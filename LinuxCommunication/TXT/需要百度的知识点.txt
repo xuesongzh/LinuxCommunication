@@ -1,0 +1,13 @@
+WMware-workstation
+红帽子
+CentOS
+Ubuntu
+vim
+IP地址
+网段
+
+IPv4 地址
+子网掩码
+默认网关
+ping命令
+DNS：域名解析
