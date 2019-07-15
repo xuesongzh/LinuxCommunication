@@ -29,10 +29,13 @@
 4.配置服务器IP
 	linux上查看网络信息：ifconfig(windows:ipconfig),网卡名ens33
 	vim分文本编辑状态和命令状态，命令道文本要按i,反之按ESC，在命令状态下输入shift:wq!存盘退出，q!不存盘退出
+	55min
 
 5.修改DNS
 	8.8.8.8谷歌域名解析服务器
 
 6.配置远程链接
-	73分钟
+	(1)需要在linux上安装ssh服务 ps -elgrep ssh检查是否有安装ssh
+	sudo apt-get install openssh-server
+	75min
 
