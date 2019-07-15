@@ -2,16 +2,27 @@ WMware-workstation
 一款可以虚拟计算机的软件
 
 Linux 系统
-红帽子
-CentOS
-Ubuntu
-vim
-IP地址
-网段
+RedHat:商用收费
+CentOS：RedHat的复制版，不收费
+Ubuntu：桌面型Linux
 
-IPv4 地址
-子网掩码
-默认网关
+vim
+文本编辑器：https://blog.csdn.net/yang1349day/article/details/88885480
+
+IP地址
+https://blog.csdn.net/apanious/article/details/51014374
+
+网段
+https://blog.csdn.net/lusijie1/article/details/78578147
+
+子网掩码，网关
+https://blog.csdn.net/faker_wang/article/details/80747407
+
 ping命令
+https://blog.csdn.net/hezeyujiang/article/details/79504038
+
 DNS：域名解析
+https://www.cnblogs.com/gopark/p/8430916.html
+
 ssh服务
+https://www.cnblogs.com/sunshine-long/p/8846044.html
