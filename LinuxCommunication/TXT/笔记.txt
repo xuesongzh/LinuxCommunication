@@ -37,5 +37,16 @@
 6.配置远程链接
 	(1)需要在linux上安装ssh服务 ps -elgrep ssh检查是否有安装ssh
 	sudo apt-get install openssh-server
-	75min
+	远程连接工具，Xshell
 
+ 7.安装编译工具gcc(编译c程序)，g++(编译c++程序)
+	sudo apt-get install build-essential
+	sudo apt-get install gcc
+	sudo apt-get install g++
+
+ 8.共享操作目录
+	vim使用不习惯
+	windows写代码，转到linux下编译
+	samba服务，在这里不采用
+	通过虚拟机，共享windows目录，linux可以访问
+ 34min

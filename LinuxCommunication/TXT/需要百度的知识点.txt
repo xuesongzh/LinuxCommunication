@@ -12,3 +12,7 @@ IPv4 地址
 ping命令
 DNS：域名解析
 ssh服务
+
+xshell
+gcc
+g++
