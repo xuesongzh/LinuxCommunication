@@ -1,17 +1,31 @@
 WMware-workstation
-ºìÃ±×Ó
-CentOS
-Ubuntu
-vim
-IPµØÖ·
-Íø¶Î
+ä¸€æ¬¾å¯ä»¥è™šæ‹Ÿè®¡ç®—æœºçš„è½¯ä»¶
 
-IPv4 µØÖ·
-×ÓÍøÑÚÂë
-Ä¬ÈÏÍø¹Ø
-pingÃüÁî
-DNS£ºÓòÃû½âÎö
-ssh·şÎñ
+Linux ç³»ç»Ÿ
+RedHat:å•†ç”¨æ”¶è´¹
+CentOSï¼šRedHatçš„å¤åˆ¶ç‰ˆï¼Œä¸æ”¶è´¹
+Ubuntuï¼šæ¡Œé¢å‹Linux
+
+vim
+æ–‡æœ¬ç¼–è¾‘å™¨ï¼šhttps://blog.csdn.net/yang1349day/article/details/88885480
+
+IPåœ°å€
+https://blog.csdn.net/apanious/article/details/51014374
+
+ç½‘æ®µ
+https://blog.csdn.net/lusijie1/article/details/78578147
+
+å­ç½‘æ©ç ï¼Œç½‘å…³
+https://blog.csdn.net/faker_wang/article/details/80747407
+
+pingå‘½ä»¤
+https://blog.csdn.net/hezeyujiang/article/details/79504038
+
+DNSï¼šåŸŸåè§£æ
+https://www.cnblogs.com/gopark/p/8430916.html
+
+sshæœåŠ¡
+https://www.cnblogs.com/sunshine-long/p/8846044.html
 
 xshell
 gcc
