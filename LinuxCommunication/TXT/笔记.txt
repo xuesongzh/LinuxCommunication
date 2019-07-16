@@ -49,4 +49,53 @@
 	windows写代码，转到linux下编译
 	samba服务，在这里不采用
 	通过虚拟机，共享windows目录，linux可以访问
- 34min
+
+/*************************/
+1. 安装nginx,搭建web服务器
+	epoll,linux内核版本2.6以上
+	gcc编译器，g++编译器
+	pcre库：函数库，支持解析正则表达式 sudo apt-get install libpcre3-dev
+	zlib库：压缩，解压缩功能 sudo apt-get install libz-dev
+	openssl库：ssl功能相关库，用于网站加密通讯 sudo apt-get install libssl-dev
+
+2. nainx源码下载及目录结构简单认识
+	nginx官网: http://www.nginx.org
+	版本：mainline,版本号中间数字一般为奇数，更新快，有最新功能有bug修复，稳定性差一点
+		  stable，稳定版，中间数字一般为偶数，经过长时间测试比较稳定，一般用于商业环境
+		  Legacy，遗留版本，以往老版本
+	安装：有二进制版本，通过命令安装，不灵活
+	      灵活安装，编译nginx，才能把三方模块装进来
+
+	创建目录并将源码下载到linux
+		mkdir nginxsourcecode
+		ls
+		wget http://nginx.org/download/nginx-1.14.2.tar.gz下载
+		下载完成需要解压：tar -xzvf nginx-1.14.2.tar.gz
+
+3. nginx源码目录
+	auto/:编译相关的搅拌，可执行文件configure一会会用到这里面的脚本
+		CC/:检查编译器的脚本
+		lib/:检查依赖库的脚本
+		os/:检查操作系统类型的脚本
+		type/:检查平台类型的脚本
+		cd ..返回上一级
+	CHANGES:修复的bug，新增功能说明
+	CHANGES.ru:俄语版
+	conf/:默认的配置文件
+	configure:编译之前用此可执行文件生成一些必要的中间文件
+	contrib/:脚本和工具，典型的是vim高亮工具
+	html/:欢迎界面和错误界面先关的html文件
+	man/:命令行帮助文件
+	src/:源码目录
+		core:核心代码
+		event:event(事件)相关代码
+		http:http(服务)模块相关代码
+		mail（邮件）模块相关代码
+		os：操作系统相关代码
+		stream：流处理相关代码
+
+4. 编译nginux
+	用configure来做编译之前的工作
+
+		
+

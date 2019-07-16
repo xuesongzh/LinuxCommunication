@@ -30,3 +30,6 @@ https://www.cnblogs.com/sunshine-long/p/8846044.html
 xshell
 gcc
 g++
+
+ls -la
+cp -r 拷贝命令
