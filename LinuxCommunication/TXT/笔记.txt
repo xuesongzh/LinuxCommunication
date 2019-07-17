@@ -96,6 +96,21 @@
 
 4. 编译nginux
 	用configure来做编译之前的工作
+	--prefix:指定最终安装目录，默认值：/usr/local/nginx
+	--sbin-path:用来指定可执行文件目录：默认值是sbin/nginx
+	--conf-path:用来指定配置文件目录:默认值conf/nginx.conf
+
+	执行configure生成中间文件目录： ./configure
+	objs/ngx_modules:内容决定了我们一会编译nginx的时候有哪些模块会被编译到nginx里面来
+	Makefile:编译规则文件，执行make命令时用到
+
+	make命令来编译，生成nainx可执行文件： make
+	用make命令开始安装，把配置文件拷贝到安装目录 sudo make install
+
+5.使用nginx
+	启动：sudo ./nginx
+	缺省的服务器默认是80端口
+
 
 		
 
