@@ -152,6 +152,30 @@ nginx进程模型细说：
 	多线程模型弊端：共享内存，如果报错一定会影响其他线程，最终会导致服务器挂掉
 
 
+/**************五：学习nginx源码钱的准备工作*******************/
+nginx源码查看工具：vs code
+
+nginx源码入口函数定位：nginx.c
+
+创建一个自己的linux的c语言程序：
+	如果共享目录不见了，一般是虚拟机自带工具 VMWare tools可能有问题
+	重装VMWare tools:
+	选择虚拟机->冲转VMWare tools
+	sudo mkdir cdrom
+	sudo mount /dev/cdrom  /mnt/cdrom
+	sudo cp Wm.......gz ../
+	sudo tar -zxvf vm......gz
+	cd vmware-tools-distrib
+	sudo ./vmware-install.pl
+
+gcc编译程序：
+	如果.c文件很多都需要编译，那需要专门写makefile来编译
+	gcc -o:用来指定可执行文件名
+	gcc -o nginx nginx.c
+	
+	
+
+
 
 
 		
