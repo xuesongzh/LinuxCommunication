@@ -111,6 +111,48 @@
 	启动：sudo ./nginx
 	缺省的服务器默认是80端口
 
+/**************四：nginx整体结构，进程模型*******************/
+nginx整体结构：
+	1.master进程和worker进程（父子关系）
+	启动nginx后，看到一个master进程和worker进程
+	ps -ef | grep nginx命令
+	第一列：UID，进程所属用户ID
+	第二列：进程ID（PID,用来唯一标识进程
+	第三列：父进程ID，fork()创建进程，worker进程是master创建出来的
+
+	2.nginx进程模型
+	1个master进程，1到多个worker进程，这种工作机制对外服务，这种工作机制保证nginx稳定灵活运行
+	master进程责任：监控进程，不处理具体业务，专门用于管理的监控worker进程
+	worker进程：用来干活，和用户交互
+	master和worker进程之间要通讯，可以用信号，也可以用共享内存;
+	稳定性，灵活性体现之一：worker一旦挂掉，master会立即fork一个新的worker进程
+
+	3.调整worker进程数量
+	worker进程几个合适，有一个公认的做法：多核计算机，让每个worker运行在一个单独的内核上，最大限度减少CPU进程切换成本
+	我的电脑是8核（8个processor）;
+	grep -c processor /proc/cpuinfo查看虚拟机processor
+	配置虚拟机processor数量
+	配置nginx的processor的数量
+
+nginx进程模型细说：
+	稳定，灵活
+	1.nginx配置文件重载
+	kill 一个worker进程，master会立即fork一个新的worker进程（666）
+	sudo kill 948
+
+	2.nginx热升级
+	运行时可以升级，不用停止nginx
+	还可以回滚版本
+
+	3.nginx的关闭
+	sudo ./nginx -s quit：优雅退出
+	sudo ./nginx -s stop:粗暴退出
+
+总结：
+	多线程模型弊端：共享内存，如果报错一定会影响其他线程，最终会导致服务器挂掉
+
+
+
 
 		
 
