@@ -44,7 +44,55 @@ ps命令
 1. 进程之间的通讯方式
 2. CPU处理机数量
 
-/**************五：学习nginx源码钱的准备工作*******************/
+/**************3.1：学习nginx源码钱的准备工作*******************/
 linux文件权限
 gcc命令行参数
 makefile了解一下
+
+/**************3.2：nginx源码学法，终端和进程的关系说*******************/
+nginx源码学习方法：
+	跟着老师学，nginx中最有用的东西
+	前期学习两个主要任务
+	泛读nginx中的一些重要代码，把nginx中最重要的代码提取出来作为我们自己知识库的一部分
+
+终端和进程的关系：
+	1.终端与bash进程
+	ps -rf | grep bash
+	pts:虚拟终端，没连接一个虚拟终端到乌班图linux操作系统就会出现一个bash进程（shell
+		用于解释用户输入的命令
+	whereis bash
+
+	2.终端上的开启进程
+	pa -la
+	终端关闭，终端上的进程也关闭了
+	可执行程序nginx是bash的子进程
+	每个进程还属于一个进程组：一个或者多个进程的组合，每一个进程组有一个进程组ID，可以调佣系统函数创建进程组。
+	“会话”(session):是一个或者多个进程组的集合
+	一般，一个bash上面运行的所有程序都会属于一个会话，会有一个首进程，这个bsh通常就是首进程
+	ps -eo pid,ppid,sid,tty,pgrp,comm,cmd | grep -E 'bash|PID|nginx'
+	如果xshell终端要断开，系统会发送SIGHUP(终端断开信号)，给session leader
+	bash进程收到SIGHUP信号后，会把信号发送给session里面的所有进程
+	进程收到SIGHUP信号之后就会退出
+
+	3.strace工具使用
+	linux下调试分析诊断工具，可以跟踪程序执行时进程的系统调用以及收到的信号
+	跟踪nginx进程：sudo strace -e trace=signal -p 1245
+	kill(4294966051, SIGHUP):发送信号SIGHUP给进程组-1245的绝对值里所有的进程
+	综合来讲，bash先发SIGHUP给session里面的所有进程，然后在发送SIGHUP给自己
+
+	4.终端关闭时如何让进程不退出
+	编写代码忽略SIGHUP信号
+	nginx和bash不在同一个session里
+	setsid命令，启动一个进程而且会使该进程会在一个新的session里面：setsid ./nginx
+	nohup(不要挂断)：nohup ./nginx, 把屏幕输出重定位到nohup.out文件中去
+
+	5.后台运行
+	./nginx &:执行程序的同时，终端可以做其他的事情，如果不用后台执行，终端只能等待当前终端之后才能执行其他命令
+	后台ctrl+c杀不掉
+	fg切换到前台，bg切换到后台
+
+/**************3.3：信号的概念、认识、处理动作*******************/
+异步
+sudo find / -name "signal.h" | xargs grep -in "SIGHUP"
+进程状态：S+ Ss
+
