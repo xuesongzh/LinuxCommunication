@@ -209,6 +209,25 @@ shell和bash之间的关系
 signal函数
 可重入函数
 
+/**************3.5：信号编程进阶、sigprocmask范例*******************/
+信号集：
+	一个进程必须能够记住当前阻塞了哪些信号
+	我们需要被称为“信号集”的一种信号类型，能够把60多个信号都表示下:sigset_t
+	//typedef struct{
+	//     unsigned long sig[2];
+	//}sigset_t;
+
+信号相关函数：
+	sigemptyset():清空信号集，把所有信号为清为0，表示这60多个信号都没有来
+	sigfillset():把信号集中的信号都设置为1
+	sigaddset(),sigdelset():把某个信号从0变成1，反之
+
+	sigprocmask(),siigmember()
+	一个进程里面有一个信号集，用来表示当前阻塞了哪些信号，把某个信号设为1表示阻塞同类信号，不能传递给该进程
+	sigprocmask():设置该进程信号集中的内容
+
+
+
 
 
 
