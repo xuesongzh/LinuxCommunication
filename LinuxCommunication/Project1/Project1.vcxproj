@@ -160,6 +160,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\TXT\3_6.txt" />
     <Text Include="..\TXT\笔记.txt" />
     <Text Include="..\TXT\需要百度的知识点.txt" />
   </ItemGroup>

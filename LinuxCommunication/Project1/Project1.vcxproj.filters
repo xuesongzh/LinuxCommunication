@@ -37,5 +37,8 @@
     <Text Include="..\TXT\需要百度的知识点.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\TXT\3_6.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
