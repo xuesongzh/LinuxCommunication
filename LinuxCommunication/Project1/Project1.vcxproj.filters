@@ -26,19 +26,5 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Project1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\TXT\笔记.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\TXT\需要百度的知识点.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\TXT\3_6.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>
