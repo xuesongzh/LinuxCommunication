@@ -15,16 +15,16 @@ void muNEfunc(int value) //我这个函数能够修改这个全局变量g_mysign
 }
 
 //信号处理函数
-void sig_usr(int signo)
+void sig_usr(int signo) 
 {     
-    //int tmpsign = g_mysign;   
-    //muNEfunc(22); //因为一些实际需求必须要在sig_user这个信号处理函数里调用muNEfunc
+    //int tmpsign = g_mysign; //备份自定义全局变量   
+    muNEfunc(22); //因为一些实际需求必须要在sig_user这个信号处理函数里调用muNEfunc
 
-    int myerrno = errno;
+    int myerrno = errno;//备份系统全局变量
 
     if(signo == SIGUSR1)
     {
-        printf("收到了SIGUSR1信号!\n");
+        printf("收到了SIGUSR1信号!\n"); //不可重入函数，在信号处理函数中不要使用，这里只是为了测试方便
     }
     else if(signo == SIGUSR2)
     {
@@ -56,6 +56,7 @@ int main(int argc, char *const *argv)
         printf("休息1秒\n");        
         
         muNEfunc(15);
+        //sleep(1);
         printf("g_mysign=%d\n",g_mysign); 
         //拿g_mysign做一些其他用途；
     }
@@ -64,3 +65,4 @@ int main(int argc, char *const *argv)
 }
 
 
+//ctrl + D 全选
