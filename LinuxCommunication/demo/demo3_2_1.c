@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <unistd.h> //sleepĞèÒª°üº¬µÄÍ·ÎÄ¼ş
+ï»¿#include <stdio.h>
+#include <unistd.h> //sleepéœ€è¦åŒ…å«çš„å¤´æ–‡ä»¶
 
 int main()
 {
