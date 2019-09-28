@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <unistd.h>
 
-int main()
+int main(int argc, char* const* argv)
 {
 	fork(); //假定fork()成功
 	fork();
