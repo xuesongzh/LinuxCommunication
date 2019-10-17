@@ -16,8 +16,6 @@
 
 class Configer
 {
-    
 };
-
 
 #endif 
