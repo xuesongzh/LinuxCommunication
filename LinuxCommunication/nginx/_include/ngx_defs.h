@@ -24,4 +24,12 @@ extern char** g_os_argv;
 extern char* gp_envmem;
 extern int g_environlen;
 
+//class Singleton Implementation
+#undef DECLARE_SINGLETON
+#define DECLARE_SINGLETON(T)\
+public:\
+	static T* GetInstance();\
+	
+
+
 #endif
