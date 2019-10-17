@@ -11,12 +11,17 @@
 ==============================
 */
 
-#ifndef _NGINX_DEFS_H_
-#define _NGINX_DEFS_H_
+#ifndef __NGINX_DEFS_H__
+#define __NGINX_DEFS_H__
 
-define LH_NAMESPACE_BEGIN \
-	namespace LH{
+typedef struct
+{
+	char ItemName[50];
+	char ItemContent[500];
+}ConfItem, *PConfItem;
 
-define LH_NAMESPACE_END }
+extern char** g_os_argv;
+extern char* gp_envmem;
+extern int g_environlen;
 
 #endif

@@ -4,7 +4,7 @@
 *All rights reversed
 
 *File name: ngx_configer.h
-*Brief: class Configer
+*Brief: class Configer 用于读取配置文件
 
 *Data:2019.10.16
 *Version: 1.0
@@ -16,7 +16,7 @@
 
 class Configer
 {
-
+    
 };
 
 
