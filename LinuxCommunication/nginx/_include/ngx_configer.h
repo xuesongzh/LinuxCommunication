@@ -16,9 +16,28 @@
 
 class Configer
 {
+  private:
+	Configer();
 
-public:
-	bool Load(const char* pConfName); //加载配置文件
+  public:
+	~Configer();
+
+  public:
+	static Configer *GetInstance();
+
+  public:
+	bool Load(const char *pConfName); //加载配置文件
+
+  public:
+	static Configer *mInstance;
+
+
+
+	class GarCollector
+	{
+	  public:
+		~GarCollector();
+	};
 };
 
 #endif 

@@ -24,6 +24,19 @@ extern char** g_os_argv;
 extern char* gp_envmem;
 extern int g_environlen;
 
+//delete pointer
+// #ifndef DEL_PTR
+// #define DEL_PTR(ptr)        \
+// 	do                      \
+// 	{                       \
+// 		if (ptr != nullptr) \
+// 		{                   \
+// 			delete (ptr);   \
+// 			ptr = nullptr;  \
+// 		}                   \
+// 	} while (false)
+// #endif
+
 //class Singleton Implementation
 #undef DECLARE_SINGLETON
 #define DECLARE_SINGLETON(T)\
