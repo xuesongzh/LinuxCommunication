@@ -14,6 +14,9 @@
 #ifndef __NGX_CONFIGER_H__
 #define __NGX_CONFIGER_H__
 
+#include <vector>
+#include "ngx_datamodel.h"
+
 class Configer
 {
   private:
@@ -28,9 +31,13 @@ class Configer
   public:
 	bool Load(const char *pConfName); //加载配置文件
 
-  public:
-	static Configer *mInstance;
+	void SetConfigInfo(const std::vector<PConfItem>& config);
 
+	std::vector<PConfItem> GetConfigInfo() const;
+
+  private:
+	static Configer *mInstance;
+	std::vector<PConfItem> mConfigInfo;
 
 
 	class GarCollector
