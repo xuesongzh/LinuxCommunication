@@ -30,10 +30,7 @@ class Configer
 
   public:
 	bool Load(const char *pConfName); //加载配置文件
-
-	void SetConfigInfo(const std::vector<PConfItem>& config);
-
-	std::vector<PConfItem> GetConfigInfo() const;
+	const char* GetContentByName(const char* pItemName);
 
   private:
 	static Configer *mInstance;
