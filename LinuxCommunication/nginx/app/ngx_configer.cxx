@@ -9,7 +9,7 @@ Configer* Configer::mInstance = nullptr;
 
 Configer::Configer()
 {
-	
+
 }
 
 Configer::~Configer()
@@ -30,7 +30,7 @@ Configer::GarCollector::~GarCollector()
 Configer* Configer::GetInstance()
 {
 	//锁（boost暂时不引用进来）
-	if(mInstance != nullptr)
+	if(mInstance == nullptr)
 	{
 		mInstance = new Configer();
 		static GarCollector garCollector;
@@ -98,9 +98,6 @@ bool Configer::Load(const char* pConfName)
 			NgxHelper::Rtrim(pConfigItem->ItemName);
 			NgxHelper::Ltrim(pConfigItem->ItemContent);
 			NgxHelper::Rtrim(pConfigItem->ItemContent);
-
-			printf("%s\n", pConfigItem->ItemName);
-			printf("%s\n", pConfigItem->ItemContent);
 			
 			//以上操作会留下空格，需要截取掉
 			mConfigInfo.push_back(pConfigItem);

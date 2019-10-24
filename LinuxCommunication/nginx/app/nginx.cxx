@@ -12,8 +12,6 @@ int main(int argc, char* const* argv)
 		exit(1);
 	}
 
-	// auto conf = pConfiger->GetContentByName("ListenPort");
-	// printf("%s\n", conf);
-
+	
 	return 0;
 }

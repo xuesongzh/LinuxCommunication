@@ -30,6 +30,7 @@ class Configer
 
   public:
 	bool Load(const char *pConfName); //加载配置文件
+
 	const char* GetContentByName(const char* pItemName);
 
   private:
