@@ -3,6 +3,7 @@
 
 #include "ngx_configer.h"
 #include "ngx_defs.h"
+#include "ngx_helper.h"
 
 Configer* Configer::mInstance = nullptr;
 
@@ -92,6 +93,15 @@ bool Configer::Load(const char* pConfName)
 			strncpy(pConfigItem->ItemName, linebuf, static_cast<int>(ptmp - linebuf));
 			strcpy(pConfigItem->ItemContent, ptmp + 1);
 
+			//删除字符串首尾空格
+			NgxHelper::Ltrim(pConfigItem->ItemName);
+			NgxHelper::Rtrim(pConfigItem->ItemName);
+			NgxHelper::Ltrim(pConfigItem->ItemContent);
+			NgxHelper::Rtrim(pConfigItem->ItemContent);
+
+			printf("%s\n", pConfigItem->ItemName);
+			printf("%s\n", pConfigItem->ItemContent);
+			
 			//以上操作会留下空格，需要截取掉
 			mConfigInfo.push_back(pConfigItem);
 		}
