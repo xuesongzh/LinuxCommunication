@@ -33,6 +33,8 @@ class Configer
 
 	const char* GetContentByName(const char* pItemName);
 
+	int GetNumberByName(const char* pItemName, const int def);
+
   private:
 	static Configer *mInstance;
 	std::vector<PConfItem> mConfigInfo;

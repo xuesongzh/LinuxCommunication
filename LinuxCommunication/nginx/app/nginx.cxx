@@ -6,6 +6,7 @@
 #include "ngx_configer.h"
 #include "ngx_helper.h"
 #include "ngx_defs.h"
+#include "ngx_log.h"
 
 int main(int argc, char* const* argv)
 {
@@ -21,10 +22,14 @@ int main(int argc, char* const* argv)
 		exit(1);
 	}
 
+	//日志初始化
+	ngx_log_init();
+
+
 	NgxHelper::NgxSetProcTitle("nginx: master process");
 
 
-	DEL_PTR(gp_envmem)；//释放分配的新的环境变量内存
+	DEL_PTR(gp_envmem);//释放分配的新的环境变量内存
 
 	printf("程序退出!\n");
 

@@ -20,6 +20,13 @@ typedef struct
 	char ItemContent[500];
 }ConfItem, *PConfItem;
 
+//日志相关
+typedef struct
+{
+	int log_level; //日志级别
+	int fd; //日志文件描述符
+}ngx_log_t;
+
 extern char** g_os_argv;
 extern char* gp_envmem;
 extern int g_environlen;

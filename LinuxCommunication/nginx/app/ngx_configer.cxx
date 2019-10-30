@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h> //atoi
 
 #include "ngx_configer.h"
 #include "ngx_defs.h"
@@ -120,4 +121,17 @@ const char* Configer::GetContentByName(const char* pItemName)
 	}
 
 	return nullptr;
+}
+
+int Configer::GetNumberByName(const char* pItemName, const int def)
+{
+	for(auto cIter = mConfigInfo.cbegin(); cIter != mConfigInfo.cend(); ++cIter)
+	{
+		if(strcasecmp((*cIter)->ItemName, pItemName) == 0)
+		{
+			return atoi((*cIter)->ItemContent);
+		}
+	}
+
+	return def;
 }
