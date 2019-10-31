@@ -15,6 +15,7 @@ ngx_log_t ngx_log;
 void ngx_log_stderr(int err, const char* fmt, ...)
 {
     va_list args;
+    
 }
 
 
