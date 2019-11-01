@@ -15,7 +15,19 @@ ngx_log_t ngx_log;
 void ngx_log_stderr(int err, const char* fmt, ...)
 {
     va_list args;
+    u_char errstr[NGX_MAX_ERROR_STR + 1]; //+1:'\0'
+    u_char* p;
+    u_char* last；
+    memset(errstr, 0, sizeof(errstr));
+
+    last = errstr + NGX_MAX_ERROR_STR; //用于防止输出字符超过此长度
+
+    p = (errstr, "nginx: ", 7); //此时p指向字符串"nginx: "的后面
+
     
+
+
+
 }
 
 

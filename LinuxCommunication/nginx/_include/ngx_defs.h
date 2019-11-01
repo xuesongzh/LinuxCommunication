@@ -17,6 +17,8 @@
 /*---------------日志相关-----------------*/
 #define NGX_LOG_PATH "logs/error1.log" //缺省log路径
 
+#define NGX_MAX_ERROR_STR 2048 //错误信息最大长度
+
 //日志等级：0级别最高，8级最低
 #define NGX_LOG_STDERR      0 //严重错误，不输出到日志文件，直接打印到控制台或者屏幕上
 #define NGX_LOG_EMERG       1 //紧急[meerg]
@@ -33,6 +35,9 @@
 
 
 
+/*---------------Common-----------------*/
+//类似memcpy，但常规memcpy返回的是指向目标dst的指针，而此处返回的是目标【拷贝数据后】的终点位置，连续复制多段数据时方便
+#define NGX_CPYMEM(dst, src, n)  (((u_char*)memcpy(dst, src, n)) + (n))
 
 
 
