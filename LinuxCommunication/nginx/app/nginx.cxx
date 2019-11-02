@@ -24,6 +24,7 @@ int main(int argc, char* const* argv)
 
 	//日志初始化
 	ngx_log_init();
+	ngx_log_stderr(0, "fhfu");
 
 
 	NgxHelper::NgxSetProcTitle("nginx: master process");
