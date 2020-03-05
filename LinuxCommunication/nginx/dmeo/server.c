@@ -29,7 +29,7 @@ int main(int argc, char* const argv)
 
 	for (;;)
 	{
-		connfd = accept(listenfd, (struct sockaddr)NULL, NULL);//卡在这里知道有客服端连接上来
+		connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);//卡在这里知道有客服端连接上来
 
 		write(connfd, pContent, strlen(pContent));
 

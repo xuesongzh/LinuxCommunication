@@ -36,7 +36,7 @@ int main(int argc, char* const argv)
 
 	int n;
 	char reviceLine[256 + 1];
-	while ((n = read(sockfd, reviceLine, 256) > 0)
+	while ((n = read(sockfd, reviceLine, 256)) > 0)
 	{
 		reviceLine[n] = 0;
 		printf("content: %s\n", reviceLine);
