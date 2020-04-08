@@ -21,6 +21,14 @@ int main(int argc, char* const argv)
 	serv_addr.sin_port = htons(serv_port);//绑定端口号
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);//监听所有IP地址
 
+	//设置套接字选项消除TIME_WAITE对bind()失败的影响
+	int reuseaddr = 1; //开启
+	if (-1 == setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (const void*)&reuseaddr, sizeof(reuseaddr)))
+	{
+		printf("setsockopt failed!\n");
+		return -1;
+	}
+
 	int result = 0;
 	result = bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));//绑定服务器地址结构体
 	if (-1 == result)
