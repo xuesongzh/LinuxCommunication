@@ -21,11 +21,23 @@ int main(int argc, char* const argv)
 	serv_addr.sin_port = htons(serv_port);//绑定端口号
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);//监听所有IP地址
 
-	bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));//绑定服务器地址结构体
-	listen(listenfd, 32); //可以积压的请个个数为32
+	int result = 0;
+	result = bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));//绑定服务器地址结构体
+	if (-1 == result)
+	{
+		printf("bind faild!\n");
+		return -1;
+	}
+
+	result = listen(listenfd, 32); //可以积压的请个个数为32
+	if (-1 == result)
+	{
+		printf("listen failed!\n");
+		return -1;
+	}
 
 	int connfd;//真正用于通信的套接字
-	const char* pContent = "server send to client";
+	const char* pContent = "server send to client\n";
 
 	for (;;)
 	{
