@@ -99,7 +99,7 @@ $(DEP_DIR)/%.d:%.cxx
 	echo -n $(LINK_OBJ_DIR)/ > $@
 #	gcc -MM $^ | sed 's/^/$(LINK_OBJ_DIR)&/g' > $@
 #  >>表示追加
-	gcc -I$(INCLUDE_PATH) -MM $^ >> $@
+	$(CC) -I$(INCLUDE_PATH) -MM $^ >> $@
 
 #上行处理后，.d文件中内容应该就如：/mnt/hgfs/linux/nginx/app/link_obj/nginx.o: nginx.cxx ngx_func.h ../signal/ngx_signal.h
 
