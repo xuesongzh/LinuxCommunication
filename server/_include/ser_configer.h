@@ -12,7 +12,9 @@
 #ifndef __SER_CONFIGER_H__
 #define __SER_CONFIGER_H__
 
+#include <vector>
 #include "ser_macros.h"
+#include "ser_datastruct.h"
 
 class SerConfiger
 {  
@@ -21,7 +23,11 @@ DECLEAR_SINGLETON(SerConfiger)
 public:
     ~SerConfiger();
 
+public:
+    bool Load(const char* const& pConfFileName);
 
+private:
+    std::vector<LPConfItem> mConfItemList;
 };
 
 #endif
