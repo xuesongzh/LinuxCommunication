@@ -1,13 +1,18 @@
 #include <string.h>
+#include <strings.h>
 
 #include "ser_configer.h"
 #include "ser_function.h"
+#include "ser_macros.h"
 
 IMPLEMENT_SINGLETON(SerConfiger)
 
 SerConfiger::~SerConfiger()
 {
-    
+    for (auto& item : mConfItemList)
+    {
+        DEL_PTR(item);
+    }
 }
 
 bool SerConfiger::Load(const char* const& pConfFileName)
@@ -73,4 +78,31 @@ bool SerConfiger::Load(const char* const& pConfFileName)
 
     fclose(fp);
     return true;
+}
+
+
+const char* SerConfiger::GerString(const char* const& pItemName)
+{
+    for (auto& item : mConfItemList)
+    {
+        if (strcasecmp(item->mName, pItemName) == 0) //忽略大小比较字符串
+        {
+            return  item->mContent;
+        }
+    }
+
+    return nullptr;
+}
+
+int SerConfiger::GetIntDefault(const char* const& pItemName, int def)
+{
+    for (auto& item : mConfItemList)
+    {
+        if (strcasecmp(item->mName, pItemName) == 0)
+        {
+            return  atoi(item->mContent);
+        }
+    }
+
+    return def;
 }

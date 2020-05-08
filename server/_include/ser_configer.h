@@ -25,6 +25,8 @@ public:
 
 public:
     bool Load(const char* const& pConfFileName);
+    const char* GerString(const char* const& pItemName);
+    int GetIntDefault(const char* const& pItemName, int def);
 
 private:
     std::vector<LPConfItem> mConfItemList;

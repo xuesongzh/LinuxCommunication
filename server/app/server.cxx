@@ -23,17 +23,14 @@ int main(int argc, char* const* argv)
 		//日志
 		exit(1);
 	}
+
+	int port = pConfiger->GetIntDefault("ListenPort", 0);
+	const char* db = pConfiger->GerString("DBInfo");
+	printf("%d:%s\n", port, db);
+
 	//修改环境变量的位置以修改进程标题
 	// g_os_argv = (char**) argv;
 	// NgxHelper::NgxInitProcTitle(); //将环境变量搬家
-
-	// //读取配置文件
-	// Configer* pConfiger = Configer::GetInstance();
-	// if(!pConfiger->Load("nginx.conf"))
-	// {
-	// 	printf("load config failed!\n");
-	// 	exit(1);
-	// }
 
 	// //日志初始化
 	// ngx_log_init();
