@@ -22,7 +22,7 @@ typedef struct
 
 /*-------------全局变量-------------*/
 //设置进程标题相关
-extern char * const* pArgv; //命令行参数
+extern char ** pArgv; //命令行参数
 extern char* pNewEnviron; //指向新的环境变量内存
 extern int EnvironLength; //环境变量的长度
 

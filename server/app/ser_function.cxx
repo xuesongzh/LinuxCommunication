@@ -1,6 +1,8 @@
 #include <string.h>
 #include <unistd.h> //environ
+
 #include "ser_function.h"
+#include "ser_datastruct.h"
 
 #pragma region[字符串相关]
 
@@ -63,6 +65,29 @@ void MoveEnviron(char*& pNewEnviron)
 		environ[i] = pTemp; //改变环境变量指向
 		pTemp += sizeEnv;
 	}
+}
+
+void SetProcessTitle(const char* const& pTitle)
+{
+	size_t sizeTitle = strlen(pTitle);
+	size_t garvLength = 0;
+	for (int i = 0; pArgv[i]; ++i)
+	{
+		garvLength += strlen(pArgv[i]) + 1;
+	}
+	//标题名字太长不支持
+	size_t totalLength = garvLength + EnvironLength; 
+	if (sizeTitle > totalLength)
+	{
+		return;
+	}
+
+	pArgv[1] = NULL; //for循环中用于判断pArgv[i]
+	char* pTemp = pArgv[0];
+	strcpy(pTemp, pTitle);
+	pTemp += sizeTitle;
+	//把标题之后的内存清空
+	memset(pTemp, 0, totalLength - sizeTitle);
 }
 
 #pragma endregion

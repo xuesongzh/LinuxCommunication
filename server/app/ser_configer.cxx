@@ -83,7 +83,7 @@ bool SerConfiger::Load(const char* const& pConfFileName)
 }
 
 
-const char* SerConfiger::GerString(const char* const& pItemName)
+const char* SerConfiger::GetString(const char* const& pItemName)
 {
     for (auto& item : mConfItemList)
     {

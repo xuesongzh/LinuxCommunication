@@ -8,14 +8,14 @@
 #include "ser_macros.h"
 
 //设置进程标题相关全局变量
-char* const* pArgv = nullptr;
+char** pArgv = nullptr;
 char* pNewEnviron = nullptr;
 int EnvironLength = 0;
 
 int main(int argc, char* const* argv)
 {
 	//将环境变量搬走
-	pArgv = argv;
+	pArgv = const_cast<char**>(argv);
 	for (int i = 0; environ[i]; ++i)
 	{
 		EnvironLength += strlen(environ[i]) + 1; //环境变量长度，+1是因为'\0'的存在
@@ -35,6 +35,9 @@ int main(int argc, char* const* argv)
 		//日志
 		exit(1);
 	}
+	//设置主进程标题
+	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");
+	SetProcessTitle(masterProcessTitle);
 
 	//修改环境变量的位置以修改进程标题
 	// g_os_argv = (char**) argv;
@@ -59,7 +62,7 @@ int main(int argc, char* const* argv)
 	printf("程序退出!\n");
 
 	//程序退出的时候要释放内存
-	// DEL_ARRAY(pNewEnviron);
+	DEL_ARRAY(pNewEnviron);
 
 	return 0;
 }

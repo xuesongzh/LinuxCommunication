@@ -24,7 +24,8 @@ void Ltrim(char* const& string);
 
 void MoveEnviron(char*& pNewEnviron);
 
-// void SetProcessTitle();
+//假设所有的命令行参数都不用才能调用次函数
+void SetProcessTitle(const char* const& pTitle);
 
 #pragma endregion
 
