@@ -20,5 +20,12 @@ void Ltrim(char* const& string);
 
 #pragma endregion
 
+#pragma region[设置进程名称]
+
+void MoveEnviron(char*& pNewEnviron);
+
+// void SetProcessTitle();
+
+#pragma endregion
 
 #endif

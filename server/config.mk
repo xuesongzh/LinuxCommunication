@@ -11,5 +11,6 @@ BUILD_DIR = $(BUILD_ROOT)/signal/ \
 			$(BUILD_ROOT)/app/ 
 
 #编译时是否生成调试信息。GNU调试器可以利用该信息
+#valgrind需要用debug
 export DEBUG = true
 

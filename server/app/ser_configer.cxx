@@ -13,6 +13,8 @@ SerConfiger::~SerConfiger()
     {
         DEL_PTR(item);
     }
+
+    mConfItemList.clear();
 }
 
 bool SerConfiger::Load(const char* const& pConfFileName)

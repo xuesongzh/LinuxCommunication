@@ -1,4 +1,5 @@
 #include <string.h>
+#include <unistd.h> //environ
 #include "ser_function.h"
 
 #pragma region[字符串相关]
@@ -46,6 +47,22 @@ void Ltrim(char* const& string)
 	}
 	(*p_tmp2) = '\0';
     return;
+}
+
+#pragma endregion
+
+#pragma region[设置进程名称]
+
+void MoveEnviron(char*& pNewEnviron)
+{
+	char* pTemp = pNewEnviron;
+	for (int i = 0; environ[i]; ++i)
+	{
+		size_t sizeEnv = strlen(environ[i]) + 1; //注意'\0'
+		strcpy(pTemp, environ[i]); //复制内容到新内存
+		environ[i] = pTemp; //改变环境变量指向
+		pTemp += sizeEnv;
+	}
 }
 
 #pragma endregion
