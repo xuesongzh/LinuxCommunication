@@ -6,6 +6,7 @@
 #include "ser_configer.h"
 #include "ser_function.h"
 #include "ser_macros.h"
+#include "ser_log.h"
 
 //设置进程标题相关全局变量
 char** pArgv = nullptr;
@@ -37,21 +38,12 @@ int main(int argc, char* const* argv)
 	}
 	//设置主进程标题
 	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");
+	if (nullptr == masterProcessTitle)
+	{
+		//日志
+		exit(1);
+	}
 	SetProcessTitle(masterProcessTitle);
-
-	//修改环境变量的位置以修改进程标题
-	// g_os_argv = (char**) argv;
-	// NgxHelper::NgxInitProcTitle(); //将环境变量搬家
-
-	// //日志初始化
-	// ngx_log_init();
-	// ngx_log_stderr(0, "fhfu");
-
-
-	// NgxHelper::NgxSetProcTitle("nginx: master process");
-
-
-	// DEL_PTR(gp_envmem);//释放分配的新的环境变量内存
 
 	// while(true)
 	// {
