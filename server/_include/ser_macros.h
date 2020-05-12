@@ -90,6 +90,13 @@ className* className::GetInstance()\
 #pragma endregion
 
 #pragma region[其他]
+//日志打印
+//标准错误输出到屏幕
+#define SER_LOG_STDERR(errNum, pfmt, ...)\
+do\
+{\
+    ser_log_stderr(errNum, pfmt, ##__VA_ARGS__);\
+}while(false)
 
 //适合字符拷贝，返回指向dst+n的指针
 #define SER_MEMCPY(dst, src, n)\
@@ -98,6 +105,8 @@ do\
    dst = (uint8_t*)memcpy(dst, src, n) + n;\
 }while(false)
 
+//日志信息的最大长度
+#define SER_MAX_ERROR_STR 2048
 
 #pragma endregion
 

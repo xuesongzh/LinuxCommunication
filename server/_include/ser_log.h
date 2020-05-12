@@ -14,10 +14,10 @@
 
 #include <stdint.h>
 
+//打印日志 输出到屏幕
+void ser_log_stderr(const int& errNum, const char* fmt, ...);
 
+//打印日志 输出到log文件
 
-
-//打印错误码
-void ser_log_errno(uint8_t*& pWrite, uint8_t*& pLast, const int& err);
 
 #endif
