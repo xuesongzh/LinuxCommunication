@@ -18,6 +18,14 @@ static void ser_vslprintf(
     uint8_t*& pLast, 
     const char*& pfmt,
     const va_list& args);
+//打印数字
+static void ser_sprinf_number(
+    uint8_t*& pWrite,
+    uint8_t* pLast,
+    uint64_t& uint64,
+    const uint8_t& charZero,
+    const uint32_t& hex,
+    const uint32_t& width);
 
 void ser_log_stderr(const int& errNum, const char* pfmt, ...)
 {
@@ -53,6 +61,60 @@ void ser_log_stderr(const int& errNum, const char* pfmt, ...)
     return;
 }
 
+static void ser_sprinf_number(
+    uint8_t*& pWrite,
+    uint8_t* pLast,
+    uint64_t& uint64,
+    const uint8_t& charZero,
+    const uint32_t& hex,
+    const uint32_t& width)
+{
+    //必要参数定义
+    uint8_t temp[SER_INT64_STR_LEN_MAXA + 1]; //用于临时存放数字
+    uint8_t* pTempWrite = temp + SER_INT64_STR_LEN_MAXA; //指向temp数组最后，为了填充不够的位数，需要反向填充
+    size_t numLength = 0;//数字宽度
+    static uint8_t hexChar[] = "0123456789abcdef"; //用于十六进制小写
+    static uint8_t HEXChar[] = "0123456789ABCDEF"; //用于十六进制大写
+
+    if(0 == hex)
+    {
+        //从末尾将数字依次从后往前插入到temp数组
+        do
+        {
+            *--pTempWrite = (uint8_t)(uint64 % 10 + '0');
+        }while(uint64 /= 10);
+    }
+    // else if(1 == hex) //十六进制小写
+    // {
+    //     do
+    //     {
+    //         *--pTempWrite = hexChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
+    //     }while(uint64 >> 4); //循环取出每一个十六进制数字  
+    // }
+    // else if(2 == hex) //十六进制大写
+    // {
+    //     do
+    //     {
+    //         *--pTempWrite = HEXChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
+    //     }while(uint64 >> 4); 
+    // }
+
+    numLength = temp + SER_INT64_STR_LEN_MAXA -  pTempWrite; //得到数字宽度
+
+    //不够的位数用zero填充
+    while(numLength++ < width && pWrite < pLast)
+    {
+        *pWrite++ = charZero;
+    }
+
+    numLength = temp + SER_INT64_STR_LEN_MAXA -  pTempWrite; //恢复数字长度，用于拷贝
+    if((pWrite + numLength) > pLast)
+    {
+        numLength = pLast - pWrite; //如果数字的时候超过最大长度，剩多少位就拷贝多少位
+    }
+
+    SER_MEMCPY(pWrite, pTempWrite, numLength);
+}
 
 static void ser_vslprintf(
     uint8_t*& pWrite, 
@@ -60,11 +122,63 @@ static void ser_vslprintf(
     const char*& pfmt,
     const va_list& args)
 {
+    //必要参数声明
+    uint32_t intWidth = 0; //整数部分长度
+    uint8_t charZero = ' '; //用于填充不够长度的位数，'0'或者''
+    bool isSign = true; //是否是有符号数
+    uint64_t uint64 = 0; //保存无符号数参数
+    int64_t int64 = 0; //保存有符号数参数
+    uint32_t hex = 0; //是否十六进制显示，0:不是，1:以小写字母显示，2:以大写字母显示
+
+
     while(*pfmt && pWrite < pLast)
     {
         if (*pfmt == '%') //碰到需要转换的格式
         {
+            charZero = (uint8_t)(*pfmt++ == '0' ? '0' : ' ');
+            intWidth = 0;
+            isSign = true;
+            hex = 0;
 
+            //读取%后面的数字，及整数部分长度,例如%016，就会取出16
+            while(*pfmt >= '0' && *pfmt < '9')
+            {
+                intWidth = intWidth*10 + (*pfmt++ - '0');
+            }
+
+            switch (*pfmt)
+            {
+            case 'd':
+                if(isSign)
+                {
+                    int64 = (int64_t)(va_arg(args, int32_t));
+                }
+                else
+                {
+                    uint64 = (uint64_t)(va_arg(args, uint32_t));
+                }
+                break;
+            default: //不是定义的字符直接拷贝
+                *pWrite++ = *pfmt++;
+                continue;
+            }
+
+            //%d的会走到这里,把整数参数统一保存到uint64中去
+            if(isSign)
+            {
+                if(int64 < 0)
+                {
+                    *pWrite++ = '-'; //填充'-'
+                    uint64 = (uint64_t) -int64; //变成无符号数 
+                }
+                else
+                {
+                    uint64 = (uint64_t) int64;
+                }              
+            }
+
+            ser_sprinf_number(pWrite, pLast, uint64, charZero, hex, intWidth);
+            pfmt++;
         }
         else //纯字符串
         {

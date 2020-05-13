@@ -15,7 +15,7 @@ int EnvironLength = 0;
 
 int main(int argc, char* const* argv)
 {
-	// SER_LOG_STDERR(1, "TESTTEST");
+	SER_LOG_STDERR(1, "TESTTEST%d---", 26);
 	//将环境变量搬走
 	pArgv = const_cast<char**>(argv);
 	for (int i = 0; environ[i]; ++i)

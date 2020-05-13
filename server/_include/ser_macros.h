@@ -110,6 +110,12 @@ do\
    dst = (uint8_t*)memcpy(dst, src, n) + n;\
 }while(false)
 
+//64位有符号数需要的最大字符串长度
+#define SER_INT64_STR_LEN_MAXA (sizeof("-9223372036854775808") - 1)
+
+//32位无符号最大数字
+#define SER_MAX_UINT32_VALUE (uint32_t) 0xffffffff
+
 #pragma endregion
 
 #endif
