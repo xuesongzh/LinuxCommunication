@@ -13,6 +13,7 @@
 #define __SER_CONFIGER_H__
 
 #include <vector>
+#include <mutex>
 #include "ser_macros.h"
 #include "ser_datastruct.h"
 
