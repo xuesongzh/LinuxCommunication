@@ -84,20 +84,20 @@ static void ser_sprinf_number(
             *--pTempWrite = (uint8_t)(uint64 % 10 + '0');
         }while(uint64 /= 10);
     }
-    // else if(1 == hex) //十六进制小写
-    // {
-    //     do
-    //     {
-    //         *--pTempWrite = hexChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
-    //     }while(uint64 >> 4); //循环取出每一个十六进制数字  
-    // }
-    // else if(2 == hex) //十六进制大写
-    // {
-    //     do
-    //     {
-    //         *--pTempWrite = HEXChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
-    //     }while(uint64 >> 4); 
-    // }
+    else if(1 == hex) //十六进制小写
+    {
+        do
+        {
+            *--pTempWrite = hexChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
+        }while(uint64 >>= 4); //循环取出每一个十六进制数字  
+    }
+    else if(2 == hex) //十六进制大写
+    {
+        do
+        {
+            *--pTempWrite = HEXChar[(uint32_t)(uint64 & 0xf)]; //取出最后一个16进制数字
+        }while(uint64 >>= 4); 
+    }
 
     numLength = temp + SER_INT64_STR_LEN_MAXA -  pTempWrite; //得到数字宽度
 
