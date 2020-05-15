@@ -129,6 +129,7 @@ static void ser_vslprintf(
     uint64_t uint64 = 0; //保存无符号数参数
     int64_t int64 = 0; //保存有符号数参数
     uint32_t hex = 0; //是否十六进制显示，0:不是，1:以小写字母显示，2:以大写字母显示
+    uint32_t fracWidth = 0; //浮点数小数位长度
 
 
     while(*pfmt && pWrite < pLast)
@@ -145,10 +146,43 @@ static void ser_vslprintf(
             {
                 intWidth = intWidth*10 + (*pfmt++ - '0');
             }
+            //如果遇到u,x,X,.需要重置一些标志位去表示当前是无符号，十进制小写，十六进制大写，浮点数等显示格式
+            while(true)
+            {
+                switch(*pfmt)
+                {
+                case 'u': //无符号数
+                    isSign = false;
+                    pfmt++;
+                    continue;
+                case 'X': //十六进制大写显示
+                    hex = 2;
+                    pfmt++;
+                    continue;
+                case 'x': //十六进制小写显示
+                    hex = 1;
+                    pfmt++;
+                    continue;
+                case '.': //浮点数显示
+                    pfmt++;
+                    while(*pfmt >= '0' && *pfmt <= '9')
+                    {
+                        //取出小数位长度
+                        fracWidth = fracWidth * 10 + (*pfmt++ - '0');
+                    }
+                    break;
+                default:
+                    break;
+                }
+                break;
+            }
 
             switch (*pfmt)
             {
-            case 'd':
+            case '%':
+                *pWrite++ =  *pfmt++;
+                continue;
+            case 'd': //整数显示
                 if(isSign)
                 {
                     int64 = (int64_t)(va_arg(args, int32_t));
@@ -158,6 +192,61 @@ static void ser_vslprintf(
                     uint64 = (uint64_t)(va_arg(args, uint32_t));
                 }
                 break;
+            case 's': //字符串打印
+            { //在switch case中如果使用局部变量，必须设置他的生命周期，加{}。否侧报错
+                uint8_t *pTemp = va_arg(args, uint8_t *);
+                while (*pTemp && pWrite < pLast)
+                {
+                    *pWrite++ = *pTemp++;
+                }
+                pfmt++;
+                continue;
+            }
+            case 'p': //打印进程id
+                int64 = (int64_t)(va_arg(args, pid_t));
+                isSign = true;
+                break;
+            case 'f': //打印浮点数
+            {
+                double floatValue = va_arg(args, double);
+                if(floatValue < 0)
+                {
+                    *pWrite++ = '-';//显示负号
+                    floatValue = -floatValue; //将负数变为正数
+                }
+                uint64 = (uint32_t)floatValue; //保存正整数部分
+
+                uint64_t fracValue = 0;//要显示的小数部分，比如15.4保留3位，这里求出来的结果应该是400
+                if(fracWidth) //如果小数有位数要求
+                {
+                    uint32_t scale = 1;
+                    uint32_t n = fracWidth; 
+                    while(n--)
+                    {
+                        scale *= 10; //这里可能溢出
+                    }
+
+                    fracValue = (uint64_t)((floatValue - (double)uint64) * scale + 0.5); //有四舍五入
+                    if(fracValue == scale) //比如12.999这种直接进位
+                    {
+                        uint64++;
+                        fracValue = 0;
+                    }
+                }
+
+                //显示整数部分
+                ser_sprinf_number(pWrite, pLast, uint64, charZero, 0, intWidth);
+                if(fracWidth) //指定了显示多少位小数
+                {
+                    if(pWrite < pLast)
+                    {
+                        *pWrite++ = '.';
+                    }
+                    ser_sprinf_number(pWrite, pLast, fracValue, '0', 0, fracWidth);
+                }
+                pfmt++;
+                continue;
+            }
             default: //不是定义的字符直接拷贝
                 *pWrite++ = *pfmt++;
                 continue;

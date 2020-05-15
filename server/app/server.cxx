@@ -15,7 +15,6 @@ int EnvironLength = 0;
 
 int main(int argc, char* const* argv)
 {
-	SER_LOG_STDERR(1, "TESTTEST%d---", 26);
 	//将环境变量搬走
 	pArgv = const_cast<char**>(argv);
 	for (int i = 0; environ[i]; ++i)
@@ -29,19 +28,19 @@ int main(int argc, char* const* argv)
 	SerConfiger* pConfiger = SerConfiger::GetInstance();
 	if (nullptr == pConfiger)
 	{
-		//日志
+		SER_LOG_STDERR(0, "create configer failed!");
 		exit(1);
 	}
 	if (true != pConfiger->Load("server.conf"))
 	{
-		//日志
+		SER_LOG_STDERR(0, "load configer content failed!");
 		exit(1);
 	}
 	//设置主进程标题
 	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");
 	if (nullptr == masterProcessTitle)
 	{
-		//日志
+		SER_LOG_STDERR(0, "get master process title failed!");
 		exit(1);
 	}
 	SetProcessTitle(masterProcessTitle);

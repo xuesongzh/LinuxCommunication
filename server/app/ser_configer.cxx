@@ -4,6 +4,7 @@
 #include "ser_configer.h"
 #include "ser_function.h"
 #include "ser_macros.h"
+#include "ser_log.h"
 
 IMPLEMENT_SINGLETON(SerConfiger)
 
@@ -23,7 +24,7 @@ bool SerConfiger::Load(const char* const& pConfFileName)
     fp = fopen(pConfFileName, "r");
     if (nullptr == fp)
     {
-        //日志
+		SER_LOG_STDERR(0, "open configer file failed!");
         return false;
     }
 
