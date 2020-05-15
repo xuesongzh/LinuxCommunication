@@ -28,19 +28,22 @@ int main(int argc, char* const* argv)
 	SerConfiger* pConfiger = SerConfiger::GetInstance();
 	if (nullptr == pConfiger)
 	{
-		SER_LOG_STDERR(0, "create configer failed!");
+		SER_LOG_STDERR(errno, "create configer failed!");
 		exit(1);
 	}
 	if (true != pConfiger->Load("server.conf"))
 	{
-		SER_LOG_STDERR(0, "load configer content failed!");
+		SER_LOG_STDERR(errno, "load configer content failed!");
 		exit(1);
 	}
+
+	ser_log_init();
+
 	//设置主进程标题
 	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");
 	if (nullptr == masterProcessTitle)
 	{
-		SER_LOG_STDERR(0, "get master process title failed!");
+		SER_LOG_STDERR(errno, "get master process title failed!");
 		exit(1);
 	}
 	SetProcessTitle(masterProcessTitle);

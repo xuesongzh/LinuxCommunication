@@ -17,7 +17,9 @@
 //打印日志 输出到屏幕
 void ser_log_stderr(const int& errNum, const char* fmt, ...);
 
-//打印日志 输出到log文件
+//初始化日志文件，打开日志文件
+void ser_log_init();
 
+//打印日志 输出到log文件
 
 #endif

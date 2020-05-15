@@ -2,9 +2,26 @@
 #include <stdio.h>
 #include <stdarg.h> //va_list
 #include <unistd.h> //STDERR_FILENO...
+#include <fcntl.h> //open
 
 #include "ser_log.h"
 #include "ser_macros.h"
+#include "ser_configer.h"
+
+//必要变量定义
+ser_log_t ser_log;
+static const char* SerLogLevels[][20] = 
+{
+    {"stderr"},    //0：控制台错误
+    {"emerg"},     //1：紧急
+    {"alert"},     //2：警戒
+    {"crit"},      //3：严重
+    {"error"},     //4：错误
+    {"warn"},      //5：警告
+    {"notice"},    //6：注意
+    {"info"},      //7：信息
+    {"debug"}      //8：调试   
+};
 
 //只用于本文件的函数声明
 //打印错误码
@@ -59,6 +76,32 @@ void ser_log_stderr(const int& errNum, const char* pfmt, ...)
     write(STDERR_FILENO, errstr, pWrite - errstr);
 
     return;
+}
+
+void ser_log_init()
+{
+    const char* pLogFilePath = nullptr;
+    //读取配置文件中log文件的存放位置
+    SerConfiger* pConfiger = SerConfiger::GetInstance();
+    pLogFilePath = pConfiger->GetString("LogFilePath");
+    if(nullptr == pLogFilePath)
+    {
+        //读不到就给默认路径
+        pLogFilePath = (const char*)SER_LOG_DEFAULT_PATH;
+    }
+    //读取日志等级，读不到就给默认值SER_LOG_NOTICE
+    ser_log.mLogLevel = pConfiger->GetIntDefault("LogLevel", SER_LOG_NOTICE);
+
+    //O_WRONLY(只写打开)|O_APPEND(追加到末尾)|O_CREAT(文件不存在就创建)
+    //0644:当前用户110(可读，可写，不可执行)，(所在组)100,(其他用户)100
+    ser_log.mFd = open(pLogFilePath, O_WRONLY|O_APPEND|O_CREAT, 0644);
+
+    if(-1 == ser_log.mFd) //如果有错误直接打印到屏幕
+    {
+        SER_LOG_STDERR(errno, "can not open log file path:%s", pLogFilePath);
+        ser_log.mFd = STDERR_FILENO; //定位到标准错误
+    }
+
 }
 
 static void ser_sprinf_number(

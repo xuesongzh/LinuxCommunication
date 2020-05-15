@@ -24,7 +24,7 @@ bool SerConfiger::Load(const char* const& pConfFileName)
     fp = fopen(pConfFileName, "r");
     if (nullptr == fp)
     {
-		SER_LOG_STDERR(0, "open configer file failed!");
+		SER_LOG_STDERR(errno, "open configer file failed!");
         return false;
     }
 

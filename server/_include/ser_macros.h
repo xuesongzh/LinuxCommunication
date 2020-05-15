@@ -99,6 +99,8 @@ do\
 //日志信息的最大长度
 #define SER_MAX_ERROR_STR 2048
 
+#define SER_LOG_DEFAULT_PATH "logs/error.log"
+
 #pragma endregion
 
 #pragma region[其它]
