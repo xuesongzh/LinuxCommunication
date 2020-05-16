@@ -40,7 +40,8 @@ int main(int argc, char* const* argv)
 	}
 
 	SER_LOG_INIT();
-	SER_LOG(SER_LOG_DEBUG,1,"tetstetete");
+	SER_LOG(SER_LOG_DEBUG,1,"test debug!");
+	SER_LOG(SER_LOG_INFO,2,"test info!");
 
 	//设置主进程标题
 	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");
