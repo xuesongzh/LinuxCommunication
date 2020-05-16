@@ -12,11 +12,13 @@
 char** pArgv = nullptr;
 char* pNewEnviron = nullptr;
 int EnvironLength = 0;
+pid_t ser_pid;
 
 int main(int argc, char* const* argv)
 {
-	//将环境变量搬走
+	ser_pid = getpid(); //获取进程ID
 	pArgv = const_cast<char**>(argv);
+	//将环境变量搬走
 	for (int i = 0; environ[i]; ++i)
 	{
 		EnvironLength += strlen(environ[i]) + 1; //环境变量长度，+1是因为'\0'的存在
@@ -37,7 +39,8 @@ int main(int argc, char* const* argv)
 		exit(1);
 	}
 
-	ser_log_init();
+	SER_LOG_INIT();
+	SER_LOG(SER_LOG_DEBUG,1,"tetstetete");
 
 	//设置主进程标题
 	const char* masterProcessTitle = pConfiger->GetString("MasterProcessTitle");

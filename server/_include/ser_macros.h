@@ -89,11 +89,25 @@ className* className::GetInstance()\
 
 #pragma region[日志相关]
 //日志打印
+//日志初始化
+#define SER_LOG_INIT()\
+do\
+{\
+    ser_log_init();\
+}while(false)
+
 //标准错误输出到屏幕
 #define SER_LOG_STDERR(errNum, pfmt, ...)\
 do\
 {\
     ser_log_stderr(errNum, pfmt, ##__VA_ARGS__);\
+}while(false)
+
+//将日志输出到日志文件
+#define SER_LOG(logLevel, errNum, pfmt, ...)\
+do\
+{\
+    ser_log_error_core(logLevel, errNum, pfmt, ##__VA_ARGS__);\
 }while(false)
 
 //日志信息的最大长度

@@ -47,7 +47,7 @@ extern char* pNewEnviron; //指向新的环境变量内存
 extern int EnvironLength; //环境变量的长度
 
 //日志相关
-extern pid_t ser_pid;
-extern ser_log_t ser_log;
+extern pid_t ser_pid; //进程ID
+extern ser_log_t ser_log; //日志文件描述
 
 #endif

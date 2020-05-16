@@ -3,6 +3,7 @@
 #include <stdarg.h> //va_list
 #include <unistd.h> //STDERR_FILENO...
 #include <fcntl.h> //open
+#include <sys/time.h> //gettimeofday
 
 #include "ser_log.h"
 #include "ser_macros.h"
@@ -10,7 +11,7 @@
 
 //必要变量定义
 ser_log_t ser_log;
-static const char* SerLogLevels[][20] = 
+static const char SerLogLevels[][20] = 
 {
     {"stderr"},    //0：控制台错误
     {"emerg"},     //1：紧急
@@ -44,7 +45,17 @@ static void ser_sprinf_number(
     const uint32_t& hex,
     const uint32_t& width);
 
-void ser_log_stderr(const int& errNum, const char* pfmt, ...)
+//对ser_vslprintf，以适应自己的数据结构
+static void ser_log_format(
+    uint8_t*& pWrite,
+    uint8_t*& pLast,
+    const char* pfmt,
+    ...);
+
+void ser_log_stderr(
+    const int& errNum, 
+    const char* pfmt,
+    ...)
 {
     va_list args; //可变参数
     uint8_t errstr[SER_MAX_ERROR_STR + 1]; //日志信息
@@ -78,6 +89,94 @@ void ser_log_stderr(const int& errNum, const char* pfmt, ...)
     return;
 }
 
+void ser_log_error_core(
+    const int& logLevel,
+    const int& errNum,
+    const char* pfmt,
+    ...)
+{
+    uint8_t errstr[SER_MAX_ERROR_STR + 1];
+    memset(errstr, 0, sizeof(errstr));
+    uint8_t* pWrite = errstr;
+    uint8_t* pLast = errstr + SER_MAX_ERROR_STR;
+
+    struct timeval tv;
+    memset(&tv, 0, sizeof(struct timeval));
+
+    struct tm tm;
+    memset(&tm, 0, sizeof(struct tm));
+
+    time_t sec; //秒
+    va_list args;
+    //获取当前时间，返回自1970-01-01 00:00:00到现在经历的秒数
+    gettimeofday(&tv, NULL);
+    sec = tv.tv_sec;
+    localtime_r(&sec, &tm); //把参数1的time_t转换为本地时间保存到参数2中去,_r表示线程安全版本
+    tm.tm_mon++; //月份调整才正常
+    tm.tm_year += 1900; //年份调整才正常
+
+    //组合出一个当前时间字符串，格式形如：2020/05/16 19:57:11
+    uint8_t currentTime[30] = {0};
+    uint8_t* pTimeWrite = currentTime;
+    uint8_t* pTimeLast = currentTime + 30;
+    ser_log_format(pTimeWrite,pTimeLast,
+        "%4d/%02d/%02d %02d:%02d:%02d",
+        tm.tm_year, tm.tm_mon, tm.tm_mday,
+        tm.tm_hour, tm.tm_min, tm.tm_sec);
+    
+    SER_MEMCPY(pWrite, currentTime, strlen((const char*)currentTime));
+    ser_log_format(pWrite, pLast, " [%s] ", SerLogLevels[logLevel]); //打印日志等级
+    ser_log_format(pWrite, pLast, " pid:%p ", ser_pid); //打印进程ID
+
+    va_start(args, pfmt);
+    ser_vslprintf(pWrite, pLast, pfmt, args); //打印用户日志
+    va_end(args);
+
+    if(0 != errNum)
+    {
+        ser_log_errno(pWrite, pLast, errNum); //打印错误码
+    }
+
+    if(pWrite > pLast - 1)
+    {
+        pWrite = pLast - 1;
+    }
+    *pWrite++ = '\n';
+
+    ssize_t writeFlag;
+    while(true)
+    {
+        if(logLevel > ser_log.mLogLevel)
+        {
+            break;//大于配置文件中的日志等级不打印
+        }
+
+        writeFlag = write(ser_log.mFd, errstr, pWrite - errstr);
+        if(-1 == writeFlag) //写入文件失败
+        {
+            if(errno == ENOSPC)
+            {
+                //磁盘没空间了，暂不处理
+
+            }
+            else
+            {
+                //其他错误
+                if(STDERR_FILENO != ser_log.mFd)
+                {
+                    //直接显示到屏幕
+                    writeFlag = write(STDERR_FILENO, errstr, pWrite - errstr);
+                }
+            }
+            break;
+        }
+
+        break;
+    }
+
+    return;
+}
+
 void ser_log_init()
 {
     const char* pLogFilePath = nullptr;
@@ -102,6 +201,18 @@ void ser_log_init()
         ser_log.mFd = STDERR_FILENO; //定位到标准错误
     }
 
+}
+
+static void ser_log_format(
+    uint8_t*& pWrite,
+    uint8_t*& pLast,
+    const char* pfmt,
+    ...)
+{
+    va_list args;
+    va_start(args, pfmt);
+    ser_vslprintf(pWrite, pLast, pfmt, args);
+    va_end(args);
 }
 
 static void ser_sprinf_number(
@@ -179,7 +290,7 @@ static void ser_vslprintf(
     {
         if (*pfmt == '%') //碰到需要转换的格式
         {
-            charZero = (uint8_t)(*pfmt++ == '0' ? '0' : ' ');
+            charZero = (uint8_t)(*++pfmt == '0' ? '0' : ' ');
             intWidth = 0;
             isSign = true;
             hex = 0;
@@ -223,7 +334,7 @@ static void ser_vslprintf(
             switch (*pfmt)
             {
             case '%':
-                *pWrite++ =  *pfmt++;
+                *pWrite++ = *pfmt++;
                 continue;
             case 'd': //整数显示
                 if(isSign)
@@ -237,7 +348,7 @@ static void ser_vslprintf(
                 break;
             case 's': //字符串打印
             { //在switch case中如果使用局部变量，必须设置他的生命周期，加{}。否侧报错
-                uint8_t *pTemp = va_arg(args, uint8_t *);
+                const char* pTemp = va_arg(args, const char*);
                 while (*pTemp && pWrite < pLast)
                 {
                     *pWrite++ = *pTemp++;
