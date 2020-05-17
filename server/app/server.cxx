@@ -40,6 +40,13 @@ int main(int argc, char* const* argv)
 
 	//日志系统初始化
 	SER_LOG_INIT();
+	//初始化信号，注册相关信号处理函数
+	if(ser_init_signals() != 0)
+	{
+		SER_LOG_STDERR(0,"signals init failed!");
+		exitCode = 1;
+		goto lblexit;
+	}
 
 	//将环境变量搬走：为了设置进程标题
 	for (int i = 0; environ[i]; ++i)
@@ -59,11 +66,11 @@ int main(int argc, char* const* argv)
 	}
 	SetProcessTitle(masterProcessTitle);
 
-	// while(true)
-	// {
-	// 	sleep(1);
-	// 	printf("sleep 1 second!\n");
-	// }
+	while(true)
+	{
+		sleep(1);
+		printf("sleep 1 second!\n");
+	}
 
 lblexit:
 	FreeSource();

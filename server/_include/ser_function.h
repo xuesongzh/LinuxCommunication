@@ -29,4 +29,11 @@ void SetProcessTitle(const char* const& pTitle);
 
 #pragma endregion
 
+#pragma region[信号相关]
+
+//用于注册信号处理函数
+int ser_init_signals();
+
+#pragma endregion
+
 #endif
