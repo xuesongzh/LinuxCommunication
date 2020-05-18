@@ -44,10 +44,15 @@ typedef enum
 //设置进程标题相关
 extern char ** pArgv; //命令行参数
 extern char* pNewEnviron; //指向新的环境变量内存
-extern int EnvironLength; //环境变量的长度
+extern size_t EnvironLength; //环境变量的长度
+extern size_t ArgvLength; //命令行参数所需长度
+extern int ArgcNumber; //命令行参数个数
 
 //日志相关
 extern pid_t ser_pid; //进程ID
 extern ser_log_t ser_log; //日志文件描述
+
+//进程相关
+extern pid_t ser_parent_pid; //父进程id
 
 #endif

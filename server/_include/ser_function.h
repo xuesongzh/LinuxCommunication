@@ -20,12 +20,16 @@ void Ltrim(char* const& string);
 
 #pragma endregion
 
-#pragma region[设置进程名称]
+#pragma region[进程相关]
 
+//移走环境变量的位置，怕设置标题时，标题太长覆盖了环境变量
 void MoveEnviron(char*& pNewEnviron);
 
 //假设所有的命令行参数都不用才能调用次函数
 void SetProcessTitle(const char* const& pTitle);
+
+//主进程函数
+void ser_master_process_cycle();
 
 #pragma endregion
 
