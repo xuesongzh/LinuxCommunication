@@ -24,7 +24,7 @@ int main(int argc, char* const* argv)
 	/**************一些变量的初始化和赋值*******************/
 	int exitCode = 0;
 	ser_pid = getpid(); //获取进程ID
-	ser_parent_pid = getpid(); //主进程ID
+	ser_parent_pid = getppid(); //父进程ID
 	pArgv = const_cast<char**>(argv);
 	const char* masterProcessTitle = nullptr; //主进程标题
 
@@ -72,8 +72,9 @@ int main(int argc, char* const* argv)
 	pNewEnviron = new char[EnvironLength];
 	memset(pNewEnviron, 0, EnvironLength);
 	MoveEnviron(pNewEnviron);
-
-	ser_master_process_cycle(); //主进程和子进程在里面循环，干活
+	
+ 	//主进程和子进程在里面循环，干活
+	ser_master_process_cycle();
 
 lblexit:
 	FreeSource();
