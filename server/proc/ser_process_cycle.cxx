@@ -2,13 +2,17 @@
 #include<signal.h>
 #include<unistd.h>
 #include<string.h>
+#include<errno.h>
 
 
 #include "ser_function.h"
 #include "ser_configer.h"
 #include "ser_log.h"
 
-
+static void ser_start_worker_processes(int processNum);
+static int ser_spawn_process(int processIndex);
+static void ser_worker_process_cycle(int processIndex);
+static void ser_worker_process_init(int processIndex);
 
 void ser_master_process_cycle()
 {
@@ -18,7 +22,7 @@ void ser_master_process_cycle()
 	sigaddset(&sigSet, SIGCHLD); //子进程状态发生改变
 	sigaddset(&sigSet, SIGALRM); //定时器超时
 	sigaddset(&sigSet, SIGIO); //异步I/O
-	sigaddset(&sigSet, SIGINT); //终端终端
+	sigaddset(&sigSet, SIGINT); //终端中断
 	sigaddset(&sigSet, SIGHUP); //连接断开
 	sigaddset(&sigSet, SIGUSR1); //用户信号
 	sigaddset(&sigSet, SIGUSR2); //用户信号
@@ -63,16 +67,84 @@ void ser_master_process_cycle()
 	}
 
 	//创建子进程
-
-
+	int workerprocesses = SerConfiger::GetInstance()->GetIntDefault("WorkerProcesses", 1);
+	ser_start_worker_processes(workerprocesses);
 
 	//创建子进程之后，清空信号屏蔽字
 	sigemptyset(&sigSet);
 
-	while(true)
+	for(;;)
 	{
-		// SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
+		SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
 	}
 
+	return;
+}
+
+static void ser_start_worker_processes(int processNum)
+{
+	for(int i = 0; i < processNum; ++i)
+	{
+		if(-1 == ser_spawn_process(i))
+		{
+			SER_LOG(SER_LOG_ALERT, errno, "create worker process failed! index:%d", processNum);
+		}
+	}
+
+	return; //父进程返回不在这里循环
+}
+
+//fork()子进程
+static int ser_spawn_process(int processIndex)
+{
+	pid_t pid;
+	pid = fork();
+	switch(pid)
+	{
+	case -1: //创建进程失败
+		SER_LOG(SER_LOG_ALERT, errno, "create worker process failed!");
+		return -1;
+	case 0: //子进程
+		ser_parent_pid = ser_pid;
+		ser_pid = getpid();
+		ser_worker_process_cycle(processIndex);
+		break;
+	default: //父进程，返回的是子进程的ID
+		break;
+	}
+
+	return pid;
+}
+
+//workr子进程循环，干活
+static void ser_worker_process_cycle(int processIndex)
+{
+	ser_worker_process_init(processIndex);
+	//设置子进程标题
+	const char* pWorkerProcessTitle = SerConfiger::GetInstance()->GetString("WorkerProcessTitle");
+	SetProcessTitle(pWorkerProcessTitle);
+
+	//子进程循环体
+	for(;;)
+	{
+
+		SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
+	}
+
+	return;
+}
+
+//子进程创建时的初始化工作
+static void ser_worker_process_init(int processIndex)
+{
+	sigset_t sigSet;
+	sigemptyset(&sigSet); //原来有信号屏蔽字，现在清空
+	
+	if(sigprocmask(SIG_SETMASK, &sigSet, NULL) == -1)
+	{
+		SER_LOG(SER_LOG_ALERT, errno, "worker process init: sigprocmask failed!");
+	}
+
+	//以后扩充代码....
 	return;
 }
