@@ -54,5 +54,6 @@ extern ser_log_t ser_log; //日志文件描述
 
 //进程相关
 extern pid_t ser_parent_pid; //父进程id
+extern int ser_daemonized; //标记是否为守护进程
 
 #endif

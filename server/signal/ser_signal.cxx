@@ -67,7 +67,7 @@ int ser_init_signals()
         }
         else
         {
-            SER_LOG_STDERR(0, "sigaction(%s) register sucess!", pSig->mSigName);
+            // SER_LOG_STDERR(0, "sigaction(%s) register sucess!", pSig->mSigName);
         }
     }
 

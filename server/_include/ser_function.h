@@ -31,6 +31,9 @@ void SetProcessTitle(const char* const& pTitle);
 //主进程函数
 void ser_master_process_cycle();
 
+//创建守护进程
+int ser_daemon();
+
 #pragma endregion
 
 #pragma region[信号相关]

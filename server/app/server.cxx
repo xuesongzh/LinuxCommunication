@@ -16,6 +16,7 @@ size_t ArgvLength = 0;
 int ArgcNumber = 0;
 pid_t ser_pid;
 pid_t ser_parent_pid;
+int ser_daemonized = 0;
 
 static void FreeSource();
 
@@ -72,7 +73,28 @@ int main(int argc, char* const* argv)
 	pNewEnviron = new char[EnvironLength];
 	memset(pNewEnviron, 0, EnvironLength);
 	MoveEnviron(pNewEnviron);
+
+	//创建守护进程
+	if(pConfiger->GetIntDefault("Daemon", 0) == 1)
+	{
+		int result = ser_daemon();
+		if(-1 == result)
+		{
+			exitCode = 1;
+			goto lblexit;
+		}
+		if(1 == result)
+		{
+			//父进程退出，但不打印
+			exitCode = 0;
+			FreeSource();
+			return exitCode;
+		}
+
+		ser_daemonized = 1; //标记为守护进程
+	}
 	
+	//如果配置了守护进程，fork()出来的子进程才会走到这里，也是守护进程作为我们的主进程
  	//主进程和子进程在里面循环，干活
 	ser_master_process_cycle();
 
