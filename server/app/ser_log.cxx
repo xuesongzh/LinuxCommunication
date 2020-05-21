@@ -63,7 +63,7 @@ void ser_log_stderr(
     uint8_t* pLast = errstr + SER_MAX_ERROR_STR; //指向最后一个字符，用于判断是否超过日志最大长度
     memset(errstr, 0, sizeof(errstr));
 
-    SER_MEMCPY(pWrite, "server: ", sizeof("server: "));
+    SER_MEMCPY(pWrite, "server: ", strlen("server: "));
 
     //实现可变参数的打印，定制输出格式
     va_start(args, pfmt); //使args指向可变参数起始参数
@@ -81,8 +81,14 @@ void ser_log_stderr(
     {
         pWrite = pLast - 1; //pLast - 1是可写的最后一个有效字符
     }
-    *pWrite++ = '\n'; //插入换行符
 
+    //如果是守护进程，需要往日志中写，如果不是通过终端启动进程，那么将在屏幕上看不到信息
+    if(ser_log.mFd > STDERR_FILENO)
+    {
+        ser_log_error_core(SER_LOG_STDERR, errNum, (const char*)errstr);
+    }
+
+    *pWrite++ = '\n'; //插入换行符
     //往屏幕(STDERR_FILENO)输出错误信息
     write(STDERR_FILENO, errstr, pWrite - errstr);
 

@@ -75,8 +75,8 @@ void ser_master_process_cycle()
 
 	for(;;)
 	{
-		// SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
 		sleep(1);
+		SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
 		//sigsuspend();
 		//a)根据给定的参数设置新的mask 并 阻塞当前进程【因为是个空集，所以不阻塞任何信号】
         //b)此时，一旦收到信号，便恢复原先的信号屏蔽【我们原来的mask在上边设置的，阻塞了多达10个信号，从而保证我下边的执行流程不会再次被其他信号截断】
@@ -137,7 +137,7 @@ static void ser_worker_process_cycle(int processIndex)
 	{
 
 		sleep(1);
-		// SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
+		SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
 	}
 
 	return;
