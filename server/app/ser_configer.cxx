@@ -1,5 +1,6 @@
 #include <string.h>
 #include <strings.h>
+#include <signal.h> 
 
 #include "ser_configer.h"
 #include "ser_function.h"

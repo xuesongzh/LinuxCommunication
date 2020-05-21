@@ -4,6 +4,7 @@
 #include <unistd.h> //STDERR_FILENO...
 #include <fcntl.h> //open
 #include <sys/time.h> //gettimeofday
+#include <signal.h> 
 
 #include "ser_log.h"
 #include "ser_macros.h"

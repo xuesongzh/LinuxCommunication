@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <fcntl.h> //open
 #include <sys/stat.h> //umask
+#include <signal.h> 
 
 #include "ser_function.h"
 #include "ser_log.h"

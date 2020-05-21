@@ -8,6 +8,7 @@
 #include "ser_function.h"
 #include "ser_configer.h"
 #include "ser_log.h"
+#include "ser_macros.h"
 
 static void ser_start_worker_processes(int processNum);
 static int ser_spawn_process(int processIndex);
@@ -135,6 +136,7 @@ static void ser_worker_process_cycle(int processIndex)
 	//子进程循环体
 	for(;;)
 	{
+		ser_process_type = SER_PROCESS_WORKER; //标记为worker进程
 
 		sleep(1);
 		SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);

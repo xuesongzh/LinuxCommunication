@@ -2,6 +2,7 @@
 #include <stdlib.h> //exit()
 #include <unistd.h> //sleep()
 #include <string.h>
+#include <signal.h> 
 
 #include "ser_configer.h"
 #include "ser_function.h"
@@ -17,6 +18,8 @@ int ArgcNumber = 0;
 pid_t ser_pid;
 pid_t ser_parent_pid;
 int ser_daemonized = 0;
+int ser_process_type = SER_PROCESS_MASTER;
+sig_atomic_t ser_reap = 0;
 
 static void FreeSource();
 
@@ -40,12 +43,17 @@ int main(int argc, char* const* argv)
 	{
 		EnvironLength += strlen(environ[i]) + 1; //环境变量长度，+1是因为'\0'的存在
 	}
-
 	ArgcNumber = argc;
+
+	ser_log.mFd = -1; //日志文件标记为失效状态
+	ser_process_type = SER_PROCESS_MASTER; //标记为master进程
+	ser_reap = 0; //标记子进程状态没有发生变化
+
 	/**************配置文件加载*******************/
 	SerConfiger* pConfiger = SerConfiger::GetInstance();
 	if (nullptr == pConfiger)
 	{
+		SER_LOG_INIT();
 		SER_LOG_STDERR(errno, "create configer failed!");
 		exitCode = 1;
 		goto lblexit;
@@ -93,14 +101,14 @@ int main(int argc, char* const* argv)
 
 		ser_daemonized = 1; //标记为守护进程
 	}
-	
+
 	//如果配置了守护进程，fork()出来的子进程才会走到这里，也是守护进程作为我们的主进程
  	//主进程和子进程在里面循环，干活
 	ser_master_process_cycle();
 
 lblexit:
+	SER_LOG_STDERR(0,"程序退出!\n");
 	FreeSource();
-	printf("程序退出!\n");
 	return exitCode;
 }
 

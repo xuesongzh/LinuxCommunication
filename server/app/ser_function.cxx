@@ -1,5 +1,6 @@
 #include <string.h>
 #include <unistd.h> //environ
+#include <signal.h> 
 
 #include "ser_function.h"
 #include "ser_datastruct.h"

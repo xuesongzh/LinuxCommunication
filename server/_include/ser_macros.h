@@ -134,4 +134,11 @@ do\
 
 #pragma endregion
 
+#pragma region[进程相关]
+
+#define SER_PROCESS_MASTER 0 //管理进程
+#define SER_PROCESS_WORKER 1 //工作进程
+
+#pragma endregion
+
 #endif
