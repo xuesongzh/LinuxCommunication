@@ -3,6 +3,7 @@
 #include <string.h> //memset
 #include <unistd.h>
 #include <errno.h>
+#include <sys/wait.h> //waitpid
 
 #include "ser_function.h"
 #include "ser_macros.h"
@@ -19,6 +20,8 @@ typedef struct
 
 //信号处理函数
 static void ser_signal_handler(int signo, siginfo_t* pSiginfo, void* pUconText);
+//获取子进程结束时的状态，以免kill子进程是变为僵尸进程
+static void ser_process_get_status();
 
 ser_signal_t signals[] = 
 {
@@ -77,6 +80,115 @@ int ser_init_signals()
 
 static void ser_signal_handler(int signo, siginfo_t* pSiginfo, void* pUconText)
 {
-    //暂时没有任何逻辑处理
-    printf("get a signal!\n");
+    ser_signal_t* pSig;
+    char* pAction; //记录一个动作字符串
+
+    for(pSig = signals; pSig->mSigno != 0; ++pSig)
+    {
+        if(pSig->mSigno == signo)
+        {
+            break;
+        }
+    }
+
+    pAction = (char*)""; //目前没有动作
+    if(ser_process_type == SER_PROCESS_MASTER)
+    {
+        switch(signo)
+        {
+        case SIGCHLD: //子进程退出master进程收到此信号
+            ser_reap = 1; //子进程状态发生变化
+            break;
+        default:
+            break;
+        }
+    }
+    else if(ser_process_type == SER_PROCESS_WORKER)
+    {
+        //子进程
+    }
+    else
+    {
+        //其他进程
+    }
+
+    if(pSiginfo && pSiginfo->si_pid) //si_pid为发送该信号的进程pid
+    {
+        SER_LOG(SER_LOG_NOTICE, 0, "signal %d (%s) received from %p%s", signo, pSiginfo->si_uid, pSiginfo->si_pid, pAction);
+    }
+    else
+    {
+        //没有改信号发送的进程pid
+        SER_LOG(SER_LOG_NOTICE, 0, "signal %d (%s) received from %s", signo, pSiginfo->si_uid, pAction);
+    }
+
+    //子进程状态变化，获取该子进程的状态
+    if(ser_reap == 1 && signo == SIGCHLD)
+    {
+        ser_process_get_status();
+    }
+
+    return;
+}
+
+static void ser_process_get_status()
+{
+    pid_t pid;
+    int status = 0;
+    int err = 0;
+    int one = 0;//标记信号被正常处理过一次
+
+    while(true)
+    {
+        //waitpid获取子进程的终止状态，这样，子进程就不会成为僵尸进程了；
+        //第一次waitpid返回一个> 0值，表示成功
+        //第二次再循环回来，再次调用waitpid会返回一个0，表示子进程还没结束，然后这里有return来退出；
+        //第一个参数为-1，表示等待任何子进程，
+        //第二个参数：保存子进程的状态信息。
+        //第三个参数：提供额外选项，WNOHANG表示不要阻塞，让这个waitpid()立即返回     
+        pid = waitpid(-1, &status, WNOHANG);
+
+        if(0 == pid) //子进程未结束
+        {
+            return;
+        }
+
+        if(-1 == pid) //调用waipid有错误
+        {
+            err = errno;
+            if(EINTR == err) //调用过程中被某个信号中断
+            {
+                continue;
+            }
+
+            if(ECHILD == err && one) //没有子进程
+            {
+                return;
+            }
+
+            if(ECHILD == err) //没有子进程
+            {
+                SER_LOG(SER_LOG_INFO, err, "waitpid failed!: no such worker process");
+                return;
+            }
+
+            SER_LOG(SER_LOG_ALERT, err, "waitpid failed!");
+            return;
+        }
+        //走到这里表示，waitpid成功
+        one = 1;
+        //获取子进程终止信号编号
+        if(WTERMSIG(status))
+        {
+            //获取是子进程终止的信号编号
+            SER_LOG(SER_LOG_ALERT, 0, "pid = %p exited on signal %d", pid, WTERMSIG(status));
+        }
+        else
+        {
+            //获取子进程传递给exit或者_exit参数的低八位
+            SER_LOG(SER_LOG_NOTICE, 0, "pid = %p exited with code %d", pid, WEXITSTATUS(status));
+        }
+    }
+
+    return;
 }

@@ -76,14 +76,14 @@ void ser_master_process_cycle()
 
 	for(;;)
 	{
-		sleep(1);
-		SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
-		//sigsuspend();
+		// sleep(1);
+		// SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
+		//sigsuspend():
 		//a)根据给定的参数设置新的mask 并 阻塞当前进程【因为是个空集，所以不阻塞任何信号】
         //b)此时，一旦收到信号，便恢复原先的信号屏蔽【我们原来的mask在上边设置的，阻塞了多达10个信号，从而保证我下边的执行流程不会再次被其他信号截断】
         //c)调用该信号对应的信号处理函数，之前已经注册过的函数
         //d)信号处理函数返回后，sigsuspend返回，使程序流程继续往下走
-		// sigsuspend(&sigSet); //master进程信号驱动
+		sigsuspend(&sigSet); //master进程信号驱动
 		
 	}
 
@@ -128,6 +128,7 @@ static int ser_spawn_process(int processIndex)
 //workr子进程循环，干活
 static void ser_worker_process_cycle(int processIndex)
 {
+	ser_process_type = SER_PROCESS_WORKER; //标记为worker进程
 	ser_worker_process_init(processIndex);
 	//设置子进程标题
 	const char* pWorkerProcessTitle = SerConfiger::GetInstance()->GetString("WorkerProcessTitle");
@@ -136,10 +137,8 @@ static void ser_worker_process_cycle(int processIndex)
 	//子进程循环体
 	for(;;)
 	{
-		ser_process_type = SER_PROCESS_WORKER; //标记为worker进程
-
-		sleep(1);
-		SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
+		// sleep(1);
+		// SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
 	}
 
 	return;
