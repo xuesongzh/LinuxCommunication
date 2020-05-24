@@ -8,6 +8,7 @@
 #include "ser_function.h"
 #include "ser_macros.h"
 #include "ser_log.h"
+#include "ser_socket.h"
 
 //设置进程标题相关全局变量
 char** pArgv = nullptr;
@@ -20,6 +21,9 @@ pid_t ser_parent_pid;
 int ser_daemonized = 0;
 int ser_process_type = SER_PROCESS_MASTER;
 sig_atomic_t ser_reap = 0;
+
+//全局对象socket
+SerSocket g_socket;
 
 static void FreeSource();
 
@@ -72,6 +76,13 @@ int main(int argc, char* const* argv)
 	if(ser_init_signals() != 0)
 	{
 		SER_LOG_STDERR(0,"signals init failed!");
+		exitCode = 1;
+		goto lblexit;
+	}
+	//初始化socket
+	if(false == g_socket.Initialize())
+	{
+		SER_LOG_STDERR(0, "socket init failed!");
 		exitCode = 1;
 		goto lblexit;
 	}
