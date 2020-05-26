@@ -58,4 +58,8 @@ extern int ser_daemonized; //标记是否为守护进程
 extern int ser_process_type; //进程类型，master或者worker
 extern sig_atomic_t ser_reap; //标记子进程状态变化[一般是子进程发来SIGCHLD信号表示退出]
 
+class SerSocket; //前置声明
+//网络相关
+extern SerSocket g_socket;
+
 #endif
