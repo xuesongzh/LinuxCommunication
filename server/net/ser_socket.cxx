@@ -5,6 +5,7 @@
 #include<sys/ioctl.h> //ioctl
 #include<arpa/inet.h> //sockaddr_in
 #include<string.h>
+#include<sys/epoll.h>
 
 
 #include "ser_socket.h"
@@ -26,6 +27,9 @@ SerSocket::~SerSocket()
     }
 
     mListenSocketList.clear();
+
+    DEL_ARRAY(mConnectionHeader); //释放连接池
+
     return;
 }
 
@@ -120,22 +124,73 @@ bool SerSocket::ser_open_listening_sockets()
 
 int SerSocket::ser_epoll_init()
 {
+    //创建epoll对象，红黑树+双向链表
+    mEpollFd = epoll_create(mWorkerConnections); //参数大于0即可，这里串epoll能处理的最大连接数
+    if(-1 == mEpollFd)
+    {
+        SER_LOG_STDERR(0,"SerSocket::ser_epoll_init()中epoll_create失败!");
+        exit(2); //致命问题直接退出
+    }
+
+    //创建连接池
+    mConnectionLength = mWorkerConnections; //连接池大小等于能处理的TCP连接最大数目
+    mConnectionHeader = new ser_connection_t[mConnectionLength];
+    mFreeConnectionHeader = nullptr;
+    int i = mConnectionLength;
+
+    do
+    {
+        --i;
+        mConnectionHeader[i].mNext = mFreeConnectionHeader; //最后一个元素指向空
+        mConnectionHeader[i].mSockFd = -1; //初始化TCP连接，无socket绑定
+        mConnectionHeader[i].mInstance = 1; //失效标志位：失效
+        mConnectionHeader[i].mCurrsequence = 0; //序号从0开始
+
+        //更新空闲链头指针
+        mFreeConnectionHeader = &mConnectionHeader[i];
+
+    }while(i);
+    mFreeConnectionLegth = mConnectionLength; //刚开始空闲链大小等于连接池大小
+
+    //为监听套接字增加一个连接池中的连接
+    for(auto& sockListen : mListenSocketList)
+    {
+        auto pFreeConnection = ser_get_free_connection(sockListen->mFd); //取出一个空闲链接
+        if(nullptr == pFreeConnection)
+        {
+            //说明空闲连接没有了，链接池被分配完了
+            SER_LOG_STDERR(0,"ser_get_free_connection()取空闲链接失败!");
+            exit(2);
+        }
+        pFreeConnection->mListening = sockListen; //连接对象关联监听套接字对象
+        sockListen->mConnection = pFreeConnection; //监听对象关联连接池对象
+        pFreeConnection->mRHandler = &SerSocket::ser_event_accept; //对监听端口读事件设置处理方法
+        //往监听套接字上增加监听事件
+        if(0 != ser_epoll_add_event(sockListen->mFd, 1, 0, 0, EPOLL_CTL_ADD, pFreeConnection))
+        {
+            exit(2);
+        }
+
+    }
+
     return 0;
 }
 
 int SerSocket::ser_epoll_add_event(
-    const int &fd,
-    const int &readEvent,
-    const int &writeEvent,
-    const uint32_t &otherFlag,
-    const uint32_t &eventType,
-    lpser_connection_t &pConnection)
+    const int& fd,
+    const int& readEvent,
+    const int& writeEvent,
+    const uint32_t& otherFlag,
+    const uint32_t& eventType,
+    lpser_connection_t& pConnection)
 {
+
     return 0;
 }
 
 void SerSocket::ser_event_accept(lpser_connection_t oldConnection)
 {
+
     return;
  }
 

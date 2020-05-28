@@ -24,13 +24,13 @@ class SerSocket;
 typedef struct ser_listening_s ser_listening_t,*lpser_listening_t;
 typedef struct ser_connection_s ser_connection_t,*lpser_connection_t;
 //定义成员函数指针
-typedef void (SerSocket::*ser_event_handler)(lpser_listening_t connect);
+typedef void (SerSocket::*ser_event_handler)(lpser_connection_t connect);
 
 struct ser_listening_s
 {
     int mPort; //监听端口
     int mFd; //套接字句柄：socket
-    lpser_listening_t mConnection; //指向对应的连接池中的连接
+    lpser_connection_t mConnection; //指向对应的连接池中的连接
 };
 
 //连接池格式，与TCP连接绑定
