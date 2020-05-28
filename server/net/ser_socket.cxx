@@ -12,7 +12,8 @@
 #include "ser_log.h"
 #include "ser_configer.h"
 
-SerSocket::SerSocket():mListenPortCount(1)
+SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),mConnectionHeader(nullptr), 
+    mFreeConnectionHeader(nullptr),mConnectionLength(1),mFreeConnectionLegth(1)
 {
     return;
 }
@@ -30,16 +31,21 @@ SerSocket::~SerSocket()
 
 bool SerSocket::Initialize() //在fork子进程之前调用
 {
+    ReadConf();
     bool ret = ser_open_listening_sockets();
     return ret;
 }
 
-
-bool SerSocket::ser_open_listening_sockets()
+void SerSocket::ReadConf()
 {
     auto pConfiger = SerConfiger::GetInstance();
     mListenPortCount = pConfiger->GetIntDefault("ListenPortCount", mListenPortCount);
+    mWorkerConnections = pConfiger->GetIntDefault("WorkerConnections", mWorkerConnections);
+    return;
+}
 
+bool SerSocket::ser_open_listening_sockets()
+{
     int listenSockFd; //监听套接字
     struct sockaddr_in serv_addr; //服务器地址结构
     int listenPort; //监听端口
@@ -48,6 +54,8 @@ bool SerSocket::ser_open_listening_sockets()
     memset(&serv_addr, 0, sizeof(struct sockaddr_in));
     serv_addr.sin_family = AF_INET; //ipv4
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);//监听所有本地IP
+
+    auto pConfiger = SerConfiger::GetInstance();
 
     for(int i = 0; i < mListenPortCount; ++i)
     {
@@ -109,6 +117,27 @@ bool SerSocket::ser_open_listening_sockets()
 
     return true;
 }
+
+int SerSocket::ser_epoll_init()
+{
+    return 0;
+}
+
+int SerSocket::ser_epoll_add_event(
+    const int &fd,
+    const int &readEvent,
+    const int &writeEvent,
+    const uint32_t &otherFlag,
+    const uint32_t &eventType,
+    lpser_connection_t &pConnection)
+{
+    return 0;
+}
+
+void SerSocket::ser_event_accept(lpser_connection_t oldConnection)
+{
+    return;
+ }
 
 bool SerSocket::ser_set_nonblocking(const int& sockfd)
 {
