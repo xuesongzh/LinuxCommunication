@@ -216,12 +216,6 @@ int SerSocket::ser_epoll_add_event(
     return 0;
 }
 
-void SerSocket::ser_event_accept(lpser_connection_t oldConnection)
-{
-
-    return;
- }
-
 bool SerSocket::ser_set_nonblocking(const int& sockfd)
 {
     int nb = 1; //0:清除，1:设置

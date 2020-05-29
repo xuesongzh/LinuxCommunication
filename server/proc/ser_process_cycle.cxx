@@ -9,6 +9,7 @@
 #include "ser_configer.h"
 #include "ser_log.h"
 #include "ser_macros.h"
+#include "ser_socket.h"
 
 static void ser_start_worker_processes(int processNum);
 static int ser_spawn_process(int processIndex);
@@ -153,6 +154,13 @@ static void ser_worker_process_init(int processIndex)
 	if(sigprocmask(SIG_SETMASK, &sigSet, NULL) == -1)
 	{
 		SER_LOG(SER_LOG_ALERT, errno, "worker process init: sigprocmask failed!");
+	}
+
+	//初始化epoll对象，并且往监听套接字上增加读事件
+	if(0 != g_socket.ser_epoll_init())
+	{
+		SER_LOG_STDERR(errno, "ser_worker_process_init()中ser_epoll_init失败!");
+		exit(2);
 	}
 
 	//以后扩充代码....
