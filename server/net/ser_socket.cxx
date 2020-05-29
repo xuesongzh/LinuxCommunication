@@ -184,6 +184,34 @@ int SerSocket::ser_epoll_add_event(
     const uint32_t& eventType,
     lpser_connection_t& pConnection)
 {
+    struct epoll_event ev;
+    memset(&ev,0,sizeof(ev));
+
+    if(1 == readEvent)
+    {
+        //读事件
+        ev.events = EPOLLIN|EPOLLRDHUP; //EPOLLIN读事件，也就是read ready【客户端三次握手连接进来，也属于一种可读事件】EPOLLRDHUP 客户端关闭连接，断连
+    }
+    else
+    {
+        //其他类型事件
+    }
+
+    if(0 != otherFlag)
+    {
+        ev.events |= otherFlag;
+    }
+
+    //因为指针的最后一位【二进制位】肯定不是1，所以 和 pConnection->instance做 |运算；到时候通过一些编码，既可以取得c的真实地址，又可以把此时此刻的pConnection->instance值取到
+    //比如c是个地址，可能的值是 0x00af0578，对应的二进制是‭101011110000010101111000‬，而 | 1后是0x00af0579
+    //把连接池对象弄进去，后续来事件时，用epoll_wait()后，这个对象能取出来用  //但同时把一个 标志位【不是0就是1】弄进去
+    ev.data.ptr = (void*)((uintptr_t)pConnection | pConnection->mInstance);
+
+    if(-1 == epoll_ctl(mEpollFd, eventType, fd, &ev)) //将socket及其事件添加到红黑树中
+    {
+        SER_LOG_STDERR(errno,"ngx_epoll_add_event()中epoll_ctl(%d,%d,%d,%u,%u)失败.",fd,readEvent,writeEvent,otherFlag,eventType);
+        return -1;
+    }
 
     return 0;
 }
