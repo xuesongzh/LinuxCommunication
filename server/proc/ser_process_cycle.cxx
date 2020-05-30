@@ -140,6 +140,7 @@ static void ser_worker_process_cycle(int processIndex)
 	{
 		// sleep(1);
 		// SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
+		ser_process_events_and_timers();
 	}
 
 	return;

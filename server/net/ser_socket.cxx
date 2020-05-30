@@ -5,8 +5,6 @@
 #include<sys/ioctl.h> //ioctl
 #include<arpa/inet.h> //sockaddr_in
 #include<string.h>
-#include<sys/epoll.h>
-
 
 #include "ser_socket.h"
 #include "ser_macros.h"
@@ -174,6 +172,36 @@ int SerSocket::ser_epoll_init()
     }
 
     return 0;
+}
+
+//timer表示epoll_waiter要等待的时间，单位ms
+//返回值1：正常返回，0：有问题返回。两者出现都需要程序正常继续执行
+int SerSocket::ser_epoll_process_events(const int& timer)
+{
+    int events = epoll_wait(mEpollFd, mEvents, SER_EVENTS_MAX, timer);
+
+    uintptr_t instance;
+    lpser_connection_t pConnection;
+    uint32_t eventType;
+    for(int i = 0; i < events; ++i)
+    {
+        pConnection = (lpser_connection_t)(mEvents[i].data.ptr);
+        instance = (uintptr_t)pConnection & 1; //取出instance
+        pConnection = (lpser_connection_t)((uintptr_t)pConnection & (uintptr_t)~1); //取得连接池真正的地址
+
+
+        eventType = mEvents[i].events; //取得时间类型
+
+
+        if(eventType & EPOLLIN) //如果是读事件，如：三次握手
+        {
+            //如果是监听套接字，一般是三路握手，走ser_event_accept
+            //如果是正常tcp连接来数据，走ser_wait_request_handler
+            (this->*(pConnection->mRHandler))(pConnection);
+        }
+    }
+
+    return 1;
 }
 
 int SerSocket::ser_epoll_add_event(
