@@ -166,7 +166,7 @@ int SerSocket::ser_epoll_init()
         sockListen->mConnection = pFreeConnection; //监听对象关联连接池对象
         pFreeConnection->mRHandler = &SerSocket::ser_event_accept; //对监听端口读事件设置处理方法
         //往监听套接字上增加监听事件
-        if(0 != ser_epoll_add_event(sockListen->mFd, 1, 0, 0, EPOLL_CTL_ADD, pFreeConnection))
+        if(-1 == ser_epoll_add_event(sockListen->mFd, 1, 0, 0, EPOLL_CTL_ADD, pFreeConnection))
         {
             exit(2);
         }

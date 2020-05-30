@@ -157,11 +157,7 @@ static void ser_worker_process_init(int processIndex)
 	}
 
 	//初始化epoll对象，并且往监听套接字上增加读事件
-	if(0 != g_socket.ser_epoll_init())
-	{
-		SER_LOG_STDERR(errno, "ser_worker_process_init()中ser_epoll_init失败!");
-		exit(2);
-	}
+	g_socket.ser_epoll_init();
 
 	//以后扩充代码....
 	return;

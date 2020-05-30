@@ -80,7 +80,7 @@ private:
     void ser_free_connection(lpser_connection_t& pConnection);
 
     //event
-    void ser_event_accept(lpser_connection_t oldConnection);
+    void ser_event_accept(lpser_connection_t listenConnection);
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
     int mWorkerConnections; //epoll连接的最大数目，配置文件配置
