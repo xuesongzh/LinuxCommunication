@@ -14,8 +14,10 @@
 
 #include<vector>
 #include<sys/socket.h> //sockaddr
+#include<sys/epoll.h>
 #include<stdint.h>
 
+//前向声明
 class SerSocket;
 
 #define SER_LISTEN_BACKLOG 511 //监听套接字已完成连接队列最大个数
@@ -68,6 +70,7 @@ public:
         const uint32_t& otherFlag,
         const uint32_t& eventType,
         lpser_connection_t& pConnection);
+    int ser_epoll_process_events(const int& timer);
 
 private:
     void ReadConf(); 
@@ -93,6 +96,8 @@ private:
     int mFreeConnectionLegth; //空闲连接池大小
 
     std::vector<lpser_listening_t> mListenSocketList; //监听套接字队列
+
+    struct epoll_event mEvents[SER_EVENTS_MAX]; //时间数组，最多处理SER_EVENTS_MAX个事件
 };
 
 #endif

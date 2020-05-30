@@ -41,6 +41,9 @@ int ser_daemon();
 //用于注册信号处理函数
 int ser_init_signals();
 
+//用于处理网络事件和定时器事件
+void ser_process_events_and_timers();
+
 #pragma endregion
 
 #endif
