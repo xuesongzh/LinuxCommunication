@@ -81,9 +81,12 @@ private:
     //连接池
     lpser_connection_t ser_get_free_connection(const int& sockfd);
     void ser_free_connection(lpser_connection_t& pConnection);
+    void ser_close_accepted_connection(lpser_connection_t tcpConnection);
 
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
+    void ser_wait_request_handler(lpser_connection_t tcpConnection);
+    
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
     int mWorkerConnections; //epoll连接的最大数目，配置文件配置

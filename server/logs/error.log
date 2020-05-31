@@ -1,0 +1,9 @@
+2020/05/31 16:27:42 [info]  pid:2151 监听端口80成功
+2020/05/31 16:27:42 [info]  pid:2151 监听端口443成功
+2020/05/31 16:28:00 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:04 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:05 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:06 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:07 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:08 [stderr]  pid:2160 server: test tcp handler!
+2020/05/31 16:28:10 [stderr]  pid:2160 server: test tcp handler!
