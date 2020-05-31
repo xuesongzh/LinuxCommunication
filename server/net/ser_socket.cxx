@@ -178,7 +178,42 @@ int SerSocket::ser_epoll_init()
 //返回值1：正常返回，0：有问题返回。两者出现都需要程序正常继续执行
 int SerSocket::ser_epoll_process_events(const int& timer)
 {
+    //等待事件，事件会返回到mEvents里，最多返回SER_EVENTS_MAX个事件【我们只提供了这些内存】；
+    //如果两次调用epoll_wait()的事件间隔比较长，则可能在epoll的双向链表中，积累了多个事件，所以调用epoll_wait，可能取到多个事件
+    //阻塞timer这么长时间除非：a)阻塞时间到达 b)阻塞期间收到事件【比如新用户连入】会立刻返回c)调用时有事件也会立刻返回d)如果来个信号，比如你用kill -1 pid
+    //如果timer为-1则一直阻塞，如果timer为0则立即返回，即便没有任何事件
+    //返回值：有错误发生返回-1，错误在errno中，比如你发个信号过来，就返回-1，错误信息是(4: Interrupted system call)
+    //       如果你等待的是一段时间，并且超时了，则返回0；
+    //       如果返回>0则表示成功捕获到这么多个事件【返回值里】
     int events = epoll_wait(mEpollFd, mEvents, SER_EVENTS_MAX, timer);
+    if(events == -1) //有错误发生
+    {
+        //有错误发生，发送某个信号给本进程就可以导致这个条件成立，而且错误码根据观察是4；
+        //#define EINTR  4，EINTR错误的产生：当阻塞于某个慢系统调用的一个进程捕获某个信号且相应信号处理函数返回时，该系统调用可能返回一个EINTR错误。
+        //例如：在socket服务器端，设置了信号捕获机制，有子进程，当在父进程阻塞于慢系统调用时由父进程捕获到了一个有效信号时，内核会致使accept返回一个EINTR错误(被中断的系统调用)。
+        if(errno == EINTR)
+        {
+            SER_LOG(SER_LOG_INFO, errno, "SerSocket::ser_epoll_process_events中epoll_wait失败!");
+            return 1; //信号所致，正常返回
+        }
+        else
+        {
+            SER_LOG(SER_LOG_ALERT, errno, "SerSocket::ser_epoll_process_events中epoll_wait失败!");
+            return 0; //有问题返回
+        }
+    }
+
+    if(events == 0) //超时，没来事件
+    {
+        if(-1 != timer)//没有一直阻塞
+        {
+            //阻塞一段时间，正常返回
+            return 1;
+        }
+        //一直阻塞
+        SER_LOG(SER_LOG_ALERT,0, "SerSocket::ser_epoll_process_events中epoll_wait一直阻塞但发生了超时，不正常!");
+        return 0;
+    }
 
     uintptr_t instance;
     lpser_connection_t pConnection;
@@ -189,15 +224,52 @@ int SerSocket::ser_epoll_process_events(const int& timer)
         instance = (uintptr_t)pConnection & 1; //取出instance
         pConnection = (lpser_connection_t)((uintptr_t)pConnection & (uintptr_t)~1); //取得连接池真正的地址
 
+        //过滤过期事件
+        if(pConnection->mSockFd == -1)
+        {
+            //一个套接字，当关联一个 连接池中的连接【对象】时，这个套接字值是要给到mSockFd的，关闭连接时这个mSockFd会被设置为-1
+            //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭，那我们应该会把mSockFd设置为-1；
+            //第二个事件照常处理
+            //第三个事件，假如这第三个事件，也跟第一个事件对应的是同一个连接，那这个条件就会成立；那么这种事件，属于过期事件，不该处理
+            SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了mSockFd == -1的过期事件!");
+            continue;
+        }
 
+        if(instance != pConnection->mInstance)
+        {
+            //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭【麻烦就麻烦在这个连接被服务器关闭上了】，但是恰好第三个事件也跟这个连接有关；
+            //因为第一个事件就把socket连接关闭了，显然第三个事件我们是不应该处理的【因为这是个过期事件】，若处理肯定会导致错误；
+            //那我们上述把mSockFd设置为-1，可以解决这个问题吗？ 能解决一部分问题，但另外一部分不能解决，不能解决的问题描述如下【这么离奇的情况应该极少遇到】：
+
+            //a)处理第一个事件时，因为业务需要，我们把这个连接【假设套接字为50】关闭，同时设置mFd = -1;并且调用ser_free_connection将该连接归还给连接池；
+            //b)处理第二个事件，恰好第二个事件是建立新连接事件，调用ser_get_free_connection从连接池中取出的连接非常可能就是刚刚释放的第一个事件对应的连接池中的连接；
+            //c)又因为a中套接字50被释放了，所以会被操作系统拿来复用，复用给了b；
+            //d)当处理第三个事件时，第三个事件其实是已经过期的，应该不处理，那怎么判断这第三个事件是过期的呢？ 【假设现在处理的是第三个事件，此时这个 连接池中的该连接 实际上已经被用作第二个事件对应的socket上了】；
+                //依靠instance标志位能够解决这个问题，当调用ser_get_free_connection从连接池中获取一个新连接时，我们把instance标志位置反，所以这个条件如果不成立，说明这个连接已经被挪作他用了；
+            SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了instance != pConnection->mInstance的过期事件!");
+            continue;           
+        }
+
+        //处理正常事件
         eventType = mEvents[i].events; //取得时间类型
 
+        if(eventType & (EPOLLERR|EPOLLHUP)) //生了错误或者客户端断连
+        {
+            //EPOLLIN：表示对应的链接上有数据可以读出（TCP链接的远端主动关闭连接，也相当于可读事件，因为本服务器要处理发送来的FIN包）
+            //EPOLLOUT：表示对应的连接上可以写入数据发送【写准备好】   
+            eventType |= EPOLLIN|EPOLLOUT;
+        }
 
         if(eventType & EPOLLIN) //如果是读事件，如：三次握手
         {
             //如果是监听套接字，一般是三路握手，走ser_event_accept
             //如果是正常tcp连接来数据，走ser_wait_request_handler
             (this->*(pConnection->mRHandler))(pConnection);
+        }
+
+        if(eventType & EPOLLOUT) //如果是写事件
+        {
+            SER_LOG_STDERR(0, "处理写事件.......");
         }
     }
 
