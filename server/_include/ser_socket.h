@@ -13,6 +13,7 @@
 #define __SER_SOCKER_H__
 
 #include<vector>
+#include<list>
 #include<sys/socket.h> //sockaddr
 #include<sys/epoll.h>
 #include<stdint.h>
@@ -52,6 +53,13 @@ struct ser_connection_s
     lpser_connection_t mNext;
 };
 
+//引入消息头记录一下额外的需要使用的东西
+typedef struct NSG_HEADER
+{
+    lpser_connection_t mConnection; //记录对应的连接池对象
+    uint64_t  mCurrsequence; //收到数据时对应的序列号，将来用于判断连接是否过期
+}MSG_HEADER, *LPMSG_HEADER;
+
 class SerSocket
 {
 public:
@@ -81,7 +89,7 @@ private:
     //连接池
     lpser_connection_t ser_get_free_connection(const int& sockfd);
     void ser_free_connection(lpser_connection_t& pConnection);
-    void ser_close_accepted_connection(lpser_connection_t tcpConnection);
+    void ser_close_connection(lpser_connection_t connection); //关闭连接池对象并释放对应的套接字对象
 
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
@@ -101,6 +109,8 @@ private:
     std::vector<lpser_listening_t> mListenSocketList; //监听套接字队列
 
     struct epoll_event mEvents[SER_EVENTS_MAX]; //时间数组，最多处理SER_EVENTS_MAX个事件
+
+    std::list<char*> mMsgRecvQueue; //接收数据消息队列
 };
 
 #endif

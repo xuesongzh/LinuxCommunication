@@ -9,10 +9,14 @@
 =====================================*/
 
 #include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <errno.h>
 
 #include "ser_socket.h"
 #include "ser_macros.h"
 #include "ser_log.h"
+#include "ser_datastruct.h"
 
 lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 {
@@ -50,5 +54,17 @@ void SerSocket::ser_free_connection(lpser_connection_t& pConnection)
     ++(pConnection->mCurrsequence);
     mFreeConnectionHeader = pConnection; //空闲连接池表头指向新地址
     ++mFreeConnectionLegth; //空闲连接池大小加1
+}
+
+void SerSocket::ser_close_connection(lpser_connection_t connection)
+{
+    int fd = connection->mSockFd;
+    if(close(fd) == -1)
+    {
+        SER_LOG(SER_LOG_ALERT, errno, "SerSocket::ser_close_accepted_connection中close tcp fd失败!");
+    }
+    connection->mSockFd = -1; //用于判断是否有过期事件的存在
+    ser_free_connection(connection);
+    return;
 }
 

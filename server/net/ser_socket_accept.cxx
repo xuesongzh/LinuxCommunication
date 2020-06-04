@@ -106,7 +106,7 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection)
         {
             if(ser_set_nonblocking(tcpSockFd) == false)
             {
-                ser_close_accepted_connection(pTCPConnection);//回收连接池中的连接，并关闭socket
+                ser_close_connection(pTCPConnection);//回收连接池中的连接，并关闭socket
             }
         }
 
@@ -118,7 +118,7 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection)
         if(ser_epoll_add_event(tcpSockFd, 1, 0, 0, EPOLL_CTL_ADD, pTCPConnection) == -1)
         {
             //增加事件失败，回收连接池及关闭套接字
-            ser_close_accepted_connection(pTCPConnection);
+            ser_close_connection(pTCPConnection);
             return;
         }
 
@@ -127,15 +127,3 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection)
 
     return;
  }
-
-void SerSocket::ser_close_accepted_connection(lpser_connection_t tcpConnection)
-{
-    int fd = tcpConnection->mSockFd;
-    ser_free_connection(tcpConnection);
-    tcpConnection->mSockFd = -1; //用于判断是否有过期事件的存在
-    if(close(fd) == -1)
-    {
-        SER_LOG(SER_LOG_ALERT, errno, "SerSocket::ser_close_accepted_connection中close tcp fd失败!");
-    }
-    return;
-}
