@@ -9,6 +9,7 @@
 #include "ser_macros.h"
 #include "ser_log.h"
 #include "ser_socket.h"
+#include "ser_memory.h"
 
 //设置进程标题相关全局变量
 char** pArgv = nullptr;
@@ -70,6 +71,13 @@ int main(int argc, char* const* argv)
 	}
 
 	/**************初始化工作*******************/
+	//单例类初始化
+	if(nullptr == SerMemory::GetInstance())
+	{
+		SER_LOG_STDERR(0,"ser memory init failed!");
+		exitCode = 1;
+		goto lblexit;	
+	}
 	//日志系统初始化
 	SER_LOG_INIT();
 	//初始化信号，注册相关信号处理函数

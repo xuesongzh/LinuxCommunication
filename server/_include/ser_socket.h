@@ -18,6 +18,8 @@
 #include<sys/epoll.h>
 #include<stdint.h>
 
+#include "ser_pkg_defs.h"
+
 //前向声明
 class SerSocket;
 
@@ -49,6 +51,15 @@ struct ser_connection_s
     uint8_t mWReady; //写准备好标记
     ser_event_handler mRHandler; //读事件相关处理
     ser_event_handler mWHandler; //写事件相关处理
+
+    //收数据包相关
+    int mRecvStat; //收数据包状态：PKG_HD_INIT...
+    char mPkgHeadInfo[PKG_HEAD_INFO_SIZE]; //接收数据包头数据，长度比数据包结构体大
+    char* mRecvLocation; //接收数据的位置
+    unsigned int mRecvLength; //接收数据长度
+
+    bool mIfNewRecvMem; //接收数据的时候是否new了内存
+    char* mPkgData; //和mIfNewRecvMem搭配使用，包含消息头，包头，消息体的数据
 
     lpser_connection_t mNext;
 };
@@ -94,6 +105,9 @@ private:
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
     void ser_wait_request_handler(lpser_connection_t tcpConnection);
+
+    //pkg
+
     
 private:
     int mListenPortCount; //监听端口数目，配置文件配置

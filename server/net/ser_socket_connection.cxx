@@ -17,6 +17,7 @@
 #include "ser_macros.h"
 #include "ser_log.h"
 #include "ser_datastruct.h"
+#include "ser_memory.h"
 
 lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 {
@@ -40,6 +41,12 @@ lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 
    memset(pFreeConnection, 0, sizeof(ser_connection_t));
    pFreeConnection->mSockFd = sockfd;
+   pFreeConnection->mRecvStat = PKG_HD_INIT; //刚开始处于接收包头状态
+   pFreeConnection->mRecvLocation = pFreeConnection->mPkgHeadInfo; //接收位置指向包头数组
+   pFreeConnection->mRecvLength = sizeof(PKG_HEADER);
+   pFreeConnection->mIfNewRecvMem = false; //没有分配内存
+   pFreeConnection->mPkgData = nullptr; //入消息队列的包
+
    //恢复有用值
    pFreeConnection->mInstance = !instance; //初始值为1,取反为0，代表每次分配内存时有效
    pFreeConnection->mCurrsequence = currsequence;
@@ -50,6 +57,11 @@ lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 
 void SerSocket::ser_free_connection(lpser_connection_t& pConnection)
 {
+    if(pConnection->mIfNewRecvMem) //如果new了内存需要释放
+    {
+        SerMemory::GetInstance()->FreeMemory(pConnection->mPkgData);
+    }
+
     pConnection->mNext = mFreeConnectionHeader;
     ++(pConnection->mCurrsequence);
     mFreeConnectionHeader = pConnection; //空闲连接池表头指向新地址
