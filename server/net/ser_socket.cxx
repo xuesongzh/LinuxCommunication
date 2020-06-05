@@ -10,6 +10,7 @@
 #include "ser_macros.h"
 #include "ser_log.h"
 #include "ser_configer.h"
+#include "ser_memory.h"
 
 SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),mConnectionHeader(nullptr), 
     mFreeConnectionHeader(nullptr),mConnectionLength(1),mFreeConnectionLegth(1)
@@ -27,6 +28,8 @@ SerSocket::~SerSocket()
     mListenSocketList.clear();
 
     DEL_ARRAY(mConnectionHeader); //释放连接池
+
+    ser_clear_msgqueue(); //释放消息队列
 
     return;
 }
@@ -353,4 +356,16 @@ void SerSocket::ser_close_listening_sockets()
         SER_LOG(SER_LOG_INFO, 0, "关闭监听端口:%d", pSocketItem->mFd);
     }
     return;
+}
+
+void SerSocket::ser_clear_msgqueue()
+{
+    char* pTemp = nullptr;
+    auto pMemory = SerMemory::GetInstance();
+    while(!mMsgRecvQueue.empty())
+    {
+        pTemp = mMsgRecvQueue.front();
+        mMsgRecvQueue.pop_front();
+        pMemory->FreeMemory(pTemp);
+    }
 }

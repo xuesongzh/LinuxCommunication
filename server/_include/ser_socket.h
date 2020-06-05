@@ -107,7 +107,7 @@ private:
     void ser_wait_request_handler(lpser_connection_t tcpConnection);
 
     //pkg
-
+    void ser_clear_msgqueue();
     
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
