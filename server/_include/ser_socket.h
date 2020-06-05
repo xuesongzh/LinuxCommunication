@@ -108,6 +108,7 @@ private:
 
     //pkg
     void ser_clear_msgqueue();
+    ssize_t ser_recv_pkg(lpser_connection_t const& pConnection, char* const& pBuffer, const ssize_t& bufferLength);
     
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
