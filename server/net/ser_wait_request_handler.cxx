@@ -1,6 +1,7 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
+#include <arpa/inet.h> //ntohs
 
 #include "ser_socket.h"
 #include "ser_macros.h"
@@ -8,6 +9,7 @@
 #include "ser_pkg_defs.h"
 #include "ser_log.h"
 #include "ser_datastruct.h"
+#include "ser_memory.h"
 
 #define PKG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //包头长度
 #define MSG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //消息头长度
@@ -69,4 +71,92 @@ ssize_t SerSocket::ser_recv_pkg(lpser_connection_t const& pConnection, char* con
     }
 
     return recvPkgLength;
+}
+
+void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnection)
+{
+    auto pMemory = SerMemory::GetInstance();
+
+    auto pPkgHeader = (LPPKG_HEADER)pConnection->mPkgHeadInfo; //包头所在位置
+    unsigned int pkgLength = ntohs(pPkgHeader->mPkgLength); //整个包的长度，网络序转主机序
+
+    //恶意包判断
+    if(pkgLength < PKG_HEADER_LENGTH || pkgLength > (PKG_MAX_LENGTH - 1000))
+    {
+        //包太小或者太大都被判断为恶意包，复原接收数据的状态和位置
+        pConnection->mRecvStat = PKG_HD_INIT;
+        pConnection->mRecvLocation = pConnection->mPkgHeadInfo;
+        pConnection->mRecvLength = PKG_HEADER_LENGTH;
+    }
+    else
+    {
+        //合法包，继续处理
+        //分配内存，放消息头，包体，以及将包头信息拷贝到这块新的内存中来
+        auto pNewBuffer = (char*)pMemory->MallocMemory(MSG_HEADER_LENGTH + pkgLength);
+        pConnection->mIfNewRecvMem  = true; //分配了新的内存
+        pConnection->mPkgData = pNewBuffer;
+        //1)填写消息头
+        auto pMsgHeader = (LPMSG_HEADER)pNewBuffer;
+        pMsgHeader->mConnection = pConnection;
+        pMsgHeader->mCurrsequence = pConnection->mCurrsequence;
+        //2)填写包头内容
+        pNewBuffer += MSG_HEADER_LENGTH;
+        memcpy(pNewBuffer, pConnection->mPkgHeadInfo, PKG_HEADER_LENGTH); //拷贝包头信息内容到新内存
+        if(pkgLength == PKG_HEADER_LENGTH)
+        {
+            //没有包体信息，直接入消息队列
+            ser_wait_request_in_msgqueue(pConnection);
+        }
+        else
+        {
+            //开始收包体
+            pConnection->mRecvStat = PKG_BD_INIT;
+            pConnection->mRecvLocation = pNewBuffer + PKG_HEADER_LENGTH; //之前已经+MSG_HEADER_LENGTH
+            pConnection->mRecvLength = pkgLength - PKG_HEADER_LENGTH; //更新包体长度
+        }
+    }
+
+
+}
+
+void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection)
+{
+    //如消息队列
+    ser_in_msgqueue(pConnection->mPkgData);
+
+    //设置一些状态
+    pConnection->mIfNewRecvMem = false; //放入消息队列后不释放，由之后的业务逻辑释放
+    pConnection->mPkgData = nullptr;
+    pConnection->mRecvStat = PKG_HD_INIT; //回到收包头状态
+    pConnection->mRecvLocation = pConnection->mPkgHeadInfo; //收包位置
+    pConnection->mRecvLength = PKG_HEADER_LENGTH; //设置收包长度
+}
+
+void SerSocket::ser_in_msgqueue(char* const& pBuffer)
+{
+    //加入消息队列
+    mMsgRecvQueue.push_back(pBuffer);
+
+    //防止消息队列过大
+    ser_temp_out_msgqueue();
+
+    SER_LOG_STDERR(0, "收到一个完整的数据包!");
+}
+
+void SerSocket::ser_temp_out_msgqueue()
+{
+    int size = mMsgRecvQueue.size();
+    if(size >= 1000) //消息超过1000条就处理
+    {
+        auto pMemory = SerMemory::GetInstance();
+        int outSize = size - 500; //干掉500条
+        while(outSize--)
+        {
+            auto pBuffer = mMsgRecvQueue.front();
+            mMsgRecvQueue.pop_front();
+            pMemory->FreeMemory(pBuffer);
+        }
+    }
+
+    return;   
 }

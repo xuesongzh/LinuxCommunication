@@ -107,8 +107,12 @@ private:
     void ser_wait_request_handler(lpser_connection_t tcpConnection);
 
     //pkg
-    void ser_clear_msgqueue();
     ssize_t ser_recv_pkg(lpser_connection_t const& pConnection, char* const& pBuffer, const ssize_t& bufferLength);
+    void ser_wait_request_process_pkg(lpser_connection_t const& pConnection);
+    void ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection);
+    void ser_in_msgqueue(char* const& pBuffer);
+    void ser_temp_out_msgqueue();
+    void ser_clear_msgqueue();
     
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
