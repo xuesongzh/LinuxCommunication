@@ -16,6 +16,63 @@
 
 void SerSocket::ser_wait_request_handler(lpser_connection_t tcpConnection)
 {
+    ssize_t recvLength = ser_recv_pkg(tcpConnection, tcpConnection->mRecvLocation, tcpConnection->mRecvLength);
+    if(recvLength <= 0)
+    {
+        //日志已经在ser_recv_pkg处理，这里直接返回
+        return;
+    }
+    //走到这里说明成功接收到一些字节
+    if(tcpConnection->mRecvStat == PKG_HD_INIT)
+    {
+        if(recvLength == tcpConnection->mRecvLength)//正好收完包体
+        {
+            ser_wait_request_process_pkg(tcpConnection); //处理数据
+        }
+        else //没有收完，继续收包
+        {
+            tcpConnection->mRecvStat = PKG_HD_RECVING;
+            tcpConnection->mRecvLocation +=  recvLength;
+            tcpConnection->mRecvLength -= recvLength;
+        }
+    }
+    else if(tcpConnection->mRecvStat == PKG_HD_RECVING)
+    {
+        if(recvLength == tcpConnection->mRecvLength)//正好收完包体
+        {
+            ser_wait_request_process_pkg(tcpConnection); //处理数据
+        }
+        else //没有收完，继续收包
+        {
+            tcpConnection->mRecvLocation +=  recvLength;
+            tcpConnection->mRecvLength -= recvLength;
+        }       
+    }
+    else if(tcpConnection->mRecvStat == PKG_BD_INIT) //收包体
+    {
+        if(recvLength == tcpConnection->mRecvLength)
+        {
+            ser_wait_request_in_msgqueue(tcpConnection); //收完包体如消息队列
+        }
+        else
+        {
+            tcpConnection->mRecvStat = PKG_BD_RECVING;
+            tcpConnection->mRecvLocation +=  recvLength;
+            tcpConnection->mRecvLength -= recvLength; 
+        }
+    }
+    else if(tcpConnection->mRecvStat == PKG_BD_INIT) //包体没有收完继续收包体
+    {
+        if(recvLength == tcpConnection->mRecvLength)
+        {
+            ser_wait_request_in_msgqueue(tcpConnection); //收完包体如消息队列
+        }
+        else
+        {
+            tcpConnection->mRecvLocation +=  recvLength;
+            tcpConnection->mRecvLength -= recvLength; 
+        }
+    }
 
     return;
 }
@@ -79,7 +136,6 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
 
     auto pPkgHeader = (LPPKG_HEADER)pConnection->mPkgHeadInfo; //包头所在位置
     unsigned int pkgLength = ntohs(pPkgHeader->mPkgLength); //整个包的长度，网络序转主机序
-
     //恶意包判断
     if(pkgLength < PKG_HEADER_LENGTH || pkgLength > (PKG_MAX_LENGTH - 1000))
     {
