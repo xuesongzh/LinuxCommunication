@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <unistd.h>
 
 #include "ser_threadpool.h"
 #include "ser_macros.h"
@@ -29,6 +30,7 @@ bool SerThreadPool::Creat(const int& threadPoolSize)
     for(int i = 0; i < mThreadPoolSize; ++i)
     {
         mThreads.push_back(pNewItem = new ThreadItem(this)); //new 一个新线程到容器中
+        //&pNewItem->mHandle:线程句柄，NULL:线程属性，ThreadFunc：线程入口函数，pNewItem：入口函数参数
         err = pthread_create(&pNewItem->mHandle, NULL, ThreadFunc, pNewItem);
         if(0 != err)
         {
@@ -41,11 +43,22 @@ bool SerThreadPool::Creat(const int& threadPoolSize)
         }
     }
 
-    //一下代码保证每个线程都启动，并运行至pthread_cond_wait()等待
+    //以下代码保证每个线程都启动，并运行至pthread_cond_wait()等待
+lblfor:
+    for(auto& thread : mThreads)
+    {
+        if(thread->mIfRunning == false)
+        {
+            usleep(100*1000); //100ms
+            goto lblfor;
+        }
+    }
 
-
+    return true;
 }
 
+//线程入口函数，当调用pthread_create()之后，立即被执行
+//返回值必须为void*，否则pthread_create()会报错
 void* SerThreadPool::ThreadFunc(void* pPkgData)
 {
     return nullptr;
