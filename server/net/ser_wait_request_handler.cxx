@@ -12,6 +12,7 @@
 #include "ser_datastruct.h"
 #include "ser_memory.h"
 #include "ser_lock.h"
+#include "ser_threadpool.h"
 
 #define PKG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //包头长度
 #define MSG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //消息头长度
@@ -179,8 +180,11 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
 
 void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection)
 {
-    //如消息队列
+    //入消息队列
     ser_in_msgqueue(pConnection->mPkgData);
+
+    //调用一个线程执行业务逻辑
+    g_threadpool.Call();
 
     //设置一些状态
     pConnection->mIfNewRecvMem = false; //放入消息队列后不释放，由之后的业务逻辑释放
@@ -192,6 +196,7 @@ void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnecti
 
 void SerSocket::ser_in_msgqueue(char* const& pBuffer)
 {
+    SerLock locker(&mMsgQueueMutex); //加锁
     //加入消息队列
     mMsgRecvQueue.push_back(pBuffer);
 

@@ -98,7 +98,24 @@ void SerThreadPool::StopAll()
 
 void SerThreadPool::Call()
 {
+    //唤醒一个在ptherad_cond_wait()等待的线程，用于执行任务
+    int err = pthread_cond_signal(&mThreadCond);
+    if(0 != err)
+    {
+        SER_LOG_STDERR(errno, "SerThreadPool::Call()中pthread_cond_signal失败，错误码：%d!", err);
+        return;
+    }
 
+    //线程池不够用需要提示
+    if(mThreadPoolSize == mRunningThreadNumber)
+    {
+        time_t currtime = time(NULL);
+        if(currtime - mLastEmgTime > 10) //超过10秒才报警，不然会一直提示
+        {
+            mLastEmgTime = currtime;
+            SER_LOG_STDERR(0, "SerThreadPool::Call()中发现线程池不够用!");
+        }
+    }
 }
 
 //线程入口函数，当调用pthread_create()之后，立即被执行

@@ -115,3 +115,89 @@
 2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:898758400,结束等待
 2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:890365696,结束等待
 2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::StopAll()中线程池正常全部释放!
+2020/06/12 07:00:39 [stderr]  pid:1666 server: SerSocket::ser_open_listening_sockets中bind()执行失败!(98: Address already in use) (98: Address already in use) 
+2020/06/12 07:00:39 [stderr]  pid:1666 server: socket init failed!
+2020/06/12 07:00:39 [stderr]  pid:1666 server: 程序退出!
+
+2020/06/12 07:01:06 [info]  pid:1672 监听端口80成功
+2020/06/12 07:01:06 [info]  pid:1672 监听端口443成功
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1528334080!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1528334080,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1519941376!
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1511548672!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1519941376,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1503155968!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1511548672,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1494763264!
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1486370560!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1503155968,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1477977856!
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1469585152!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1494763264,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1461192448!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1486370560,开始等待
+2020/06/12 07:01:06 [info]  pid:1674 SerThreadPool::Creat()中创建线程成功，id=1452799744!
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1477977856,开始等待
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1469585152,开始等待
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1461192448,开始等待
+2020/06/12 07:01:06 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1452799744,开始等待
+2020/06/12 07:11:43 [stderr]  pid:1674 server: 收到一个完整的数据包!
+2020/06/12 07:11:43 [stderr]  pid:1674 server: 收到一个完整的数据包!
+2020/06/12 07:11:43 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1528334080,结束等待
+2020/06/12 07:11:43 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1519941376,结束等待
+2020/06/12 07:11:43 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1519941376,拿到一条数据
+2020/06/12 07:11:43 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1528334080,拿到一条数据
+2020/06/12 07:11:43 [stderr]  pid:1674 server: 执行开始---begin,tid=i!
+2020/06/12 07:11:43 [stderr]  pid:1674 server: 执行开始---begin,tid=i!
+2020/06/12 07:11:48 [stderr]  pid:1674 server: 执行结束---end,tid=i!
+2020/06/12 07:11:48 [stderr]  pid:1674 server: 执行结束---end,tid=i!
+2020/06/12 07:11:48 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1528334080,开始等待
+2020/06/12 07:11:48 [stderr]  pid:1674 server: SerThreadPool::ThreadFunc()中线程:1519941376,开始等待
+2020/06/12 07:13:19 [info]  pid:1692 监听端口80成功
+2020/06/12 07:13:19 [info]  pid:1692 监听端口443成功
+2020/06/12 07:13:19 [info]  pid:1694 SerThreadPool::Creat()中创建线程成功，id=-2047498496!
+2020/06/12 07:13:19 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,开始等待
+2020/06/12 07:13:43 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:43 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:43 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,结束等待
+2020/06/12 07:13:43 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:13:43 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:13:48 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:48 [stderr]  pid:1694 server: SerThreadPool::Call()中发现线程池不够用!
+2020/06/12 07:13:48 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:48 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:13:48 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:13:48 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:13:51 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:51 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:53 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:53 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:53 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:13:53 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:13:53 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:13:57 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:57 [stderr]  pid:1694 server: 收到一个完整的数据包!
+2020/06/12 07:13:58 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:13:58 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:13:58 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:03 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:03 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:03 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:08 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:08 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:08 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:11 [stderr]  pid:1694 server: 处理写事件.......
+2020/06/12 07:14:13 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:13 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:13 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:18 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:18 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:18 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:23 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:23 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:23 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:28 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:28 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,拿到一条数据
+2020/06/12 07:14:28 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
+2020/06/12 07:14:33 [stderr]  pid:1694 server: 执行结束---end,tid=i!
+2020/06/12 07:14:33 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,开始等待

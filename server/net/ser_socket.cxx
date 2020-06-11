@@ -5,6 +5,7 @@
 #include<sys/ioctl.h> //ioctl
 #include<arpa/inet.h> //sockaddr_in
 #include<string.h>
+#include<pthread.h>
 
 #include "ser_socket.h"
 #include "ser_macros.h"
@@ -15,6 +16,7 @@
 SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),mConnectionHeader(nullptr), 
     mFreeConnectionHeader(nullptr),mConnectionLength(1),mFreeConnectionLegth(1)
 {
+    pthread_mutex_init(&mMsgQueueMutex, NULL); //互斥量初始化
     return;
 }
 
@@ -30,6 +32,8 @@ SerSocket::~SerSocket()
     DEL_ARRAY(mConnectionHeader); //释放连接池
 
     ser_clear_msgqueue(); //释放消息队列
+
+    pthread_mutex_destroy(&mMsgQueueMutex); //互斥量释放
 
     return;
 }
