@@ -60,6 +60,47 @@ lblfor:
     return true;
 }
 
+void SerThreadPool::StopAll()
+{
+    if(true == mIfShutDown)
+    {
+        return;
+    }
+
+    mIfShutDown = true;
+    //唤醒等待条件[在pthread_cond_wait卡住等待]的所有线程
+    int err = pthread_cond_broadcast(&mThreadCond);
+    if(0 != err)
+    {
+        SER_LOG_STDERR(errno, "SerThreadPool::StopAll()中pthread_cond_broadcast()失败，错误码：%d!", err);
+        return;
+    }
+
+    //等待所有线程返回
+    for(auto& thread : mThreads)
+    {
+        pthread_join(thread->mHandle, NULL);
+    }
+
+    //释放互斥量，条件变量
+    pthread_mutex_destroy(&mThreadMutex);
+    pthread_cond_destroy(&mThreadCond);
+
+    //释放线程池
+    for(auto& thread :  mThreads)
+    {
+        DEL_PTR(thread);
+    }
+    mThreads.clear();
+    SER_LOG_STDERR(0, "SerThreadPool::StopAll()中线程池正常全部释放!");
+    return;
+}
+
+void SerThreadPool::Call()
+{
+
+}
+
 //线程入口函数，当调用pthread_create()之后，立即被执行
 //返回值必须为void*，否则pthread_create()会报错
 void* SerThreadPool::ThreadFunc(void* pThreadData)

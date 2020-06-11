@@ -144,6 +144,8 @@ static void ser_worker_process_cycle(int processIndex)
 		ser_process_events_and_timers();
 	}
 
+	g_threadpool.StopAll();
+
 	return;
 }
 

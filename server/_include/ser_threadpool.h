@@ -23,7 +23,7 @@ private:
     struct ThreadItem
     {
         ThreadItem(SerThreadPool* pThis) : mThis(pThis), mIfRunning(false){}
-        ~ThreadItem();
+        ~ThreadItem() {};
 
         pthread_t mHandle; //线程句柄
         SerThreadPool* mThis; //记录线程池指针

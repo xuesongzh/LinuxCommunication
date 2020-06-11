@@ -60,3 +60,58 @@
 2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:487999232,开始等待
 2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:479606528,开始等待
 2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:471213824,开始等待
+2020/06/12 06:41:25 [info]  pid:1403 监听端口80成功
+2020/06/12 06:41:25 [info]  pid:1403 监听端口443成功
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-751798528!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-751798528,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-760191232!
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-768583936!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-760191232,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-776976640!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-776976640,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-785369344!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-768583936,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-793762048!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-785369344,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-802154752!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-793762048,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-810547456!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-802154752,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-818940160!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-810547456,开始等待
+2020/06/12 06:41:25 [info]  pid:1406 SerThreadPool::Creat()中创建线程成功，id=-827332864!
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-818940160,开始等待
+2020/06/12 06:41:25 [stderr]  pid:1406 server: SerThreadPool::ThreadFunc()中线程:-827332864,开始等待
+2020/06/12 06:45:48 [info]  pid:1517 监听端口80成功
+2020/06/12 06:45:48 [info]  pid:1517 监听端口443成功
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=965900032!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:965900032,开始等待
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=957507328!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:957507328,开始等待
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=949114624!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:949114624,开始等待
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=940721920!
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=932329216!
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=923936512!
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=915543808!
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=907151104!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:940721920,开始等待
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=898758400!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:932329216,开始等待
+2020/06/12 06:45:48 [info]  pid:1519 SerThreadPool::Creat()中创建线程成功，id=890365696!
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:923936512,开始等待
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:915543808,开始等待
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:907151104,开始等待
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:898758400,开始等待
+2020/06/12 06:45:48 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:890365696,开始等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:965900032,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:957507328,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:949114624,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:940721920,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:932329216,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:923936512,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:915543808,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:907151104,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:898758400,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::ThreadFunc()中线程:890365696,结束等待
+2020/06/12 06:45:54 [stderr]  pid:1519 server: SerThreadPool::StopAll()中线程池正常全部释放!
