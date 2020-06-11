@@ -38,3 +38,25 @@
 2020/06/06 16:43:40 [stderr]  pid:1764 server: 收到一个完整的数据包!
 2020/06/06 16:43:40 [stderr]  pid:1764 server: 收到一个完整的数据包!
 2020/06/06 16:43:50 [stderr]  pid:1764 server: 处理写事件.......
+2020/06/11 08:42:44 [info]  pid:2051 监听端口80成功
+2020/06/11 08:42:44 [info]  pid:2051 监听端口443成功
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=546748160!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=538355456!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=529962752!
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:546748160,开始等待
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=521570048!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=513177344!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=504784640!
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:538355456,开始等待
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=496391936!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=487999232!
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=479606528!
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:529962752,开始等待
+2020/06/11 08:42:44 [info]  pid:2053 SerThreadPool::Creat()中创建线程成功，id=471213824!
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:521570048,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:513177344,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:504784640,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:496391936,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:487999232,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:479606528,开始等待
+2020/06/11 08:42:44 [stderr]  pid:2053 server: SerThreadPool::ThreadFunc()中线程:471213824,开始等待

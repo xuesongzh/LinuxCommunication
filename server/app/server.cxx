@@ -10,6 +10,7 @@
 #include "ser_log.h"
 #include "ser_socket.h"
 #include "ser_memory.h"
+#include "ser_threadpool.h"
 
 //设置进程标题相关全局变量
 char** pArgv = nullptr;
@@ -25,6 +26,7 @@ sig_atomic_t ser_reap = 0;
 
 //全局对象socket
 SerSocket g_socket;
+SerThreadPool g_threadpool;
 
 static void FreeSource();
 

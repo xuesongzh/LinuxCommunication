@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <arpa/inet.h> //ntohs
+#include <unistd.h>
 
 #include "ser_socket.h"
 #include "ser_macros.h"
@@ -10,6 +11,7 @@
 #include "ser_log.h"
 #include "ser_datastruct.h"
 #include "ser_memory.h"
+#include "ser_lock.h"
 
 #define PKG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //包头长度
 #define MSG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //消息头长度
@@ -194,25 +196,48 @@ void SerSocket::ser_in_msgqueue(char* const& pBuffer)
     mMsgRecvQueue.push_back(pBuffer);
 
     //防止消息队列过大
-    ser_temp_out_msgqueue();
+    // ser_temp_out_msgqueue();
 
     SER_LOG_STDERR(0, "收到一个完整的数据包!");
 }
 
-void SerSocket::ser_temp_out_msgqueue()
+char* SerSocket::ser_get_one_message()
 {
-    int size = mMsgRecvQueue.size();
-    if(size >= 1000) //消息超过1000条就处理
+    SerLock locker(&mMsgQueueMutex);
+    if(mMsgRecvQueue.empty())
     {
-        auto pMemory = SerMemory::GetInstance();
-        int outSize = size - 500; //干掉500条
-        while(outSize--)
-        {
-            auto pBuffer = mMsgRecvQueue.front();
-            mMsgRecvQueue.pop_front();
-            pMemory->FreeMemory(pBuffer);
-        }
+        return nullptr;
     }
-
-    return;   
+    char* pTemp = mMsgRecvQueue.front();
+    mMsgRecvQueue.pop_front();
+    return pTemp;
 }
+
+//线程处理函数，处理业务逻辑。pPkgData：消息头+包头+包体
+void SerSocket::ser_thread_process_message(char* const& pPkgData)
+{
+    pthread_t tid = pthread_self();
+    SER_LOG_STDERR(0,"执行开始---begin,tid=%ui!",tid);
+    sleep(5); //临时测试代码
+    SER_LOG_STDERR(0,"执行结束---end,tid=%ui!",tid);
+
+    return;
+}
+
+// void SerSocket::ser_temp_out_msgqueue()
+// {
+//     int size = mMsgRecvQueue.size();
+//     if(size >= 1000) //消息超过1000条就处理
+//     {
+//         auto pMemory = SerMemory::GetInstance();
+//         int outSize = size - 500; //干掉500条
+//         while(outSize--)
+//         {
+//             auto pBuffer = mMsgRecvQueue.front();
+//             mMsgRecvQueue.pop_front();
+//             pMemory->FreeMemory(pBuffer);
+//         }
+//     }
+
+//     return;   
+// }

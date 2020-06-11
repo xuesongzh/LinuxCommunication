@@ -39,7 +39,7 @@ public:
     void Call(); //唤醒一个线程来干活
 
 private:
-    static void* ThreadFunc(void* pPkgData); //线程回调函数
+    static void* ThreadFunc(void* pThreadData); //线程回调函数
 
 private:
     static pthread_mutex_t mThreadMutex; //线程同步互斥量

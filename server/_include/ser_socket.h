@@ -79,6 +79,8 @@ public:
 
 public:
     virtual bool Initialize();
+    virtual void ser_thread_process_message(char* const& pPkgData);
+    char* ser_get_one_message();
 
     //epoll
     int ser_epoll_init();
@@ -111,7 +113,7 @@ private:
     void ser_wait_request_process_pkg(lpser_connection_t const& pConnection);
     void ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection);
     void ser_in_msgqueue(char* const& pBuffer);
-    void ser_temp_out_msgqueue();
+    // void ser_temp_out_msgqueue();
     void ser_clear_msgqueue();
     
 private:
@@ -130,6 +132,7 @@ private:
     struct epoll_event mEvents[SER_EVENTS_MAX]; //时间数组，最多处理SER_EVENTS_MAX个事件
 
     std::list<char*> mMsgRecvQueue; //接收数据消息队列
+    pthread_mutex_t mMsgQueueMutex;
 };
 
 #endif

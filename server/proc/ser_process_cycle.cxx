@@ -10,6 +10,7 @@
 #include "ser_log.h"
 #include "ser_macros.h"
 #include "ser_socket.h"
+#include "ser_threadpool.h"
 
 static void ser_start_worker_processes(int processNum);
 static int ser_spawn_process(int processIndex);
@@ -156,6 +157,15 @@ static void ser_worker_process_init(int processIndex)
 	{
 		SER_LOG(SER_LOG_ALERT, errno, "worker process init: sigprocmask failed!");
 	}
+
+	//创建线程池
+	auto pConfiger = SerConfiger::GetInstance();
+	auto threadPoolSize = pConfiger->GetIntDefault("ThreadPoolSize", 5);
+	if(!g_threadpool.Creat(threadPoolSize))
+	{
+		exit(-2);
+	}
+	sleep(1); //休息1秒，防止还没有创建好线程池就来事件了
 
 	//初始化epoll对象，并且往监听套接字上增加读事件
 	g_socket.ser_epoll_init();
