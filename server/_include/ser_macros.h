@@ -68,8 +68,6 @@ class GarCollector\
 className* className::mInstance = nullptr;\
 std::mutex className::mMutex;\
 \
-className::className() {}\
-\
 className* className::GetInstance()\
 {\
     if (nullptr == mInstance)\

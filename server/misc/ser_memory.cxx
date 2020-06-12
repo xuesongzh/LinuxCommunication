@@ -5,6 +5,11 @@
 
 IMPLEMENT_SINGLETON(SerMemory);
 
+SerMemory::SerMemory()
+{
+    
+}
+
 SerMemory::~SerMemory()
 {
 

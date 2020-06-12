@@ -9,6 +9,11 @@
 
 IMPLEMENT_SINGLETON(SerConfiger)
 
+SerConfiger::SerConfiger()
+{
+    
+}
+
 SerConfiger::~SerConfiger()
 {
     for (auto& item : mConfItemList)
