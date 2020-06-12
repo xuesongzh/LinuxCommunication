@@ -26,6 +26,9 @@ class SerSocket;
 #define SER_LISTEN_BACKLOG 511 //监听套接字已完成连接队列最大个数
 #define SER_EVENTS_MAX 512 //epoll_wait一次最多接受的事件个数
 
+#define PKG_HEADER_LENGTH (sizeof(struct PKG_HEADER)) //包头长度
+#define MSG_HEADER_LENGTH (sizeof(struct NSG_HEADER)) //消息头长度
+
 typedef struct ser_listening_s ser_listening_t,*lpser_listening_t;
 typedef struct ser_connection_s ser_connection_t,*lpser_connection_t;
 //定义成员函数指针
