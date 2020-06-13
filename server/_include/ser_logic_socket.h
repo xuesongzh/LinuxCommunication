@@ -16,7 +16,24 @@
 
 class SerLogicSocket : public SerSocket
 {
-    
+public:
+    SerLogicSocket();
+    virtual ~SerLogicSocket();
+    virtual bool Initialize();
+public:
+    bool RegisterHandler(
+        lpser_connection_t const& pConnection,
+        LPMSG_HEADER const& pMsgHeader,
+        char* const& pPkgBody,
+        const unsigned short& pkgBodyLength);
+
+    bool LoginHandler(
+        lpser_connection_t const& pConnection,
+        LPMSG_HEADER const& pMsgHeader,
+        char* const& pPkgBody,
+        const unsigned short& pkgBodyLength);
+public:
+    virtual void ser_thread_process_message(char* const& pPkgData);
 };
 
 #endif
