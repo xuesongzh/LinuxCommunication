@@ -8,7 +8,7 @@
 #include "ser_function.h"
 #include "ser_macros.h"
 #include "ser_log.h"
-#include "ser_socket.h"
+#include "ser_logic_socket.h"
 #include "ser_memory.h"
 #include "ser_threadpool.h"
 
@@ -25,7 +25,7 @@ int ser_process_type = SER_PROCESS_MASTER;
 sig_atomic_t ser_reap = 0;
 
 //全局对象socket
-SerSocket g_socket;
+SerLogicSocket g_socket;
 SerThreadPool g_threadpool;
 
 static void FreeSource();

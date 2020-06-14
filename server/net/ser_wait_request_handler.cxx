@@ -136,6 +136,7 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
 
     auto pPkgHeader = (LPPKG_HEADER)pConnection->mPkgHeadInfo; //包头所在位置
     unsigned int pkgLength = ntohs(pPkgHeader->mPkgLength); //整个包的长度，网络序转主机序
+    SER_LOG_STDERR(0, "收到的包长度为：%d", pkgLength);
     //恶意包判断
     if(pkgLength < PKG_HEADER_LENGTH || pkgLength > (PKG_MAX_LENGTH - 1000))
     {
@@ -177,6 +178,11 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
 
 void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection)
 {
+    //测试代码
+    char* temp = pConnection->mPkgData;
+    LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
+    SER_LOG_STDERR(0,"入消息队列时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
+
     //入消息队列
     ser_in_msgqueue(pConnection->mPkgData);
 
@@ -218,11 +224,7 @@ char* SerSocket::ser_get_one_message()
 //线程处理函数，处理业务逻辑。pPkgData：消息头+包头+包体
 void SerSocket::ser_thread_process_message(char* const& pPkgData)
 {
-    pthread_t tid = pthread_self();
-    SER_LOG_STDERR(0,"执行开始---begin,tid=%ui!",tid);
-    sleep(5); //临时测试代码
-    SER_LOG_STDERR(0,"执行结束---end,tid=%ui!",tid);
-
+    
     return;
 }
 

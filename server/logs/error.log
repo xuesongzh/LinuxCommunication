@@ -201,3 +201,289 @@
 2020/06/12 07:14:28 [stderr]  pid:1694 server: 执行开始---begin,tid=i!
 2020/06/12 07:14:33 [stderr]  pid:1694 server: 执行结束---end,tid=i!
 2020/06/12 07:14:33 [stderr]  pid:1694 server: SerThreadPool::ThreadFunc()中线程:-2047498496,开始等待
+2020/06/14 07:05:16 [info]  pid:3326 监听端口80成功
+2020/06/14 07:05:16 [info]  pid:3326 监听端口443成功
+2020/06/14 07:05:16 [info]  pid:3328 SerThreadPool::Creat()中创建线程成功，id=1161352960!
+2020/06/14 07:05:16 [stderr]  pid:3328 server: SerThreadPool::ThreadFunc()中线程:1161352960,开始等待
+2020/06/14 07:06:40 [stderr]  pid:3328 server: 收到一个完整的数据包!
+2020/06/14 07:06:40 [stderr]  pid:3328 server: 收到一个完整的数据包!
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerThreadPool::ThreadFunc()中线程:1161352960,结束等待
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerThreadPool::ThreadFunc()中线程:1161352960,拿到一条数据
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerThreadPool::ThreadFunc()中线程:1161352960,拿到一条数据
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:06:40 [stderr]  pid:3328 server: SerThreadPool::ThreadFunc()中线程:1161352960,开始等待
+2020/06/14 07:08:36 [stderr]  pid:3328 server: 处理写事件.......
+2020/06/14 07:08:57 [info]  pid:3335 监听端口80成功
+2020/06/14 07:08:57 [info]  pid:3335 监听端口443成功
+2020/06/14 07:08:57 [info]  pid:3337 SerThreadPool::Creat()中创建线程成功，id=248379136!
+2020/06/14 07:08:57 [stderr]  pid:3337 server: SerThreadPool::ThreadFunc()中线程:248379136,开始等待
+2020/06/14 07:09:42 [stderr]  pid:3337 server: 收到一个完整的数据包!
+2020/06/14 07:09:42 [stderr]  pid:3337 server: 收到一个完整的数据包!
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerThreadPool::ThreadFunc()中线程:248379136,结束等待
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerThreadPool::ThreadFunc()中线程:248379136,拿到一条数据
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerThreadPool::ThreadFunc()中线程:248379136,拿到一条数据
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:09:42 [stderr]  pid:3337 server: SerThreadPool::ThreadFunc()中线程:248379136,开始等待
+2020/06/14 07:10:18 [stderr]  pid:3337 server: 处理写事件.......
+2020/06/14 07:11:43 [info]  pid:3390 监听端口80成功
+2020/06/14 07:11:43 [info]  pid:3390 监听端口443成功
+2020/06/14 07:11:43 [info]  pid:3392 SerThreadPool::Creat()中创建线程成功，id=1667290880!
+2020/06/14 07:11:43 [stderr]  pid:3392 server: SerThreadPool::ThreadFunc()中线程:1667290880,开始等待
+2020/06/14 07:12:00 [stderr]  pid:3392 server: 收到一个完整的数据包!
+2020/06/14 07:12:00 [stderr]  pid:3392 server: 收到一个完整的数据包!
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerThreadPool::ThreadFunc()中线程:1667290880,结束等待
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerThreadPool::ThreadFunc()中线程:1667290880,拿到一条数据
+2020/06/14 07:12:00 [stderr]  pid:3392 server: 包体长度：39863
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerThreadPool::ThreadFunc()中线程:1667290880,拿到一条数据
+2020/06/14 07:12:00 [stderr]  pid:3392 server: 包体长度：11000
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:12:00 [stderr]  pid:3392 server: SerThreadPool::ThreadFunc()中线程:1667290880,开始等待
+2020/06/14 07:13:29 [info]  pid:3443 监听端口80成功
+2020/06/14 07:13:29 [info]  pid:3443 监听端口443成功
+2020/06/14 07:13:29 [info]  pid:3445 SerThreadPool::Creat()中创建线程成功，id=321255168!
+2020/06/14 07:13:29 [stderr]  pid:3445 server: SerThreadPool::ThreadFunc()中线程:321255168,开始等待
+2020/06/14 07:13:53 [stderr]  pid:3445 server: 收到一个完整的数据包!
+2020/06/14 07:13:53 [stderr]  pid:3445 server: 收到一个完整的数据包!
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerThreadPool::ThreadFunc()中线程:321255168,结束等待
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerThreadPool::ThreadFunc()中线程:321255168,拿到一条数据
+2020/06/14 07:13:53 [stderr]  pid:3445 server: 包体长度：49043
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerThreadPool::ThreadFunc()中线程:321255168,拿到一条数据
+2020/06/14 07:13:53 [stderr]  pid:3445 server: 包体长度：35
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:13:53 [stderr]  pid:3445 server: SerThreadPool::ThreadFunc()中线程:321255168,开始等待
+2020/06/14 07:14:24 [stderr]  pid:3445 server: 处理写事件.......
+2020/06/14 07:17:41 [info]  pid:3501 监听端口80成功
+2020/06/14 07:17:41 [info]  pid:3501 监听端口443成功
+2020/06/14 07:17:41 [info]  pid:3503 SerThreadPool::Creat()中创建线程成功，id=-1516685568!
+2020/06/14 07:17:41 [stderr]  pid:3503 server: SerThreadPool::ThreadFunc()中线程:-1516685568,开始等待
+2020/06/14 07:17:59 [stderr]  pid:3503 server: 收到一个完整的数据包!
+2020/06/14 07:17:59 [stderr]  pid:3503 server: 收到一个完整的数据包!
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerThreadPool::ThreadFunc()中线程:-1516685568,结束等待
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerThreadPool::ThreadFunc()中线程:-1516685568,拿到一条数据
+2020/06/14 07:17:59 [stderr]  pid:3503 server: 包头长度：8，包体长度：49043
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerThreadPool::ThreadFunc()中线程:-1516685568,拿到一条数据
+2020/06/14 07:17:59 [stderr]  pid:3503 server: 包头长度：8，包体长度：35
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:17:59 [stderr]  pid:3503 server: SerThreadPool::ThreadFunc()中线程:-1516685568,开始等待
+2020/06/14 07:18:13 [stderr]  pid:3503 server: 处理写事件.......
+2020/06/14 07:33:25 [info]  pid:3556 监听端口80成功
+2020/06/14 07:33:25 [info]  pid:3556 监听端口443成功
+2020/06/14 07:33:25 [info]  pid:3558 SerThreadPool::Creat()中创建线程成功，id=-1333971200!
+2020/06/14 07:33:25 [stderr]  pid:3558 server: SerThreadPool::ThreadFunc()中线程:-1333971200,开始等待
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 收到的包长度为：108
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 收到一个完整的数据包!
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 收到的包长度为：104
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 收到一个完整的数据包!
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerThreadPool::ThreadFunc()中线程:-1333971200,结束等待
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerThreadPool::ThreadFunc()中线程:-1333971200,拿到一条数据
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 包头长度：8，包体长度：49043
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerThreadPool::ThreadFunc()中线程:-1333971200,拿到一条数据
+2020/06/14 07:33:37 [stderr]  pid:3558 server: 包头长度：8，包体长度：35
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 07:33:37 [stderr]  pid:3558 server: SerThreadPool::ThreadFunc()中线程:-1333971200,开始等待
+2020/06/14 07:36:44 [stderr]  pid:3558 server: 处理写事件.......
+2020/06/14 08:14:15 [info]  pid:3611 监听端口80成功
+2020/06/14 08:14:15 [info]  pid:3611 监听端口443成功
+2020/06/14 08:14:15 [info]  pid:3613 SerThreadPool::Creat()中创建线程成功，id=-1890990336!
+2020/06/14 08:14:15 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,开始等待
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 收到的包长度为：108
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 入消息队列时消息头序列号:1
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 入消息队列时包的长度:39871，消息码：43239，crc32：-1919883893
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 收到一个完整的数据包!
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 收到的包长度为：104
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 入消息队列时消息头序列号:1
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 入消息队列时包的长度:11008，消息码：10247，crc32：0
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 收到一个完整的数据包!
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,结束等待
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,拿到一条数据
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 包头长度：8，包体长度：49043
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,拿到一条数据
+2020/06/14 08:14:38 [stderr]  pid:3613 server: 包头长度：8，包体长度：35
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:14:38 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,开始等待
+2020/06/14 08:15:32 [stderr]  pid:3613 server: 处理写事件.......
+2020/06/14 08:16:02 [stderr]  pid:3613 server: 收到的包长度为：108
+2020/06/14 08:16:02 [stderr]  pid:3613 server: 入消息队列时消息头序列号:3
+2020/06/14 08:16:02 [stderr]  pid:3613 server: 入消息队列时包的长度:39871，消息码：43239，crc32：-1947889523
+2020/06/14 08:16:02 [stderr]  pid:3613 server: 收到一个完整的数据包!
+2020/06/14 08:16:02 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,结束等待
+2020/06/14 08:16:02 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,拿到一条数据
+2020/06/14 08:16:02 [stderr]  pid:3613 server: 包头长度：8，包体长度：49043
+2020/06/14 08:16:02 [stderr]  pid:3613 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:16:02 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,开始等待
+2020/06/14 08:16:56 [stderr]  pid:3613 server: 收到的包长度为：104
+2020/06/14 08:16:56 [stderr]  pid:3613 server: 入消息队列时消息头序列号:3
+2020/06/14 08:16:56 [stderr]  pid:3613 server: 入消息队列时包的长度:11008，消息码：10247，crc32：0
+2020/06/14 08:16:56 [stderr]  pid:3613 server: 收到一个完整的数据包!
+2020/06/14 08:16:56 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,结束等待
+2020/06/14 08:16:56 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,拿到一条数据
+2020/06/14 08:16:56 [stderr]  pid:3613 server: 包头长度：8，包体长度：35
+2020/06/14 08:16:56 [stderr]  pid:3613 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:16:56 [stderr]  pid:3613 server: SerThreadPool::ThreadFunc()中线程:-1890990336,开始等待
+2020/06/14 08:17:00 [stderr]  pid:3613 server: 处理写事件.......
+2020/06/14 08:31:39 [stderr]  pid:3665 server: SerSocket::ser_open_listening_sockets中bind()执行失败!(98: Address already in use) (98: Address already in use) 
+2020/06/14 08:31:39 [stderr]  pid:3665 server: socket init failed!
+2020/06/14 08:31:39 [stderr]  pid:3665 server: 程序退出!
+
+2020/06/14 08:31:56 [info]  pid:3668 监听端口80成功
+2020/06/14 08:31:56 [info]  pid:3668 监听端口443成功
+2020/06/14 08:31:56 [info]  pid:3670 SerThreadPool::Creat()中创建线程成功，id=167712512!
+2020/06/14 08:31:56 [stderr]  pid:3670 server: SerThreadPool::ThreadFunc()中线程:167712512,开始等待
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 收到的包长度为：108
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 入消息队列时消息头序列号:16777216
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 入消息队列时包的长度:49051，消息码：59304，crc32：-1947889523
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 收到一个完整的数据包!
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 收到的包长度为：104
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 入消息队列时消息头序列号:16777216
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 入消息队列时包的长度:43，消息码：1832，crc32：0
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 收到一个完整的数据包!
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerThreadPool::ThreadFunc()中线程:167712512,结束等待
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerThreadPool::ThreadFunc()中线程:167712512,拿到一条数据
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 包头长度：8，包体长度：49043
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerThreadPool::ThreadFunc()中线程:167712512,拿到一条数据
+2020/06/14 08:32:12 [stderr]  pid:3670 server: 包头长度：8，包体长度：35
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:32:12 [stderr]  pid:3670 server: SerThreadPool::ThreadFunc()中线程:167712512,开始等待
+2020/06/14 08:37:24 [info]  pid:3721 监听端口80成功
+2020/06/14 08:37:24 [info]  pid:3721 监听端口443成功
+2020/06/14 08:37:24 [info]  pid:3723 SerThreadPool::Creat()中创建线程成功，id=1014511360!
+2020/06/14 08:37:24 [stderr]  pid:3723 server: SerThreadPool::ThreadFunc()中线程:1014511360,开始等待
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 收到的包长度为：108
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 收到一个完整的数据包!
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 收到的包长度为：104
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 收到一个完整的数据包!
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerThreadPool::ThreadFunc()中线程:1014511360,结束等待
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerThreadPool::ThreadFunc()中线程:1014511360,拿到一条数据
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 包头长度：8，包体长度：49043
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerThreadPool::ThreadFunc()中线程:1014511360,拿到一条数据
+2020/06/14 08:37:43 [stderr]  pid:3723 server: 包头长度：8，包体长度：35
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:37:43 [stderr]  pid:3723 server: SerThreadPool::ThreadFunc()中线程:1014511360,开始等待
+2020/06/14 08:38:45 [stderr]  pid:3723 server: 处理写事件.......
+2020/06/14 08:42:32 [info]  pid:3780 监听端口80成功
+2020/06/14 08:42:32 [info]  pid:3780 监听端口443成功
+2020/06/14 08:42:32 [info]  pid:3782 SerThreadPool::Creat()中创建线程成功，id=-250509568!
+2020/06/14 08:42:32 [stderr]  pid:3782 server: SerThreadPool::ThreadFunc()中线程:-250509568,开始等待
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 收到的包长度为：108
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 收到一个完整的数据包!
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 收到的包长度为：104
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 收到一个完整的数据包!
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerThreadPool::ThreadFunc()中线程:-250509568,结束等待
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerThreadPool::ThreadFunc()中线程:-250509568,拿到一条数据
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 处理消息队列时包的长度:49051
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 包头长度：8，包体长度：49043
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 服务端的crc32值为:-1731614867
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerThreadPool::ThreadFunc()中线程:-250509568,拿到一条数据
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 处理消息队列时包的长度:43
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 包头长度：8，包体长度：35
+2020/06/14 08:42:42 [stderr]  pid:3782 server: 服务端的crc32值为:-1485896543
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:42:42 [stderr]  pid:3782 server: SerThreadPool::ThreadFunc()中线程:-250509568,开始等待
+2020/06/14 08:43:16 [stderr]  pid:3782 server: 处理写事件.......
+2020/06/14 08:46:53 [info]  pid:3910 监听端口80成功
+2020/06/14 08:46:53 [info]  pid:3910 监听端口443成功
+2020/06/14 08:46:53 [info]  pid:3912 SerThreadPool::Creat()中创建线程成功，id=138241792!
+2020/06/14 08:46:53 [stderr]  pid:3912 server: SerThreadPool::ThreadFunc()中线程:138241792,开始等待
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 收到的包长度为：108
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 收到一个完整的数据包!
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 收到的包长度为：104
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 收到一个完整的数据包!
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerThreadPool::ThreadFunc()中线程:138241792,结束等待
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerThreadPool::ThreadFunc()中线程:138241792,拿到一条数据
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 处理业务逻辑时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 处理消息队列时包的长度:49051
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 包头长度：8，包体长度：49043
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 服务端的crc32值为:-1017132609
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerThreadPool::ThreadFunc()中线程:138241792,拿到一条数据
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 处理业务逻辑时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 处理消息队列时包的长度:43
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 包头长度：8，包体长度：35
+2020/06/14 08:47:31 [stderr]  pid:3912 server: 服务端的crc32值为:-1485896543
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:47:31 [stderr]  pid:3912 server: SerThreadPool::ThreadFunc()中线程:138241792,开始等待
+2020/06/14 08:48:06 [stderr]  pid:3912 server: 处理写事件.......
+2020/06/14 08:50:12 [info]  pid:3972 监听端口80成功
+2020/06/14 08:50:12 [info]  pid:3972 监听端口443成功
+2020/06/14 08:50:12 [info]  pid:3974 SerThreadPool::Creat()中创建线程成功，id=1605191424!
+2020/06/14 08:50:12 [stderr]  pid:3974 server: SerThreadPool::ThreadFunc()中线程:1605191424,开始等待
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 收到的包长度为：108
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 收到一个完整的数据包!
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 收到的包长度为：104
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 收到一个完整的数据包!
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerThreadPool::ThreadFunc()中线程:1605191424,结束等待
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerThreadPool::ThreadFunc()中线程:1605191424,拿到一条数据
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 处理消息队列时包的长度:108
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 包头长度：8，包体长度：100
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 服务端的crc32值为:-1439010815
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerThreadPool::ThreadFunc()中线程:1605191424,拿到一条数据
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 处理消息队列时包的长度:104
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 包头长度：8，包体长度：96
+2020/06/14 08:50:22 [stderr]  pid:3974 server: 服务端的crc32值为:574627957
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerLogicSocket::ser_thread_process_message()中crc32校验不通过!
+2020/06/14 08:50:22 [stderr]  pid:3974 server: SerThreadPool::ThreadFunc()中线程:1605191424,开始等待
+2020/06/14 08:51:01 [stderr]  pid:3974 server: 处理写事件.......
+2020/06/14 08:52:08 [info]  pid:4031 监听端口80成功
+2020/06/14 08:52:08 [info]  pid:4031 监听端口443成功
+2020/06/14 08:52:08 [info]  pid:4033 SerThreadPool::Creat()中创建线程成功，id=1124972288!
+2020/06/14 08:52:08 [stderr]  pid:4033 server: SerThreadPool::ThreadFunc()中线程:1124972288,开始等待
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 收到的包长度为：108
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 收到一个完整的数据包!
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 收到的包长度为：104
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 收到一个完整的数据包!
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerThreadPool::ThreadFunc()中线程:1124972288,结束等待
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerThreadPool::ThreadFunc()中线程:1124972288,拿到一条数据
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 处理消息队列时包的长度:108
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 包头长度：8，包体长度：100
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 服务端的crc32值为:406077284
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerLogicSocket::ser_thread_process_message()中检测到消息码不正确!
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerThreadPool::ThreadFunc()中线程:1124972288,拿到一条数据
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 处理消息队列时包的长度:104
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 包头长度：8，包体长度：96
+2020/06/14 08:53:10 [stderr]  pid:4033 server: 服务端的crc32值为:1033481217
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerLogicSocket::ser_thread_process_message()中检测到消息码不正确!
+2020/06/14 08:53:10 [stderr]  pid:4033 server: SerThreadPool::ThreadFunc()中线程:1124972288,开始等待
+2020/06/14 08:54:25 [info]  pid:4090 监听端口80成功
+2020/06/14 08:54:25 [info]  pid:4090 监听端口443成功
+2020/06/14 08:54:25 [info]  pid:4092 SerThreadPool::Creat()中创建线程成功，id=-794364160!
+2020/06/14 08:54:25 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,开始等待
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 收到的包长度为：108
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 收到一个完整的数据包!
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 收到的包长度为：104
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 收到一个完整的数据包!
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,结束等待
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,拿到一条数据
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 处理消息队列时包的长度:108
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 包头长度：8，包体长度：100
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 服务端的crc32值为:406077284
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerLogicSocket::RegisterHandler
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,拿到一条数据
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 处理消息队列时包的长度:104
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 包头长度：8，包体长度：96
+2020/06/14 08:54:33 [stderr]  pid:4092 server: 服务端的crc32值为:1033481217
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerLogicSocket::LoginHandler
+2020/06/14 08:54:33 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,开始等待
+2020/06/14 08:54:49 [stderr]  pid:4092 server: 处理写事件.......

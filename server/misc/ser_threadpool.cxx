@@ -1,13 +1,14 @@
 #include <signal.h>
 #include <unistd.h>
 #include <errno.h>
+#include<arpa/inet.h>
 
 #include "ser_threadpool.h"
 #include "ser_macros.h"
 #include "ser_log.h"
 #include "ser_datastruct.h"
 #include "ser_memory.h"
-#include "ser_socket.h"
+#include "ser_logic_socket.h"
 
 pthread_mutex_t SerThreadPool::mThreadMutex = PTHREAD_MUTEX_INITIALIZER; //#define PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) -1)
 pthread_cond_t SerThreadPool::mThreadCond = PTHREAD_COND_INITIALIZER; //#define PTHREAD_COND_INITIALIZER ((pthread_cond_t) -1)
@@ -165,6 +166,10 @@ void* SerThreadPool::ThreadFunc(void* pThreadData)
         ++(pThreadPool->mRunningThreadNumber);
 
         //业务逻辑处理
+        // char* temp = pPkgData;
+        // LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
+        // SER_LOG_STDERR(0,"处理业务逻辑时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
+        
         g_socket.ser_thread_process_message(pPkgData);
 
         pMemory->FreeMemory(pPkgData);

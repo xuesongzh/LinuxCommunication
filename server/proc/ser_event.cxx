@@ -2,7 +2,7 @@
 
 #include "ser_function.h"
 #include "ser_datastruct.h"
-#include "ser_socket.h"
+#include "ser_logic_socket.h"
 
 void ser_process_events_and_timers()
 {
