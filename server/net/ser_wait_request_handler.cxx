@@ -183,11 +183,8 @@ void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnecti
     LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
     SER_LOG_STDERR(0,"入消息队列时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
 
-    //入消息队列
-    ser_in_msgqueue(pConnection->mPkgData);
-
-    //调用一个线程执行业务逻辑
-    g_threadpool.Call();
+    //入消息队列并调用线程处理
+    g_threadpool.InMsgRecvQueueAndSignal(pConnection->mPkgData);
 
     //设置一些状态
     pConnection->mIfNewRecvMem = false; //放入消息队列后不释放，由之后的业务逻辑释放
@@ -197,29 +194,29 @@ void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnecti
     pConnection->mRecvLength = PKG_HEADER_LENGTH; //设置收包长度
 }
 
-void SerSocket::ser_in_msgqueue(char* const& pBuffer)
-{
-    SerLock locker(&mMsgQueueMutex); //加锁
-    //加入消息队列
-    mMsgRecvQueue.push_back(pBuffer);
+// void SerSocket::ser_in_msgqueue(char* const& pBuffer)
+// {
+//     SerLock locker(&mMsgQueueMutex); //加锁
+//     //加入消息队列
+//     mMsgRecvQueue.push_back(pBuffer);
 
-    //防止消息队列过大
-    // ser_temp_out_msgqueue();
+//     //防止消息队列过大
+//     // ser_temp_out_msgqueue();
 
-    SER_LOG_STDERR(0, "收到一个完整的数据包!");
-}
+//     SER_LOG_STDERR(0, "收到一个完整的数据包!");
+// }
 
-char* SerSocket::ser_get_one_message()
-{
-    SerLock locker(&mMsgQueueMutex);
-    if(mMsgRecvQueue.empty())
-    {
-        return nullptr;
-    }
-    char* pTemp = mMsgRecvQueue.front();
-    mMsgRecvQueue.pop_front();
-    return pTemp;
-}
+// char* SerSocket::ser_get_one_message()
+// {
+//     SerLock locker(&mMsgQueueMutex);
+//     if(mMsgRecvQueue.empty())
+//     {
+//         return nullptr;
+//     }
+//     char* pTemp = mMsgRecvQueue.front();
+//     mMsgRecvQueue.pop_front();
+//     return pTemp;
+// }
 
 //线程处理函数，处理业务逻辑。pPkgData：消息头+包头+包体
 void SerSocket::ser_thread_process_message(char* const& pPkgData)

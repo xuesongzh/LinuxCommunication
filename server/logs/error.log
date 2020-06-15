@@ -487,3 +487,25 @@
 2020/06/14 08:54:33 [stderr]  pid:4092 server: SerLogicSocket::LoginHandler
 2020/06/14 08:54:33 [stderr]  pid:4092 server: SerThreadPool::ThreadFunc()中线程:-794364160,开始等待
 2020/06/14 08:54:49 [stderr]  pid:4092 server: 处理写事件.......
+2020/06/16 07:08:02 [info]  pid:1598 监听端口80成功
+2020/06/16 07:08:02 [info]  pid:1598 监听端口443成功
+2020/06/16 07:08:02 [info]  pid:1600 SerThreadPool::Creat()中创建线程成功，id=1998649088!
+2020/06/16 07:08:02 [stderr]  pid:1600 server: SerThreadPool::ThreadFunc()中线程:1998649088,开始等待
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 收到的包长度为：108
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 入消息队列时包的长度:108，消息码：5，crc32：406077284
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 收到的包长度为：104
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerThreadPool::ThreadFunc()中线程:1998649088,结束等待
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerThreadPool::ThreadFunc()中线程:1998649088,拿到一条数据
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 处理消息队列时包的长度:108
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 包头长度：8，包体长度：100
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 入消息队列时包的长度:104，消息码：6，crc32：1033481217
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerThreadPool::Call()中发现线程池不够用!
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 服务端的crc32值为:406077284
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerLogicSocket::RegisterHandler
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerThreadPool::ThreadFunc()中线程:1998649088,拿到一条数据
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 处理消息队列时包的长度:104
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 包头长度：8，包体长度：96
+2020/06/16 07:21:38 [stderr]  pid:1600 server: 服务端的crc32值为:1033481217
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerLogicSocket::LoginHandler
+2020/06/16 07:21:38 [stderr]  pid:1600 server: SerThreadPool::ThreadFunc()中线程:1998649088,开始等待
+2020/06/16 07:22:03 [stderr]  pid:1600 server: 处理写事件.......

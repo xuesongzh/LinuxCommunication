@@ -21,7 +21,8 @@ SerThreadPool::SerThreadPool() : mThreadPoolSize(0), mRunningThreadNumber(0), mL
 
 SerThreadPool::~SerThreadPool()
 {
-    //释放资源在StopAll()里面进行
+    //一些释放资源在StopAll()里面进行
+    ClearMsgRecvQueue();
 }
 
 bool SerThreadPool::Creat(const int& threadPoolSize)
@@ -125,7 +126,6 @@ void* SerThreadPool::ThreadFunc(void* pThreadData)
 {
     auto pThread = static_cast<ThreadItem*>(pThreadData);
     auto pThreadPool = pThread->mThis;
-    char* pPkgData = nullptr; //消息队列中的数据，就是数据包的数据
     auto pMemory = SerMemory::GetInstance();
     int err = 0; //错误码
     pthread_t tid = pthread_self(); //线程id
@@ -139,7 +139,7 @@ void* SerThreadPool::ThreadFunc(void* pThreadData)
             return (void*)-1;
         }
 
-        while((pPkgData = g_socket.ser_get_one_message()) == nullptr && !mIfShutDown)
+        while(pThreadPool->mMsgRecvQueue.size() == 0 && !mIfShutDown)
         {
             if(!pThread->mIfRunning)
             {
@@ -152,17 +152,23 @@ void* SerThreadPool::ThreadFunc(void* pThreadData)
             SER_LOG_STDERR(0, "SerThreadPool::ThreadFunc()中线程:%d,结束等待",tid);
         }
         //mIfShutDown == true或者某个线程拿到了一条数据才能走到这里
-        err = pthread_mutex_unlock(&mThreadMutex);
         if(mIfShutDown)
         {
-            if(pPkgData != nullptr)
-            {
-                pMemory->FreeMemory(pPkgData);
-            }
+            pthread_mutex_unlock(&mThreadMutex);
             break;
         }
 
+        char* pPkgData = pThreadPool->mMsgRecvQueue.front();
+        pThreadPool->mMsgRecvQueue.pop_front();
         SER_LOG_STDERR(0, "SerThreadPool::ThreadFunc()中线程:%d,拿到一条数据",tid);
+
+        //解锁互斥量
+        err = pthread_mutex_unlock(&mThreadMutex);
+        if(0 != err)
+        {
+            SER_LOG_STDERR(errno, "SerThreadPool::ThreadFunc()中pthread_mutex_unlock失败，错误码：%d", err);
+        }
+
         ++(pThreadPool->mRunningThreadNumber);
 
         //业务逻辑处理
@@ -177,4 +183,40 @@ void* SerThreadPool::ThreadFunc(void* pThreadData)
     }
 
     return (void*)0;
+}
+
+void SerThreadPool::InMsgRecvQueueAndSignal(char* const& pBuffer)
+{
+    int err = pthread_mutex_lock(&mThreadMutex);
+    if(0 != err)
+    {
+        SER_LOG_STDERR(errno, "SerThreadPool::InMsgRecvQueueAndSignal()中pthread_mutex_lock发生错误，错误码：%d", err);
+        return;
+    }
+
+    mMsgRecvQueue.push_back(pBuffer);
+
+    //取消互斥
+    err = pthread_mutex_unlock(&mThreadMutex);
+    if(0 != err)
+    {
+        SER_LOG_STDERR(errno, "SerThreadPool::InMsgRecvQueueAndSignal()中pthread_mutex_unlock发生错误，错误码：%d", err);
+        return;
+    }
+
+    //激活一个线程来干活
+    Call();
+    return;
+}
+
+void SerThreadPool::ClearMsgRecvQueue()
+{
+    auto pMemory = SerMemory::GetInstance();
+    char* pTemp = nullptr;
+    while(!mMsgRecvQueue.empty())
+    {
+        pTemp = mMsgRecvQueue.front();
+        mMsgRecvQueue.pop_front();
+        pMemory->FreeMemory(pTemp);
+    }
 }

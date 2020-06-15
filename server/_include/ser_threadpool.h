@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <vector>
 #include <atomic>
+#include <list>
 
 class SerThreadPool
 {
@@ -34,12 +35,14 @@ public:
     virtual ~SerThreadPool();
 
 public:
+    void InMsgRecvQueueAndSignal(char* const& pBuffer);
     bool Creat(const int& threadPoolSize); //创建线程池
     void StopAll(); //停止所有线程
     void Call(); //唤醒一个线程来干活
 
 private:
     static void* ThreadFunc(void* pThreadData); //线程回调函数
+    void ClearMsgRecvQueue();
 
 private:
     static pthread_mutex_t mThreadMutex; //线程同步互斥量
@@ -51,6 +54,7 @@ private:
     time_t mLastEmgTime; //上次发生线程池不够用的时间，避免过于频繁的打印日志
 
     std::vector<ThreadItem*> mThreads; //线程容器
+    std::list<char*> mMsgRecvQueue; //接收数据消息队列
 };
 
 #endif

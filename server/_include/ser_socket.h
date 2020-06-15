@@ -83,7 +83,7 @@ public:
 public:
     virtual bool Initialize();
     virtual void ser_thread_process_message(char* const& pPkgData);
-    char* ser_get_one_message();
+    // char* ser_get_one_message();
 
     //epoll
     int ser_epoll_init();
@@ -115,9 +115,9 @@ private:
     ssize_t ser_recv_pkg(lpser_connection_t const& pConnection, char* const& pBuffer, const ssize_t& bufferLength);
     void ser_wait_request_process_pkg(lpser_connection_t const& pConnection);
     void ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection);
-    void ser_in_msgqueue(char* const& pBuffer);
+    // void ser_in_msgqueue(char* const& pBuffer);
     // void ser_temp_out_msgqueue();
-    void ser_clear_msgqueue();
+    // void ser_clear_msgqueue();
     
 private:
     int mListenPortCount; //监听端口数目，配置文件配置
@@ -133,9 +133,6 @@ private:
     std::vector<lpser_listening_t> mListenSocketList; //监听套接字队列
 
     struct epoll_event mEvents[SER_EVENTS_MAX]; //时间数组，最多处理SER_EVENTS_MAX个事件
-
-    std::list<char*> mMsgRecvQueue; //接收数据消息队列
-    pthread_mutex_t mMsgQueueMutex;
 };
 
 #endif

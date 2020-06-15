@@ -16,7 +16,7 @@
 SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),mConnectionHeader(nullptr), 
     mFreeConnectionHeader(nullptr),mConnectionLength(1),mFreeConnectionLegth(1)
 {
-    pthread_mutex_init(&mMsgQueueMutex, NULL); //互斥量初始化
+    // pthread_mutex_init(&mMsgQueueMutex, NULL); //互斥量初始化
     return;
 }
 
@@ -31,9 +31,9 @@ SerSocket::~SerSocket()
 
     DEL_ARRAY(mConnectionHeader); //释放连接池
 
-    ser_clear_msgqueue(); //释放消息队列
+    // ser_clear_msgqueue(); //释放消息队列
 
-    pthread_mutex_destroy(&mMsgQueueMutex); //互斥量释放
+    // pthread_mutex_destroy(&mMsgQueueMutex); //互斥量释放
 
     return;
 }
@@ -362,14 +362,14 @@ void SerSocket::ser_close_listening_sockets()
     return;
 }
 
-void SerSocket::ser_clear_msgqueue()
-{
-    char* pTemp = nullptr;
-    auto pMemory = SerMemory::GetInstance();
-    while(!mMsgRecvQueue.empty())
-    {
-        pTemp = mMsgRecvQueue.front();
-        mMsgRecvQueue.pop_front();
-        pMemory->FreeMemory(pTemp);
-    }
-}
+// void SerSocket::ser_clear_msgqueue()
+// {
+//     char* pTemp = nullptr;
+//     auto pMemory = SerMemory::GetInstance();
+//     while(!mMsgRecvQueue.empty())
+//     {
+//         pTemp = mMsgRecvQueue.front();
+//         mMsgRecvQueue.pop_front();
+//         pMemory->FreeMemory(pTemp);
+//     }
+// }
