@@ -23,6 +23,7 @@ pid_t ser_parent_pid;
 int ser_daemonized = 0;
 int ser_process_type = SER_PROCESS_MASTER;
 sig_atomic_t ser_reap = 0;
+int g_stopEvent;
 
 //全局对象socket
 SerLogicSocket g_socket;
@@ -33,6 +34,7 @@ static void FreeSource();
 int main(int argc, char* const* argv)
 {
 	/**************一些变量的初始化和赋值*******************/
+	g_stopEvent = 0;
 	int exitCode = 0;
 	ser_pid = getpid(); //获取进程ID
 	ser_parent_pid = getppid(); //父进程ID

@@ -353,6 +353,26 @@ static void ser_vslprintf(
                     uint64 = (uint64_t)(va_arg(args, uint32_t));
                 }
                 break;
+            case 'i': //支持线程ID,条件变量等打印
+                if(isSign)
+                {
+                    int64 = (int64_t)va_arg(args, intptr_t);
+                }
+                else
+                {
+                    uint64 = (uint64_t)va_arg(args, uintptr_t);
+                }
+                break;
+            case 'L': //转换int64_t数据
+                if(isSign)
+                {
+                    int64 = va_arg(args, int64_t);
+                }
+                else
+                {
+                    uint64 = va_arg(args, uint64_t);
+                }
+                break;
             case 's': //字符串打印
             { //在switch case中如果使用局部变量，必须设置他的生命周期，加{}。否侧报错
                 const char* pTemp = va_arg(args, const char*);

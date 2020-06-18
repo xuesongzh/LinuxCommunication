@@ -57,6 +57,7 @@ extern pid_t ser_parent_pid; //父进程id
 extern int ser_daemonized; //标记是否为守护进程
 extern int ser_process_type; //进程类型，master或者worker
 extern sig_atomic_t ser_reap; //标记子进程状态变化[一般是子进程发来SIGCHLD信号表示退出]
+extern int g_stopEvent;//0:不退出，1:退出
 
 class SerLogicSocket; //前置声明
 class SerThreadPool;
