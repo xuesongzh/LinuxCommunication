@@ -19,6 +19,17 @@
 #include "ser_datastruct.h"
 #include "ser_memory.h"
 
+ser_connection_s::ser_connection_s() : mCurrsequence(0)
+{
+    pthread_mutex_init(&mLogicProcMutex, NULL);
+}
+
+ser_connection_s::~ser_connection_s()
+{
+    pthread_mutex_destroy(&mLogicProcMutex);
+}
+
+
 lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 {
     lpser_connection_t pFreeConnection = mFreeConnectionHeader; //把空闲连接池表头指针指向的连接返回出去

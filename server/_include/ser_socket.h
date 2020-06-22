@@ -44,6 +44,11 @@ struct ser_listening_s
 //连接池格式，与TCP连接绑定
 struct ser_connection_s
 {
+    ser_connection_s();
+    ~ser_connection_s();
+    void GetOneToUse(); //去一个连接时需要更新的一些状态
+    void PutOneToFree(); //释放连接池对象时需要更新的状态
+
     int mSockFd; //套接字描述符
     lpser_listening_t mListening; //如果这个连接与监听套接字绑定，指向监听套接字
 
@@ -54,6 +59,8 @@ struct ser_connection_s
     uint8_t mWReady; //写准备好标记
     ser_event_handler mRHandler; //读事件相关处理
     ser_event_handler mWHandler; //写事件相关处理
+
+    pthread_mutex_t mLogicProcMutex; //业务逻辑处理锁
 
     //收数据包相关
     int mRecvStat; //收数据包状态：PKG_HD_INIT...

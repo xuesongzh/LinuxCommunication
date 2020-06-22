@@ -179,9 +179,9 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
 void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnection)
 {
     //测试代码
-    char* temp = pConnection->mPkgData;
-    LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
-    SER_LOG_STDERR(0,"入消息队列时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
+    // char* temp = pConnection->mPkgData;
+    // LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
+    // SER_LOG_STDERR(0,"入消息队列时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
 
     //入消息队列并调用线程处理
     g_threadpool.InMsgRecvQueueAndSignal(pConnection->mPkgData);

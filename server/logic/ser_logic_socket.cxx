@@ -1,11 +1,15 @@
 #include<arpa/inet.h> //ntohl
 #include<signal.h>
+#include<string.h>
 
 #include "ser_logic_socket.h"
 #include "ser_crc32.h"
 #include "ser_macros.h"
 #include "ser_log.h"
 #include "ser_datastruct.h"
+#include "ser_logic_defs.h"
+#include "ser_lock.h"
+#include "ser_memory.h"
 
 //成员函数指针
 typedef bool (SerLogicSocket::*handler)(
@@ -52,7 +56,7 @@ void SerLogicSocket::ser_thread_process_message(char* const& pPkgData)
     LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(pPkgData + MSG_HEADER_LENGTH); //包头
     void* pPkgBody = nullptr; //包体
     unsigned short pkgLength = ntohs(pPkgHeader->mPkgLength); //包的长度（包头+包体）
-    SER_LOG_STDERR(0, "处理消息队列时包的长度:%d",pkgLength);
+    // SER_LOG_STDERR(0, "处理消息队列时包的长度:%d",pkgLength);
     if(pkgLength == PKG_HEADER_LENGTH)
     {
         //没有包体的数据包crc32为0
@@ -66,9 +70,9 @@ void SerLogicSocket::ser_thread_process_message(char* const& pPkgData)
         pPkgHeader->mCRC32 = ntohl(pPkgHeader->mCRC32);
         pPkgBody = (void*)(pPkgData + MSG_HEADER_LENGTH +PKG_HEADER_LENGTH);
         //校验CRC32值
-        SER_LOG_STDERR(0, "包头长度：%d，包体长度：%d",PKG_HEADER_LENGTH, pkgLength - PKG_HEADER_LENGTH);
+        // SER_LOG_STDERR(0, "包头长度：%d，包体长度：%d",PKG_HEADER_LENGTH, pkgLength - PKG_HEADER_LENGTH);
         int crc32 = SerCRC32::GetInstance()->Get_CRC((unsigned char*)pPkgBody, pkgLength - PKG_HEADER_LENGTH);
-        SER_LOG_STDERR(0, "服务端的crc32值为:%d",crc32);
+        // SER_LOG_STDERR(0, "服务端的crc32值为:%d",crc32);
         if(crc32 != pPkgHeader->mCRC32)
         {
             //crc32校验不通过，直接丢弃
@@ -121,7 +125,54 @@ bool SerLogicSocket::RegisterHandler(
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength)
 {
-    SER_LOG_STDERR(0,"SerLogicSocket::RegisterHandler");
+    //判断包的合法性
+    if(pPkgBody == nullptr)
+    {
+        SER_LOG(SER_LOG_CRIT, 0, "SerLogicSocket::RegisterHandler()中pPkgBody == nullptr");
+        return false;
+    }
+
+    if(sizeof(STRUCT_REGISTER) != pkgBodyLength)
+    {
+        SER_LOG(SER_LOG_CRIT, 0, "SerLogicSocket::RegisterHandler()中sizeof(STRUCT_REGISTER) != pPkgBodyLength");
+        return false;
+    }
+
+    //所有业务逻辑相关处理加锁
+    SerLock locker(&pConnection->mLogicProcMutex);
+
+    //取数据
+    auto pRegiseterData = (LPSTRUCT_REGISTER)pPkgBody;
+    // //测试代码
+    // int type = ntohl(pRegiseterData->mType);
+    // const char* username = pRegiseterData->mUserName;
+    // const char* password = pRegiseterData->mPassWord;
+    // SER_LOG(SER_LOG_DEBUG, 0, "type:%d, username:%s, password:%s", type,username,password);
+    //根据收到的数据进一步判断数据的合法性
+
+    //发送数据给客户端，暂时随意填
+    LPPKG_HEADER pPkgHeader = nullptr;
+    auto pMemory = SerMemory::GetInstance();
+    auto pCRC32 = SerCRC32::GetInstance();
+    int sendLength = sizeof(STRUCT_REGISTER);
+    //分配内存
+    char* pSendBuffer = static_cast<char*>(pMemory->MallocMemory(MSG_HEADER_LENGTH+PKG_HEADER_LENGTH+sendLength, false));
+    //消息头
+    memcpy(pSendBuffer, pMsgHeader, MSG_HEADER_LENGTH);
+    //包头
+    pPkgHeader = (LPPKG_HEADER)(pSendBuffer + MSG_HEADER_LENGTH);
+    pPkgHeader->mPkgLength = htons(PKG_HEADER_LENGTH + sendLength);
+    pPkgHeader->mMsgCode = htons(CMD_REGISTER);
+    //包体
+    auto pSendBody = (LPSTRUCT_REGISTER)(pSendBuffer+MSG_HEADER_LENGTH+PKG_HEADER_LENGTH);
+    //-------填充
+
+    //包头crc32值
+    int crc32 = pCRC32->Get_CRC((unsigned char*)pSendBody, sendLength);
+    pPkgHeader->mCRC32 = htonl(crc32);
+
+
+    SER_LOG(SER_LOG_INFO,0,"SerLogicSocket::RegisterHandler success!");
     return true;
 }
 
@@ -131,6 +182,6 @@ bool SerLogicSocket::LoginHandler(
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength)
 {
-    SER_LOG_STDERR(0,"SerLogicSocket::LoginHandler");
+    SER_LOG(SER_LOG_INFO,0,"SerLogicSocket::LoginHandler");
     return true;
 }
