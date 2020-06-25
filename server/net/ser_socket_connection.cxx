@@ -96,14 +96,90 @@ void SerSocket::ser_in_recy_connection(lpser_connection_t& pConnection)
     SerLock locker(&mRecyConnectionMutex);
 
     pConnection->mInRecyTime = time(NULL); //记录回收时间
+    SER_LOG(SER_LOG_INFO, 0, "入延迟回收队列的时间为:%d", pConnection->mInRecyTime);
     ++pConnection->mCurrsequence;
     mRecyConnectionList.push_back(pConnection);
     return;
 }
 
-void SerSocket::ser_recy_connection_thread(void* pThreadData)
+void* SerSocket::ser_recy_connection_thread(void* pThreadData)
 {
-    
+    auto pThread = static_cast<ThreadItem*>(pThreadData);
+    auto pSocket = pThread->mThis;
+    std::list<lpser_connection_t>::iterator iter, iterEnd;
+    lpser_connection_t pConnection = nullptr;
+    time_t currentTime;
+    int err;
+
+    while(true)
+    {
+        usleep(200*1000); //每隔200ms检查一次是否有满足条件的连接池对象
+
+        if(!pSocket->mRecyConnectionList.empty())
+        {
+            SER_LOG(SER_LOG_INFO, 0, "延迟回收队列大小：%d", pSocket->mRecyConnectionList.size());
+            currentTime = time(NULL);
+            err = pthread_mutex_lock(&pSocket->mRecyConnectionMutex);
+            if (0 != err)
+            {
+                SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_recy_connection_thread()中pthread_mutex_lock执行失败，错误码：%d", err);
+            }
+        lblRRTD:
+            iter = pSocket->mRecyConnectionList.begin();
+            iterEnd = pSocket->mRecyConnectionList.end();
+            for (; iter != iterEnd; ++iter)
+            {
+                pConnection = *iter;
+                if ((pConnection->mInRecyTime + pSocket->mRecyWaiteTime) > currentTime && g_stopEvent == 0)
+                {
+                    //如果系不退出，并且没有达到延迟回收的时间，继续。如果系统退出，则需要强制释放资源
+                    continue;
+                }
+
+                //走到这里表示达到延迟回收的时间
+                pSocket->mRecyConnectionList.erase(iter); //迭代器失效goto重新开始
+                pSocket->ser_free_connection(pConnection);
+                SER_LOG(SER_LOG_INFO, 0, "一个延迟回收队列中的连接对象被回收，sockfd:%d", pConnection->mSockFd);
+                goto lblRRTD;
+            }
+            err = pthread_mutex_unlock(&pSocket->mRecyConnectionMutex);
+            if (0 != err)
+            {
+                SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_recy_connection_thread()中pthread_mutex_unlock执行失败，错误码：%d", err);
+            }
+        }
+
+        if (g_stopEvent == 1) //整个程序要退出,释放资源
+        {
+            SER_LOG(SER_LOG_INFO, 0, "程序要退出，释放连接池资源!");
+
+            if (!pSocket->mRecyConnectionList.empty())
+            {
+                err = pthread_mutex_lock(&pSocket->mRecyConnectionMutex);
+                if (0 != err)
+                {
+                    SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_recy_connection_thread()中pthread_mutex_lock执行失败，错误码：%d", err);
+                }
+            lblRRTD2:
+                iter = pSocket->mRecyConnectionList.begin();
+                iterEnd = pSocket->mRecyConnectionList.end();
+                for (; iter != iterEnd; ++iter)
+                {
+                    pConnection = *iter;
+                    pSocket->mRecyConnectionList.erase(iter);
+                    pSocket->ser_free_connection(pConnection);
+                    goto lblRRTD2;
+                }
+                err = pthread_mutex_unlock(&pSocket->mRecyConnectionMutex);
+                if (0 != err)
+                {
+                    SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_recy_connection_thread()中pthread_mutex_unlock执行失败，错误码：%d", err);
+                }
+            }
+        }
+    }
+
+    return (void*)0;
 }
 
 lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)

@@ -150,7 +150,7 @@ private:
     // void ser_clear_msgqueue();
 
     //线程相关
-    static void ser_recy_connection_thread(void* pThreadData); //用于延迟回收连接池
+    static void* ser_recy_connection_thread(void* pThreadData); //用于延迟回收连接池
     
 private:
     struct ThreadItem //延迟回收线程结构
