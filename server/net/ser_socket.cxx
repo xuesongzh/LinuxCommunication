@@ -13,8 +13,8 @@
 #include "ser_configer.h"
 #include "ser_memory.h"
 
-SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),mConnectionHeader(nullptr), 
-    mFreeConnectionHeader(nullptr),mConnectionLength(1),mFreeConnectionLegth(1)
+SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),
+    mRecyWaiteTime(60)
 {
     // pthread_mutex_init(&mMsgQueueMutex, NULL); //互斥量初始化
     return;
@@ -28,8 +28,6 @@ SerSocket::~SerSocket()
     }
 
     mListenSocketList.clear();
-
-    DEL_ARRAY(mConnectionHeader); //释放连接池
 
     // ser_clear_msgqueue(); //释放消息队列
 
@@ -137,25 +135,28 @@ int SerSocket::ser_epoll_init()
         exit(2); //致命问题直接退出
     }
 
-    //创建连接池
-    mConnectionLength = mWorkerConnections; //连接池大小等于能处理的TCP连接最大数目
-    mConnectionHeader = new ser_connection_t[mConnectionLength];
-    mFreeConnectionHeader = nullptr;
-    int i = mConnectionLength;
+    //初始化连接池
+    ser_init_connection();
 
-    do
-    {
-        --i;
-        mConnectionHeader[i].mNext = mFreeConnectionHeader; //最后一个元素指向空
-        mConnectionHeader[i].mSockFd = -1; //初始化TCP连接，无socket绑定
-        mConnectionHeader[i].mInstance = 1; //失效标志位：失效
-        mConnectionHeader[i].mCurrsequence = 0; //序号从0开始
+    // //创建连接池
+    // mConnectionLength = mWorkerConnections; //连接池大小等于能处理的TCP连接最大数目
+    // mConnectionHeader = new ser_connection_t[mConnectionLength];
+    // mFreeConnectionHeader = nullptr;
+    // int i = mConnectionLength;
 
-        //更新空闲链头指针
-        mFreeConnectionHeader = &mConnectionHeader[i];
+    // do
+    // {
+    //     --i;
+    //     mConnectionHeader[i].mNext = mFreeConnectionHeader; //最后一个元素指向空
+    //     mConnectionHeader[i].mSockFd = -1; //初始化TCP连接，无socket绑定
+    //     // mConnectionHeader[i].mInstance = 1; //失效标志位：失效
+    //     mConnectionHeader[i].mCurrsequence = 0; //序号从0开始
 
-    }while(i);
-    mFreeConnectionLegth = mConnectionLength; //刚开始空闲链大小等于连接池大小
+    //     //更新空闲链头指针
+    //     mFreeConnectionHeader = &mConnectionHeader[i];
+
+    // }while(i);
+    // mFreeConnectionLegth = mConnectionLength; //刚开始空闲链大小等于连接池大小
 
     //为监听套接字增加一个连接池中的连接
     for(auto& sockListen : mListenSocketList)
@@ -247,20 +248,20 @@ int SerSocket::ser_epoll_process_events(const int& timer)
             continue;
         }
 
-        if(instance != pConnection->mInstance)
-        {
-            //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭【麻烦就麻烦在这个连接被服务器关闭上了】，但是恰好第三个事件也跟这个连接有关；
-            //因为第一个事件就把socket连接关闭了，显然第三个事件我们是不应该处理的【因为这是个过期事件】，若处理肯定会导致错误；
-            //那我们上述把mSockFd设置为-1，可以解决这个问题吗？ 能解决一部分问题，但另外一部分不能解决，不能解决的问题描述如下【这么离奇的情况应该极少遇到】：
+        // if(instance != pConnection->mInstance)
+        // {
+        //     //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭【麻烦就麻烦在这个连接被服务器关闭上了】，但是恰好第三个事件也跟这个连接有关；
+        //     //因为第一个事件就把socket连接关闭了，显然第三个事件我们是不应该处理的【因为这是个过期事件】，若处理肯定会导致错误；
+        //     //那我们上述把mSockFd设置为-1，可以解决这个问题吗？ 能解决一部分问题，但另外一部分不能解决，不能解决的问题描述如下【这么离奇的情况应该极少遇到】：
 
-            //a)处理第一个事件时，因为业务需要，我们把这个连接【假设套接字为50】关闭，同时设置mFd = -1;并且调用ser_free_connection将该连接归还给连接池；
-            //b)处理第二个事件，恰好第二个事件是建立新连接事件，调用ser_get_free_connection从连接池中取出的连接非常可能就是刚刚释放的第一个事件对应的连接池中的连接；
-            //c)又因为a中套接字50被释放了，所以会被操作系统拿来复用，复用给了b；
-            //d)当处理第三个事件时，第三个事件其实是已经过期的，应该不处理，那怎么判断这第三个事件是过期的呢？ 【假设现在处理的是第三个事件，此时这个 连接池中的该连接 实际上已经被用作第二个事件对应的socket上了】；
-                //依靠instance标志位能够解决这个问题，当调用ser_get_free_connection从连接池中获取一个新连接时，我们把instance标志位置反，所以这个条件如果不成立，说明这个连接已经被挪作他用了；
-            SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了instance != pConnection->mInstance的过期事件!");
-            continue;           
-        }
+        //     //a)处理第一个事件时，因为业务需要，我们把这个连接【假设套接字为50】关闭，同时设置mFd = -1;并且调用ser_free_connection将该连接归还给连接池；
+        //     //b)处理第二个事件，恰好第二个事件是建立新连接事件，调用ser_get_free_connection从连接池中取出的连接非常可能就是刚刚释放的第一个事件对应的连接池中的连接；
+        //     //c)又因为a中套接字50被释放了，所以会被操作系统拿来复用，复用给了b；
+        //     //d)当处理第三个事件时，第三个事件其实是已经过期的，应该不处理，那怎么判断这第三个事件是过期的呢？ 【假设现在处理的是第三个事件，此时这个 连接池中的该连接 实际上已经被用作第二个事件对应的socket上了】；
+        //         //依靠instance标志位能够解决这个问题，当调用ser_get_free_connection从连接池中获取一个新连接时，我们把instance标志位置反，所以这个条件如果不成立，说明这个连接已经被挪作他用了；
+        //     SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了instance != pConnection->mInstance的过期事件!");
+        //     continue;           
+        // }
 
         //处理正常事件
         eventType = mEvents[i].events; //取得时间类型

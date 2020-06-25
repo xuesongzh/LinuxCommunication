@@ -150,8 +150,8 @@ void SerSocket::ser_wait_request_process_pkg(lpser_connection_t const& pConnecti
         //合法包，继续处理
         //分配内存，放消息头，包体，以及将包头信息拷贝到这块新的内存中来
         auto pNewBuffer = (char*)pMemory->MallocMemory(MSG_HEADER_LENGTH + pkgLength);
-        pConnection->mIfNewRecvMem  = true; //分配了新的内存
-        pConnection->mPkgData = pNewBuffer;
+        // pConnection->mIfNewRecvMem  = true; //分配了新的内存
+        pConnection->mRecvPkgData = pNewBuffer;
         //1)填写消息头
         auto pMsgHeader = (LPMSG_HEADER)pNewBuffer;
         pMsgHeader->mConnection = pConnection;
@@ -184,11 +184,11 @@ void SerSocket::ser_wait_request_in_msgqueue(lpser_connection_t const& pConnecti
     // SER_LOG_STDERR(0,"入消息队列时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
 
     //入消息队列并调用线程处理
-    g_threadpool.InMsgRecvQueueAndSignal(pConnection->mPkgData);
+    g_threadpool.InMsgRecvQueueAndSignal(pConnection->mRecvPkgData);
 
     //设置一些状态
-    pConnection->mIfNewRecvMem = false; //放入消息队列后不释放，由之后的业务逻辑释放
-    pConnection->mPkgData = nullptr;
+    // pConnection->mIfNewRecvMem = false; //放入消息队列后不释放，由之后的业务逻辑释放
+    pConnection->mRecvPkgData = nullptr;
     pConnection->mRecvStat = PKG_HD_INIT; //回到收包头状态
     pConnection->mRecvLocation = pConnection->mPkgHeadInfo; //收包位置
     pConnection->mRecvLength = PKG_HEADER_LENGTH; //设置收包长度
