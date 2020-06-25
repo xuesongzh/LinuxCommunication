@@ -26,3 +26,30 @@
 2020/06/22 08:50:01 [stderr]  pid:2745 server: SerThreadPool::ThreadFunc()中线程:43194112,拿到一条数据
 2020/06/22 08:50:01 [info]  pid:2745 SerLogicSocket::LoginHandler
 2020/06/22 08:50:01 [stderr]  pid:2745 server: SerThreadPool::ThreadFunc()中线程:43194112,开始等待
+2020/06/25 09:19:27 [info]  pid:2472 监听端口80成功
+2020/06/25 09:19:27 [info]  pid:2472 监听端口443成功
+2020/06/25 09:19:27 [info]  pid:2474 SerThreadPool::Creat()中创建线程成功，id=1520441088!
+2020/06/25 09:19:27 [stderr]  pid:2474 server: SerThreadPool::ThreadFunc()中线程:1520441088,开始等待
+2020/06/25 09:21:01 [stderr]  pid:2474 server: 收到的包长度为：108
+2020/06/25 09:21:01 [stderr]  pid:2474 server: 收到的包长度为：104
+2020/06/25 09:21:01 [stderr]  pid:2474 server: SerThreadPool::ThreadFunc()中线程:1520441088,结束等待
+2020/06/25 09:21:01 [stderr]  pid:2474 server: SerThreadPool::ThreadFunc()中线程:1520441088,拿到一条数据
+2020/06/25 09:21:01 [stderr]  pid:2474 server: SerThreadPool::Call()中发现线程池不够用!
+2020/06/25 09:21:01 [info]  pid:2474 SerLogicSocket::RegisterHandler success!
+2020/06/25 09:21:01 [stderr]  pid:2474 server: SerThreadPool::ThreadFunc()中线程:1520441088,拿到一条数据
+2020/06/25 09:21:01 [info]  pid:2474 SerLogicSocket::LoginHandler
+2020/06/25 09:21:01 [stderr]  pid:2474 server: SerThreadPool::ThreadFunc()中线程:1520441088,开始等待
+2020/06/25 09:58:03 [info]  pid:2599 监听端口80成功
+2020/06/25 09:58:03 [info]  pid:2599 监听端口443成功
+2020/06/25 09:58:03 [info]  pid:2601 SerThreadPool::Creat()中创建线程成功，id=-189430016!
+2020/06/25 09:58:03 [stderr]  pid:2601 server: SerThreadPool::ThreadFunc()中线程:-189430016,开始等待
+2020/06/25 09:58:21 [stderr]  pid:2601 server: 收到的包长度为：108
+2020/06/25 09:58:21 [stderr]  pid:2601 server: 收到的包长度为：104
+2020/06/25 09:58:21 [stderr]  pid:2601 server: SerThreadPool::ThreadFunc()中线程:-189430016,结束等待
+2020/06/25 09:58:21 [stderr]  pid:2601 server: SerThreadPool::ThreadFunc()中线程:-189430016,拿到一条数据
+2020/06/25 09:58:21 [stderr]  pid:2601 server: SerThreadPool::Call()中发现线程池不够用!
+2020/06/25 09:58:21 [info]  pid:2601 SerLogicSocket::RegisterHandler success!
+2020/06/25 09:58:21 [stderr]  pid:2601 server: SerThreadPool::ThreadFunc()中线程:-189430016,拿到一条数据
+2020/06/25 09:58:21 [info]  pid:2601 SerLogicSocket::LoginHandler
+2020/06/25 09:58:21 [stderr]  pid:2601 server: SerThreadPool::ThreadFunc()中线程:-189430016,开始等待
+2020/06/25 09:58:42 [stderr]  pid:2601 server: 处理写事件.......

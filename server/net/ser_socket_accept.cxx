@@ -115,7 +115,12 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection)
         pTCPConnection->mRHandler = &SerSocket::ser_wait_request_handler;
 
         //将TCP连接以及对应的事件加入到epoll对象
-        if(ser_epoll_add_event(tcpSockFd, 1, 0, 0, EPOLL_CTL_ADD, pTCPConnection) == -1)
+        if(ser_epoll_oper_event(
+            tcpSockFd,
+            EPOLL_CTL_ADD,
+            EPOLLIN|EPOLLRDHUP, //EPOLLRDHUP:TCP断开，或者关闭
+            0,
+            pTCPConnection) == -1)
         {
             //增加事件失败，回收连接池及关闭套接字
             ser_close_connection(pTCPConnection);

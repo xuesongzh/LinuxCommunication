@@ -46,30 +46,33 @@ struct ser_connection_s
 {
     ser_connection_s();
     ~ser_connection_s();
-    void GetOneToUse(); //去一个连接时需要更新的一些状态
+    void GetOneToUse();  //去一个连接时需要更新的一些状态
     void PutOneToFree(); //释放连接池对象时需要更新的状态
 
-    int mSockFd; //套接字描述符
+    int mSockFd;                  //套接字描述符
     lpser_listening_t mListening; //如果这个连接与监听套接字绑定，指向监听套接字
 
-    unsigned mInstance:1; //位域，失效标志物，0：有效，1：失效
-    uint64_t mCurrsequence; //序号，每次分配出去+1，用于检测过期包，废包
+    unsigned mInstance : 1;    //位域，失效标志物，0：有效，1：失效
+    uint64_t mCurrsequence;    //序号，每次分配出去+1，用于检测过期包，废包
     struct sockaddr mSockAddr; //保存地址
 
-    uint8_t mWReady; //写准备好标记
+    uint8_t mWReady;             //写准备好标记
     ser_event_handler mRHandler; //读事件相关处理
     ser_event_handler mWHandler; //写事件相关处理
 
     pthread_mutex_t mLogicProcMutex; //业务逻辑处理锁
 
     //收数据包相关
-    int mRecvStat; //收数据包状态：PKG_HD_INIT...
+    int mRecvStat;                         //收数据包状态：PKG_HD_INIT...
     char mPkgHeadInfo[PKG_HEAD_INFO_SIZE]; //接收数据包头数据，长度比数据包结构体大
-    char* mRecvLocation; //接收数据的位置
-    unsigned int mRecvLength; //接收数据长度
+    char *mRecvLocation;                   //接收数据的位置
+    unsigned int mRecvLength;              //接收数据长度
 
     bool mIfNewRecvMem; //接收数据的时候是否new了内存
-    char* mPkgData; //和mIfNewRecvMem搭配使用，包含消息头，包头，消息体的数据
+    char *mPkgData;     //和mIfNewRecvMem搭配使用，包含消息头，包头，消息体的数据
+
+    //epoll事件
+    uint32_t mEpollEvents;
 
     lpser_connection_t mNext;
 };
@@ -94,20 +97,26 @@ public:
 
     //epoll
     int ser_epoll_init();
-    int ser_epoll_add_event(
-        const int& fd, 
-        const int& readEvent,
-        const int& writeEvent,
-        const uint32_t& otherFlag,
-        const uint32_t& eventType,
-        lpser_connection_t& pConnection);
+    // int ser_epoll_add_event(
+    //     const int &fd,
+    //     const int &readEvent,
+    //     const int &writeEvent,
+    //     const uint32_t &otherFlag,
+    //     const uint32_t &eventType,
+    //     lpser_connection_t &pConnection);
+    int ser_epoll_oper_event(
+        const int &fd,                    //socket描述符
+        const uint32_t &eventType,        //时间类型:EPOLL_CTL_ADD,EPOLL_CTL_MOD,EPOLL_CTL_DEL
+        const uint32_t &events,           //关心的事件：EPOLLIN等
+        const int supAction,              //补充标记，当EPOLL_CTL_ADD时不需要这个参数
+        lpser_connection_t &pConnection); //连接池对象
     int ser_epoll_process_events(const int& timer);
 
 private:
-    void ReadConf(); 
-    bool ser_open_listening_sockets(); //开启监听端口
-    void ser_close_listening_sockets(); //关闭监听套接字
-    bool ser_set_nonblocking(const int& sockfd); //设置非阻塞套接字
+    void ReadConf();
+    bool ser_open_listening_sockets();           //开启监听端口
+    void ser_close_listening_sockets();          //关闭监听套接字
+    bool ser_set_nonblocking(const int &sockfd); //设置非阻塞套接字
 
     //连接池
     lpser_connection_t ser_get_free_connection(const int& sockfd);
