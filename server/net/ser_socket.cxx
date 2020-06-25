@@ -48,6 +48,7 @@ void SerSocket::ReadConf()
     auto pConfiger = SerConfiger::GetInstance();
     mListenPortCount = pConfiger->GetIntDefault("ListenPortCount", mListenPortCount);
     mWorkerConnections = pConfiger->GetIntDefault("WorkerConnections", mWorkerConnections);
+    mRecyWaiteTime = pConfiger->GetIntDefault("RecyConnectionWaiteTime", mRecyWaiteTime);
     return;
 }
 

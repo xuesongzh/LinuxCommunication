@@ -89,7 +89,22 @@ void SerSocket::ser_clear_connection()
     }
 }
 
+void SerSocket::ser_in_recy_connection(lpser_connection_t& pConnection)
+{
+    SER_LOG(SER_LOG_INFO,0,"一个连接入延迟回收队列!");
 
+    SerLock locker(&mRecyConnectionMutex);
+
+    pConnection->mInRecyTime = time(NULL); //记录回收时间
+    ++pConnection->mCurrsequence;
+    mRecyConnectionList.push_back(pConnection);
+    return;
+}
+
+void SerSocket::ser_recy_connection_thread(void* pThreadData)
+{
+    
+}
 
 lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 {
@@ -153,6 +168,14 @@ lpser_connection_t SerSocket::ser_get_free_connection(const int& sockfd)
 
 void SerSocket::ser_free_connection(lpser_connection_t& pConnection)
 {
+    SerLock locker(&mConnectionMutex);
+
+    pConnection->PutOneToFree();
+
+    mFreeConnectionList.push_back(pConnection);
+
+    return;
+
     // if(pConnection->mIfNewRecvMem) //如果new了内存需要释放
     // {
     //     SerMemory::GetInstance()->FreeMemory(pConnection->mPkgData);
@@ -166,13 +189,12 @@ void SerSocket::ser_free_connection(lpser_connection_t& pConnection)
 
 void SerSocket::ser_close_connection(lpser_connection_t connection)
 {
+    ser_free_connection(connection);
     int fd = connection->mSockFd;
     if(close(fd) == -1)
     {
         SER_LOG(SER_LOG_ALERT, errno, "SerSocket::ser_close_accepted_connection中close tcp fd失败!");
     }
-    connection->mSockFd = -1; //用于判断是否有过期事件的存在
-    ser_free_connection(connection);
     return;
 }
 

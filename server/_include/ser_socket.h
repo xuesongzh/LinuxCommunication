@@ -18,6 +18,7 @@
 #include<sys/epoll.h>
 #include<stdint.h>
 #include<atomic>
+#include<semaphore.h>
 
 #include "ser_pkg_defs.h"
 
@@ -134,6 +135,7 @@ private:
     lpser_connection_t ser_get_free_connection(const int& sockfd);
     void ser_free_connection(lpser_connection_t& pConnection);
     void ser_close_connection(lpser_connection_t connection); //关闭连接池对象并释放对应的套接字对象
+    void ser_in_recy_connection(lpser_connection_t& pConnection);
 
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
@@ -146,8 +148,21 @@ private:
     // void ser_in_msgqueue(char* const& pBuffer);
     // void ser_temp_out_msgqueue();
     // void ser_clear_msgqueue();
+
+    //线程相关
+    static void ser_recy_connection_thread(void* pThreadData); //用于延迟回收连接池
     
 private:
+    struct ThreadItem //延迟回收线程结构
+    {
+        pthread_t mHandle;
+        SerSocket* mThis;
+        bool mIfRunning;
+
+        ThreadItem(SerSocket* pThis) : mThis(pThis), mIfRunning(false) {}
+        ~ThreadItem() {}
+    };
+
     int mListenPortCount; //监听端口数目，配置文件配置
     int mWorkerConnections; //epoll连接的最大数目，配置文件配置
     int mEpollFd; //epoll对象描述符
@@ -157,8 +172,15 @@ private:
     std::list<lpser_connection_t> mRecyConnectionList; //延迟回收队列
     pthread_mutex_t mConnectionMutex;
     pthread_mutex_t mRecyConnectionMutex;
-
     int mRecyWaiteTime; //延迟回收等待时间(s)
+
+    //发消息队列
+    std::list<char*> mMsgSendQueue;
+    pthread_mutex_t mSendQueueMutex;
+    sem_t mSendQueueSem; //信号量
+
+    //线程容器，目前只有一个用于将延迟回收队列中的连接对象放入空闲连接
+    std::vector<ThreadItem*> mThreads;
 
     std::vector<lpser_listening_t> mListenSocketList; //监听套接字队列
 
