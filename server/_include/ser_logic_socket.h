@@ -22,13 +22,13 @@ public:
     virtual bool Initialize();
 public:
     bool RegisterHandler(
-        lpser_connection_t const& pConnection,
+        lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength);
 
     bool LoginHandler(
-        lpser_connection_t const& pConnection,
+        lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength);

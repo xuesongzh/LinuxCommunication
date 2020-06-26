@@ -13,7 +13,7 @@
 
 //成员函数指针
 typedef bool (SerLogicSocket::*handler)(
-        lpser_connection_t const& pConnection,
+        lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength);
@@ -120,7 +120,7 @@ void SerLogicSocket::ser_thread_process_message(char* const& pPkgData)
 
 //业务逻辑-----------------------------
 bool SerLogicSocket::RegisterHandler(
-        lpser_connection_t const& pConnection,
+        lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength)
@@ -171,13 +171,25 @@ bool SerLogicSocket::RegisterHandler(
     int crc32 = pCRC32->Get_CRC((unsigned char*)pSendBody, sendLength);
     pPkgHeader->mCRC32 = htonl(crc32);
 
+    //往epoll中增加可写事件，以发送数据
+    //如果发送缓冲区未满，LT模式下会一直处理可写事件的位置，知道发送缓冲区满返回EAGAIN标记
+    if(ser_epoll_oper_event(
+        pConnection->mSockFd,
+        EPOLL_CTL_MOD,
+        EPOLLOUT,
+        0,
+        pConnection) == -1)
+    {
+        SER_LOG_STDERR(0, "SerLogicSocket::RegisterHandler()中，往epoll增加EPOLL_CTL_MOD事件失败!");
+    }
+
 
     SER_LOG(SER_LOG_INFO,0,"SerLogicSocket::RegisterHandler success!");
     return true;
 }
 
 bool SerLogicSocket::LoginHandler(
-        lpser_connection_t const& pConnection,
+        lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength)

@@ -121,7 +121,7 @@ public:
         const int &fd,                    //socket描述符
         const uint32_t &eventType,        //时间类型:EPOLL_CTL_ADD,EPOLL_CTL_MOD,EPOLL_CTL_DEL
         const uint32_t &events,           //关心的事件：EPOLLIN等
-        const int supAction,              //补充标记，当EPOLL_CTL_ADD时不需要这个参数
+        const int supAction,              //补充标记，当EPOLL_CTL_ADD时不需要这个参数,EPOLL_CTL_MOD有效，0：增加，1：去掉，2：覆盖
         lpser_connection_t &pConnection); //连接池对象
     int ser_epoll_process_events(const int& timer);
 

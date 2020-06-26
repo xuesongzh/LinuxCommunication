@@ -315,19 +315,19 @@ int SerSocket::ser_epoll_process_events(const int& timer)
     for(int i = 0; i < events; ++i)
     {
         pConnection = (lpser_connection_t)(mEvents[i].data.ptr);
-        instance = (uintptr_t)pConnection & 1; //取出instance
-        pConnection = (lpser_connection_t)((uintptr_t)pConnection & (uintptr_t)~1); //取得连接池真正的地址
+        // instance = (uintptr_t)pConnection & 1; //取出instance
+        // pConnection = (lpser_connection_t)((uintptr_t)pConnection & (uintptr_t)~1); //取得连接池真正的地址
 
-        //过滤过期事件
-        if(pConnection->mSockFd == -1)
-        {
-            //一个套接字，当关联一个 连接池中的连接【对象】时，这个套接字值是要给到mSockFd的，关闭连接时这个mSockFd会被设置为-1
-            //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭，那我们应该会把mSockFd设置为-1；
-            //第二个事件照常处理
-            //第三个事件，假如这第三个事件，也跟第一个事件对应的是同一个连接，那这个条件就会成立；那么这种事件，属于过期事件，不该处理
-            SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了mSockFd == -1的过期事件!");
-            continue;
-        }
+        // //过滤过期事件
+        // if(pConnection->mSockFd == -1)
+        // {
+        //     //一个套接字，当关联一个 连接池中的连接【对象】时，这个套接字值是要给到mSockFd的，关闭连接时这个mSockFd会被设置为-1
+        //     //比如我们用epoll_wait取得三个事件，处理第一个事件时，因为业务需要，我们把这个连接关闭，那我们应该会把mSockFd设置为-1；
+        //     //第二个事件照常处理
+        //     //第三个事件，假如这第三个事件，也跟第一个事件对应的是同一个连接，那这个条件就会成立；那么这种事件，属于过期事件，不该处理
+        //     SER_LOG(SER_LOG_DEBUG,0,"SerSocket::ser_epoll_process_events中遇到了mSockFd == -1的过期事件!");
+        //     continue;
+        // }
 
         // if(instance != pConnection->mInstance)
         // {
@@ -430,6 +430,21 @@ int SerSocket::ser_epoll_oper_event(
     else if(eventType == EPOLL_CTL_MOD)
     {
         //修改红黑树中节点的事件
+        ev.events = pConnection->mEpollEvents;
+        if(supAction == 0) //增加
+        {
+            ev.events |= events;
+        }
+        else if(supAction == 1) //去掉
+        {
+            ev.events &= ~events;
+        }
+        else if(supAction == 2) //覆盖
+        {
+            ev.events = events;
+        }
+
+        pConnection->mEpollEvents = ev.events;
     }
     else //EPOLL_CTL_DEL
     {
