@@ -182,7 +182,7 @@ private:
     //发消息队列
     std::list<char*> mMsgSendQueue;
     pthread_mutex_t mSendQueueMutex;
-    sem_t mSendQueueSem; //信号量
+    sem_t mSendQueueSem; //发消息线程信号量
 
     //线程容器，目前只有一个用于将延迟回收队列中的连接对象放入空闲连接
     std::vector<ThreadItem*> mThreads;

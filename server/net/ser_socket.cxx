@@ -423,7 +423,7 @@ int SerSocket::ser_epoll_oper_event(
     if(eventType == EPOLL_CTL_ADD)
     {
         //增加红黑树中的节点
-        ev.data.ptr = (void*)pConnection;
+        // ev.data.ptr = (void*)pConnection;
         ev.events = events;
         pConnection->mEpollEvents = events; //连接对象上也记录一下这个事件
     }
@@ -452,6 +452,7 @@ int SerSocket::ser_epoll_oper_event(
         return 1;
     }
 
+    ev.data.ptr = (void*)pConnection; //修复bug,否则会崩溃，因为linux内核对EPOLL_CTL_MOD的实现方式
     if(epoll_ctl(mEpollFd, eventType, fd, &ev) == -1)
     {
         SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_epoll_oper_event()中epoll_ctl()执行失败!");
