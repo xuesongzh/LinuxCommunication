@@ -52,6 +52,86 @@ void SerSocket::ReadConf()
     return;
 }
 
+bool SerSocket::ser_init_subproc()
+{
+    //发消息队列互斥量初始化
+    if(pthread_mutex_init(&mSendQueueMutex, NULL) != 0)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中pthread_mutex_init(mSendQueueMutex)失败!");
+        return false;
+    }
+    //连接池互斥量初始化
+    if(pthread_mutex_init(&mConnectionMutex, NULL) != 0)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中pthread_mutex_init(mConnectionMutex)失败!");
+        return false;
+    }
+    //延迟回收队列互斥量初始化
+    if(pthread_mutex_init(&mRecyConnectionMutex, NULL) != 0)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中pthread_mutex_init(mRecyConnectionMutex)失败!");
+        return false;
+    }
+
+    //初始化发消息相关信号量，信号量用于进程/线程 之间的同步
+    //第二个参数=0，表示信号量在线程之间共享，确实如此 ，如果非0，表示在进程之间共享
+    //第三个参数=0，表示信号量的初始值，为0时，调用sem_wait()就会卡在那里卡着
+    if (sem_init(&mSendQueueSem, 0, 0) == -1)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中sem_init(mSendQueueSem)失败!");
+        return false;
+    }
+
+    //创建线程用于延迟回收连接池对象
+    int err;
+    ThreadItem* pRecyConnThread;
+    mThreads.push_back(pRecyConnThread = new ThreadItem(this));
+    err = pthread_create(&pRecyConnThread->mHandle, NULL, ser_recy_connection_thread, pRecyConnThread);
+    if(err != 0)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中创建延迟回收线程失败!");
+        return false;
+    }
+    return true;
+}
+
+void SerSocket::ser_shutdown_subproc()
+{
+    //停止线程
+    for(auto& thread : mThreads)
+    {
+        pthread_join(thread->mHandle, NULL); //等待一个线程终止
+    }
+
+    for(auto& thread : mThreads)
+    {
+        DEL_PTR(thread); //释放new出来的线程
+    }
+    mThreads.clear();
+
+    //队列相关
+    ser_clear_send_queue();
+    ser_clear_connection();
+
+    //多线程相关
+    pthread_mutex_destroy(&mConnectionMutex);
+    pthread_mutex_destroy(&mRecyConnectionMutex);
+    pthread_mutex_destroy(&mSendQueueMutex);
+    sem_destroy(&mSendQueueSem);
+}
+
+void SerSocket::ser_clear_send_queue()
+{
+    char* pSendMsg = nullptr;
+    auto pMemory = SerMemory::GetInstance();
+    while(!mMsgSendQueue.empty())
+    {
+        pSendMsg = mMsgSendQueue.front();
+        mMsgSendQueue.pop_front();
+        pMemory->FreeMemory(pSendMsg);
+    }
+}
+
 bool SerSocket::ser_open_listening_sockets()
 {
     int listenSockFd; //监听套接字

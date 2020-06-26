@@ -89,7 +89,7 @@ void SerSocket::ser_clear_connection()
     }
 }
 
-void SerSocket::ser_in_recy_connection(lpser_connection_t& pConnection)
+void SerSocket::ser_in_recy_connection(lpser_connection_t const& pConnection)
 {
     SER_LOG(SER_LOG_INFO,0,"一个连接入延迟回收队列!");
 
@@ -104,6 +104,7 @@ void SerSocket::ser_in_recy_connection(lpser_connection_t& pConnection)
 
 void* SerSocket::ser_recy_connection_thread(void* pThreadData)
 {
+    SER_LOG(SER_LOG_INFO, 0, "延迟回收线程启动!");
     auto pThread = static_cast<ThreadItem*>(pThreadData);
     auto pSocket = pThread->mThis;
     std::list<lpser_connection_t>::iterator iter, iterEnd;
@@ -117,7 +118,7 @@ void* SerSocket::ser_recy_connection_thread(void* pThreadData)
 
         if(!pSocket->mRecyConnectionList.empty())
         {
-            SER_LOG(SER_LOG_INFO, 0, "延迟回收队列大小：%d", pSocket->mRecyConnectionList.size());
+            // SER_LOG(SER_LOG_INFO, 0, "延迟回收队列大小：%d", pSocket->mRecyConnectionList.size());
             currentTime = time(NULL);
             err = pthread_mutex_lock(&pSocket->mRecyConnectionMutex);
             if (0 != err)

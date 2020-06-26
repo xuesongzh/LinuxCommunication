@@ -92,7 +92,11 @@ ssize_t SerSocket::ser_recv_pkg(lpser_connection_t const& pConnection, char* con
     if(0 == recvPkgLength)
     {
         SER_LOG(SER_LOG_INFO, 0, "客户端关闭，四次挥手结束，正常关闭!");
-        ser_close_connection(pConnection);
+        if(close(pConnection->mSockFd) == -1)
+        {
+            SER_LOG(SER_LOG_ALERT,errno,"SerSocket::ser_recv_pkg()中close(%d)失败!",pConnection->mSockFd);  
+        }
+        ser_in_recy_connection(pConnection); //已经创建好的连接池对象进入延迟回收，保证系统稳定
         return -1;
     }
 
@@ -123,7 +127,11 @@ ssize_t SerSocket::ser_recv_pkg(lpser_connection_t const& pConnection, char* con
             SER_LOG_STDERR(errno, "SerSocket::ser_recv_pkg()中发生错误!");
         }
 
-        ser_close_connection(pConnection); //关闭套接字和连接此对象
+        if(close(pConnection->mSockFd) == -1)
+        {
+            SER_LOG(SER_LOG_ALERT,errno,"SerSocket::ser_recv_pkg()中close(%d)失败!",pConnection->mSockFd);  
+        }
+        ser_in_recy_connection(pConnection); //有错误发生时，已经创建好的连接池对象进入延迟回收，保证系统稳定
         return -1;
     }
 

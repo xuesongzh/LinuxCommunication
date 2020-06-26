@@ -102,8 +102,10 @@ public:
     virtual ~SerSocket();
 
 public:
-    virtual bool Initialize();
+    virtual bool Initialize(); //父进程中执行，初始化函数
     virtual void ser_thread_process_message(char* const& pPkgData);
+    bool ser_init_subproc(); //子进程中执行，初始化函数
+    void ser_shutdown_subproc(); //子进程中执行，程序退出时要执行的函数
     // char* ser_get_one_message();
 
     //epoll
@@ -129,13 +131,16 @@ private:
     void ser_close_listening_sockets();          //关闭监听套接字
     bool ser_set_nonblocking(const int &sockfd); //设置非阻塞套接字
 
+    //发消息相关
+    void ser_clear_send_queue();
+
     //连接池
     void ser_init_connection(); //初始化连接池
     void ser_clear_connection(); //回收连接池
     lpser_connection_t ser_get_free_connection(const int& sockfd);
     void ser_free_connection(lpser_connection_t& pConnection);
     void ser_close_connection(lpser_connection_t connection); //关闭连接池对象并释放对应的套接字对象
-    void ser_in_recy_connection(lpser_connection_t& pConnection);
+    void ser_in_recy_connection(lpser_connection_t const& pConnection);
 
     //event
     void ser_event_accept(lpser_connection_t listenConnection);

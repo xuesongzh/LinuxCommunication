@@ -145,6 +145,7 @@ static void ser_worker_process_cycle(int processIndex)
 	}
 
 	g_threadpool.StopAll();
+	g_socket.ser_shutdown_subproc();
 
 	return;
 }
@@ -168,6 +169,13 @@ static void ser_worker_process_init(int processIndex)
 		exit(-2);
 	}
 	sleep(1); //休息1秒，防止还没有创建好线程池就来事件了
+
+	//初始化子进程
+	if(true != g_socket.ser_init_subproc())
+	{
+		SER_LOG_STDERR(0, "ser_worker_process_init()中g_socket.ser_init_subproc()失败!");
+		exit(-2);
+	}
 
 	//初始化epoll对象，并且往监听套接字上增加读事件
 	g_socket.ser_epoll_init();
