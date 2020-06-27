@@ -112,7 +112,7 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection)
 
         pTCPConnection->mListening = listenConnection->mListening;
         // pTCPConnection->mWReady = 1;
-        pTCPConnection->mRHandler = &SerSocket::ser_wait_request_handler;
+        pTCPConnection->mRHandler = &SerSocket::ser_read_request_handler;
 
         //将TCP连接以及对应的事件加入到epoll对象
         if(ser_epoll_oper_event(

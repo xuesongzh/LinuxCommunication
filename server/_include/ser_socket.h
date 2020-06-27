@@ -144,7 +144,7 @@ private:
 
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
-    void ser_wait_request_handler(lpser_connection_t tcpConnection);
+    void ser_read_request_handler(lpser_connection_t tcpConnection);
 
     //pkg
     ssize_t ser_recv_pkg(lpser_connection_t const& pConnection, char* const& pBuffer, const ssize_t& bufferLength);

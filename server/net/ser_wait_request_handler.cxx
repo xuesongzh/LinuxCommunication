@@ -14,7 +14,7 @@
 #include "ser_lock.h"
 #include "ser_threadpool.h"
 
-void SerSocket::ser_wait_request_handler(lpser_connection_t tcpConnection)
+void SerSocket::ser_read_request_handler(lpser_connection_t tcpConnection)
 {
     ssize_t recvLength = ser_recv_pkg(tcpConnection, tcpConnection->mRecvLocation, tcpConnection->mRecvLength);
     if(recvLength <= 0)
