@@ -171,20 +171,24 @@ bool SerLogicSocket::RegisterHandler(
     int crc32 = pCRC32->Get_CRC((unsigned char*)pSendBody, sendLength);
     pPkgHeader->mCRC32 = htonl(crc32);
 
-    //往epoll中增加可写事件，以发送数据
-    //如果发送缓冲区未满，LT模式下会一直处理可写事件的位置，知道发送缓冲区满返回EAGAIN标记
-    if(ser_epoll_oper_event(
-        pConnection->mSockFd,
-        EPOLL_CTL_MOD,
-        EPOLLOUT,
-        0,
-        pConnection) == -1)
-    {
-        SER_LOG_STDERR(0, "SerLogicSocket::RegisterHandler()中，往epoll增加EPOLL_CTL_MOD事件失败!");
-    }
+    //将发送数据包入发送消息队列
+    ser_in_send_queue(pSendBuffer);
+
+    //测试程序
+    // //往epoll中增加可写事件，以发送数据
+    // //如果发送缓冲区未满，LT模式下会一直处理可写事件的位置，知道发送缓冲区满返回EAGAIN标记
+    // if(ser_epoll_oper_event(
+    //     pConnection->mSockFd,
+    //     EPOLL_CTL_MOD,
+    //     EPOLLOUT,
+    //     0,
+    //     pConnection) == -1)
+    // {
+    //     SER_LOG_STDERR(0, "SerLogicSocket::RegisterHandler()中，往epoll增加EPOLL_CTL_MOD事件失败!");
+    // }
 
 
-    SER_LOG(SER_LOG_INFO,0,"SerLogicSocket::RegisterHandler success!");
+    // SER_LOG(SER_LOG_INFO,0,"SerLogicSocket::RegisterHandler success!");
     return true;
 }
 

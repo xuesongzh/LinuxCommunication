@@ -125,6 +125,10 @@ public:
         lpser_connection_t &pConnection); //连接池对象
     int ser_epoll_process_events(const int& timer);
 
+protected:
+    //发消息队列
+    void ser_in_send_queue(char*& pSendBuffer);
+
 private:
     void ReadConf();
     bool ser_open_listening_sockets();           //开启监听端口
@@ -145,6 +149,7 @@ private:
     //event
     void ser_event_accept(lpser_connection_t listenConnection);
     void ser_read_request_handler(lpser_connection_t tcpConnection);
+    void ser_write_request_handler(lpser_connection_t tcpConnection);
 
     //pkg
     ssize_t ser_recv_pkg(lpser_connection_t const& pConnection, char* const& pBuffer, const ssize_t& bufferLength);
@@ -155,6 +160,7 @@ private:
     // void ser_clear_msgqueue();
 
     //线程相关
+    static void* ser_send_msg_queue_thread(void* pThreadData);
     static void* ser_recy_connection_thread(void* pThreadData); //用于延迟回收连接池
     
 private:

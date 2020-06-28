@@ -12,6 +12,7 @@
 #include "ser_log.h"
 #include "ser_configer.h"
 #include "ser_memory.h"
+#include "ser_lock.h"
 
 SerSocket::SerSocket():mListenPortCount(1), mWorkerConnections(1),mEpollFd(-1),
     mRecyWaiteTime(60)
@@ -82,8 +83,18 @@ bool SerSocket::ser_init_subproc()
         return false;
     }
 
-    //创建线程用于延迟回收连接池对象
     int err;
+    //创建线程，用于发送数据
+    ThreadItem* pSendQueueThread;
+    mThreads.push_back(pSendQueueThread = new ThreadItem(this));
+    err = pthread_create(&pSendQueueThread->mHandle, NULL, ser_send_msg_queue_thread, pSendQueueThread);
+    if(err != 0)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_init_subproc()中创建发送数据线程失败!");
+        return false;
+    }
+
+    //创建线程用于延迟回收连接池对象
     ThreadItem* pRecyConnThread;
     mThreads.push_back(pRecyConnThread = new ThreadItem(this));
     err = pthread_create(&pRecyConnThread->mHandle, NULL, ser_recy_connection_thread, pRecyConnThread);
@@ -512,3 +523,23 @@ void SerSocket::ser_close_listening_sockets()
 //         pMemory->FreeMemory(pTemp);
 //     }
 // }
+
+void SerSocket::ser_in_send_queue(char*& pSendBuffer)
+{
+    SER_LOG(SER_LOG_DEBUG, 0, "一个要发送的数据进入消息队列!");
+    SerLock locker(&mSendQueueMutex);
+    mMsgSendQueue.push_back(pSendBuffer);
+    //sem_post将信号量加1，让卡在sem_wait的线程可以走下去
+    if(sem_post(&mSendQueueSem) == -1)
+    {
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_in_send_queue()中sem_post()失败!");
+    }
+
+    return;
+}
+
+void* SerSocket::ser_send_msg_queue_thread(void* pThreadData)
+{
+
+    return (void*)0;
+}
