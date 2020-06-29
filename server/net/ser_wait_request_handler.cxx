@@ -250,3 +250,51 @@ void SerSocket::ser_thread_process_message(char* const& pPkgData)
 
 //     return;   
 // }
+
+
+//发送数据专用函数，返回本次发送的字节数
+//返回 > 0，成功发送了一些字节
+//=0，估计对方断了
+//-1，errno == EAGAIN ，本方发送缓冲区满了
+//-2，errno != EAGAIN != EWOULDBLOCK != EINTR ，认为都是对端断开的错误
+ssize_t SerSocket::ser_send_pkg(const int& sockFd, char* const& pBuffer, const ssize_t& bufferLength)
+{
+    ssize_t sendedLength;
+
+    while(true)
+    {
+        sendedLength = send(sockFd, pBuffer, bufferLength, 0); //系统函数
+        if(sendedLength > 0)
+        {   
+            //发送成功一些数据，但发送了多少，我们这里不关心，也不需要再次send
+            //这里有两种情况
+            //(1) sendedLength == bufferLength，这表示完全发完毕了
+            //(2) sendedLength < bufferLength 没发送完毕，那肯定是发送缓冲区满了，所以也不必要重试发送
+            return sendedLength;
+        }
+
+        if(sendedLength == 0)
+        {
+            //网上找资料：send=0表示超时，对方主动关闭了连接过程
+            //不在send动作里处理关闭socket这种动作，集中到recv那里处理，否则send,recv都处理都处理连接断开关闭socket有点乱
+            //连接断开epoll会通知并且 ser_recv_pkg()那里会处理，不在这里处理
+            return 0;  
+        }
+
+        if(errno == EAGAIN) // == EWOULDBLOCK
+        {
+            //内核缓冲区已满，不算错误
+            return -1;
+        }
+
+        if(errno == EINTR)
+        {
+            //被某个信号中断，等下次for循环重新send试一次
+            SER_LOG(SER_LOG_ALERT,errno,"CSocekt::SerSocket::ser_send_pkg()中send()失败,被某个信号中断!"); 
+        }
+        else
+        {
+            return -2;
+        }
+    }
+}

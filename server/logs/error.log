@@ -1,0 +1,12 @@
+2020/06/29 19:50:57 [info]  pid:2856 监听端口80成功
+2020/06/29 19:50:57 [info]  pid:2856 监听端口443成功
+2020/06/29 19:50:57 [info]  pid:2858 SerThreadPool::Creat()中创建线程成功，id=-237132032!
+2020/06/29 19:50:57 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,开始等待
+2020/06/29 19:50:58 [info]  pid:2858 延迟回收线程启动!
+2020/06/29 20:00:17 [stderr]  pid:2858 server: 收到的包长度为：108
+2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,结束等待
+2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,拿到一条数据
+2020/06/29 20:00:17 [debug]  pid:2858 一个要发送的数据进入消息队列!
+2020/06/29 20:00:17 [debug]  pid:2858 即将发送数据大小为：108
+2020/06/29 20:00:17 [debug]  pid:2858 数据发送完毕
+2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,开始等待

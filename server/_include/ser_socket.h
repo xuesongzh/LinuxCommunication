@@ -137,6 +137,7 @@ private:
 
     //发消息相关
     void ser_clear_send_queue();
+    ssize_t ser_send_pkg(const int& sockFd, char* const& pBuffer, const ssize_t& bufferLength);
 
     //连接池
     void ser_init_connection(); //初始化连接池

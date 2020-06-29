@@ -538,8 +538,107 @@ void SerSocket::ser_in_send_queue(char*& pSendBuffer)
     return;
 }
 
+//发消息线程处理函数
 void* SerSocket::ser_send_msg_queue_thread(void* pThreadData)
 {
+    //初始化一些变量
+    auto pSendThread = static_cast<ThreadItem*>(pThreadData);
+    auto pSocket = pSendThread->mThis;
+    int err = 0;
+    std::list<char*>::iterator iter, iterTemp, iterEnd;
+
+    char* pMsgBuffer = nullptr;
+    LPMSG_HEADER pMsgHeader = nullptr;
+    LPPKG_HEADER pPkgHeader = nullptr;
+    lpser_connection_t pConnection = nullptr;
+    ssize_t sendedSize = 0;
+    auto pMemory = SerMemory::GetInstance();
+
+    //发数据
+    while(g_stopEvent == 0) //程序不退出
+    {
+        //如果信号量值>0，则减1并走下去，否则卡这里卡着。
+        //如果被某个信号中断，sem_wait也可能过早的返回，错误为EINTR；不算是错误
+        //整个程序退出之前，也要sem_post()一下，确保如果本线程卡在sem_wait()，也能走下去从而让本线程成功返回
+       if((sem_wait(&pSocket->mSendQueueSem) == -1) && (errno != EINTR))
+       {
+           SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_send_msg_queue_thread()中sem_wait()失败!");
+       }
+
+        if(!pSocket->mMsgSendQueue.empty()) //发送消息队列不为空需要发送消息
+        {
+            err = pthread_mutex_lock(&pSocket->mSendQueueMutex);
+            if(err != 0)
+            {
+                SER_LOG(SER_LOG_STDERR, err, "SerSocket::ser_send_msg_queue_thread()中pthread_mutex_lock失败！");
+            }
+
+            iter = pSocket->mMsgSendQueue.begin();
+            iterEnd = pSocket->mMsgSendQueue.end();
+
+            while(iter != iterEnd)
+            {
+                pMsgBuffer = *iter;
+                pMsgHeader = (LPMSG_HEADER)pMsgBuffer;
+                pPkgHeader = (LPPKG_HEADER)(pMsgBuffer + MSG_HEADER_LENGTH);
+                pConnection = pMsgHeader->mConnection;
+
+                //判断包是否过期,比如连接断开pConnection->mCurrsequence会加一
+                if(pConnection->mCurrsequence != pMsgHeader->mCurrsequence)
+                {
+                    iterTemp = iter;
+                    iter++;
+                    pSocket->mMsgSendQueue.erase(iterTemp); //从队列中移走
+                    pMemory->FreeMemory(pMsgBuffer); //释放内存
+                    continue;
+                }
+
+                if(pConnection->mThrowSendCount > 0) //是否考epoll驱动来发消息
+                {
+                    //如果靠epoll来发送消息，则不走下面的流程
+                    iter++;
+                    continue;
+                }
+
+                pConnection->mSendPkgData = pMsgBuffer;
+                iterTemp = iter;
+                iter++;
+                pSocket->mMsgSendQueue.erase(iterTemp); //移除要发送的数据
+                pConnection->mSendLocation = (char*)pPkgHeader;
+                pConnection->mSendLength = htons(pPkgHeader->mPkgLength);
+
+                //我们采用 epoll水平触发的策略，能走到这里的，都应该是还没有投递 写事件 到epoll中
+                //epoll水平触发发送数据的改进方案：
+	            //开始不把socket写事件通知加入到epoll,当我需要写数据的时候，直接调用write/send发送数据；
+	            //如果返回了EAGIN【发送缓冲区满了，需要等待可写事件才能继续往缓冲区里写数据】，此时，我再把写事件通知加入到epoll，
+	            //此时，就变成了在epoll驱动下写数据，全部数据发送完毕后，再把写事件通知从epoll中干掉；
+	            //优点：数据不多的时候，可以避免epoll的写事件的增加/删除，提高了程序的执行效率；
+
+                //(1)直接调用write或者send发送数据
+                SER_LOG(SER_LOG_DEBUG, 0, "即将发送数据大小为：%d", pConnection->mSendLength);
+                sendedSize = pSocket->ser_send_pkg(pConnection->mSockFd, pConnection->mSendLocation, pConnection->mSendLength);
+                if(sendedSize > 0)
+                {
+                    if(sendedSize == pConnection->mSendLength) //一次性成功发送完了数据
+                    {
+                        pMemory->FreeMemory(pConnection->mSendPkgData);
+                        pConnection->mThrowSendCount = 0;
+                        SER_LOG(SER_LOG_DEBUG, 0, "数据发送完毕");
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+
+            err = pthread_mutex_unlock(&pSocket->mSendQueueMutex);
+            if(err != 0)
+            {
+                SER_LOG(SER_LOG_STDERR, err, "SerSocket::ser_send_msg_queue_thread()中pthread_mutex_unlock失败！");
+            }
+        }
+    }
 
     return (void*)0;
 }
