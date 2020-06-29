@@ -332,7 +332,7 @@ void SerSocket::ser_write_request_handler(lpser_connection_t tcpConnection)
             SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_write_request_handler()中ser_epoll_oper_event()失败!");
         }
 
-        SER_LOG(SER_LOG_DEBUG, 0, "epoll驱动发送数据完毕!");
+        SER_LOG_STDERR(0, "epoll驱动发送数据完毕!");
     }
 
     //收尾工作，这里要么数据发送完毕，要么对端断开
