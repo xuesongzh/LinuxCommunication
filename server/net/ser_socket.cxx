@@ -108,6 +108,12 @@ bool SerSocket::ser_init_subproc()
 
 void SerSocket::ser_shutdown_subproc()
 {
+    //用到信号量的，可能还需要调用一下sem_post,让发送数据的线程流程走下去
+    if(sem_post(&mSendQueueSem )== -1)
+    {
+         SER_LOG(SER_LOG_STDERR, 0,"SerSocket::ser_shutdown_subprocc()中sem_post()失败!");
+    }
+
     //停止线程
     for(auto& thread : mThreads)
     {
@@ -374,7 +380,20 @@ int SerSocket::ser_epoll_process_events(const int& timer)
 
         if(eventType & EPOLLOUT) //如果是写事件
         {
-            SER_LOG_STDERR(0, "处理写事件.......");
+            // SER_LOG_STDERR(0, "处理写事件.......");
+            if(eventType & (EPOLLERR | EPOLLHUP | EPOLLRDHUP)) //客户端关闭，服务端还挂着可写通知
+            {
+                //EPOLLERR：对应的连接发生错误
+                //EPOLLHUP：对应的连接被挂起
+                //EPOLLRDHUP：表示TCP连接的远端关闭或者半关闭连接 
+                //我们只有投递了 写事件，但对端断开时，程序流程才走到这里，投递了写事件意味着 iThrowsendCount标记肯定被+1了，这里我们减回去
+                --pConnection->mThrowSendCount; 
+            }
+            else
+            {
+                SER_LOG(SER_LOG_DEBUG, 0, "epoll驱动发数据!");
+                (this->*(pConnection->mWHandler))(pConnection);
+            }
         }
     }
 
@@ -625,10 +644,52 @@ void* SerSocket::ser_send_msg_queue_thread(void* pThreadData)
                         pConnection->mThrowSendCount = 0;
                         SER_LOG(SER_LOG_DEBUG, 0, "数据发送完毕");
                     }
-                    else
+                    else //数据没有发完，肯定是因为缓冲区满了，这是需要为epoll对象添加写事件，用内核驱动发数据
                     {
-
+                        SER_LOG(SER_LOG_DEBUG, 0, "发送缓冲区满了，数据没有发完!此时靠epoll驱动发数据!");
+                        pConnection->mSendLocation = pConnection->mSendLocation + sendedSize; //更新发送数据的位置
+                        pConnection->mSendLength = pConnection->mSendLength - sendedSize; //更新发送数据大小
+                        ++pConnection->mThrowSendCount; //标记需要通过epoll事件驱动来发送数据
+                        if(pSocket->ser_epoll_oper_event(
+                            pConnection->mSockFd,
+                            EPOLL_CTL_MOD,
+                            EPOLLOUT,
+                            0,
+                            pConnection
+                        ) == -1)
+                        {
+                            SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_send_msg_queue_thread()中ser_epoll_oper_event()失败!");
+                        }
                     }
+                    continue;
+                }
+                else if(sendedSize == 0)
+                {
+                    //发送0个字节，首先因为我发送的内容不是0个字节的；
+                    //然后如果发送 缓冲区满则返回的应该是-1，而错误码应该是EAGAIN，所以我综合认为，这种情况我就把这个发送的包丢弃了【按对端关闭了socket处理】
+                    pMemory->FreeMemory(pConnection->mSendPkgData);
+                    pConnection->mThrowSendCount = 0;
+                }
+                else if(sendedSize == -1)
+                {
+                    //发送缓冲区满，一个字节都没有发出去
+                    SER_LOG(SER_LOG_DEBUG, 0, "发送缓冲区满，一个字节都没有发出去!");
+                    ++pConnection->mThrowSendCount;
+                    if (pSocket->ser_epoll_oper_event(
+                            pConnection->mSockFd,
+                            EPOLL_CTL_MOD,
+                            EPOLLOUT,
+                            0,
+                            pConnection) == -1)
+                    {
+                        SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_send_msg_queue_thread()中ser_epoll_oper_event()失败!");
+                    }
+                }
+                else //错误，释放内存
+                {
+                    SER_LOG(SER_LOG_DEBUG, 0, "发送数据错误!");
+                    pMemory->FreeMemory(pConnection->mSendPkgData);
+                    pConnection->mThrowSendCount = 0;
                 }
             }
 

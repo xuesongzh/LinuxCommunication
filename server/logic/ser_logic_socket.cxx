@@ -155,6 +155,9 @@ bool SerLogicSocket::RegisterHandler(
     auto pMemory = SerMemory::GetInstance();
     auto pCRC32 = SerCRC32::GetInstance();
     int sendLength = sizeof(STRUCT_REGISTER);
+
+    //测试缓冲区大小，以及测试epoll驱动发送数据
+    sendLength = 65000;
     //分配内存
     char* pSendBuffer = static_cast<char*>(pMemory->MallocMemory(MSG_HEADER_LENGTH+PKG_HEADER_LENGTH+sendLength, false));
     //消息头

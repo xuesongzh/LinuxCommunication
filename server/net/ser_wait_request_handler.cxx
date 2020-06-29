@@ -13,6 +13,7 @@
 #include "ser_memory.h"
 #include "ser_lock.h"
 #include "ser_threadpool.h"
+#include "ser_memory.h"
 
 void SerSocket::ser_read_request_handler(lpser_connection_t tcpConnection)
 {
@@ -297,4 +298,51 @@ ssize_t SerSocket::ser_send_pkg(const int& sockFd, char* const& pBuffer, const s
             return -2;
         }
     }
+}
+
+void SerSocket::ser_write_request_handler(lpser_connection_t tcpConnection)
+{
+    auto pMemory = SerMemory::GetInstance();
+    ssize_t sendedSize = ser_send_pkg(tcpConnection->mSockFd, tcpConnection->mSendLocation, tcpConnection->mSendLength);
+
+    if(sendedSize > 0 && sendedSize != tcpConnection->mSendLength)
+    {
+        //发送数据不全，继续发送
+        tcpConnection->mSendLocation = tcpConnection->mSendLocation + sendedSize;
+        tcpConnection->mSendLength = tcpConnection->mSendLength - sendedSize;
+        return;
+    }
+    else if(sendedSize == -1)
+    {
+        //可以发送数据时，通知我发送缓冲区已满，不太可能
+        SER_LOG(SER_LOG_STDERR, 0, "SerSocket::ser_write_request_handler()中sendedSize == -1!");
+        return;
+    }
+
+    if (sendedSize > 0 && sendedSize == tcpConnection->mSendLength)
+    {
+        //数据发送完毕，将事件从epoll对象中去掉
+        if (ser_epoll_oper_event(
+                tcpConnection->mSockFd,
+                EPOLL_CTL_MOD,
+                EPOLLOUT,
+                1,
+                tcpConnection) == -1)
+        {
+            SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_write_request_handler()中ser_epoll_oper_event()失败!");
+        }
+
+        SER_LOG(SER_LOG_DEBUG, 0, "epoll驱动发送数据完毕!");
+    }
+
+    //收尾工作，这里要么数据发送完毕，要么对端断开
+    //让线程继续往下走，看是否有新数据可以发送
+    if(sem_post(&mSendQueueSem) == -1)
+    {
+        SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_write_request_handler()sem_post()失败!");
+    }
+
+    pMemory->FreeMemory(tcpConnection->mSendPkgData);
+    --tcpConnection->mThrowSendCount;
+    return;
 }

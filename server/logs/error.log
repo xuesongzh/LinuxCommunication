@@ -1,12 +1,115 @@
-2020/06/29 19:50:57 [info]  pid:2856 监听端口80成功
-2020/06/29 19:50:57 [info]  pid:2856 监听端口443成功
-2020/06/29 19:50:57 [info]  pid:2858 SerThreadPool::Creat()中创建线程成功，id=-237132032!
-2020/06/29 19:50:57 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,开始等待
-2020/06/29 19:50:58 [info]  pid:2858 延迟回收线程启动!
-2020/06/29 20:00:17 [stderr]  pid:2858 server: 收到的包长度为：108
-2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,结束等待
-2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,拿到一条数据
-2020/06/29 20:00:17 [debug]  pid:2858 一个要发送的数据进入消息队列!
-2020/06/29 20:00:17 [debug]  pid:2858 即将发送数据大小为：108
-2020/06/29 20:00:17 [debug]  pid:2858 数据发送完毕
-2020/06/29 20:00:17 [stderr]  pid:2858 server: SerThreadPool::ThreadFunc()中线程:-237132032,开始等待
+2020/06/29 21:22:25 [info]  pid:3384 监听端口80成功
+2020/06/29 21:22:25 [info]  pid:3384 监听端口443成功
+2020/06/29 21:22:25 [info]  pid:3386 SerThreadPool::Creat()中创建线程成功，id=-1086904576!
+2020/06/29 21:22:25 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:22:26 [info]  pid:3386 延迟回收线程启动!
+2020/06/29 21:22:41 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:22:41 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:22:41 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:22:41 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:22:41 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:22:41 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:22:41 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:22:59 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:22:59 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:22:59 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:22:59 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:22:59 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:22:59 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:22:59 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:00 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:00 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:00 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:00 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:00 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:00 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:00 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:01 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:01 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:01 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:01 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:01 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:01 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:01 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:03 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:03 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:03 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:03 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:03 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:03 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:03 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:04 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:04 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:04 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:04 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:04 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:04 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:04 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:05 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:05 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:05 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:05 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:05 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:05 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:05 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:06 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:06 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:06 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:06 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:06 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:06 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:06 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:07 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:07 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:07 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:07 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:07 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:07 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:07 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:07 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:07 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:08 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:08 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:08 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:08 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:08 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:08 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:08 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:09 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:09 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:09 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:09 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:09 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:09 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:09 [debug]  pid:3386 发送缓冲区满了，数据没有发完!此时靠epoll驱动发数据!
+2020/06/29 21:23:10 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:10 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:10 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:10 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:10 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:11 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:11 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:11 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:11 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:11 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:12 [stderr]  pid:3386 server: 收到的包长度为：108
+2020/06/29 21:23:12 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,结束等待
+2020/06/29 21:23:12 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,拿到一条数据
+2020/06/29 21:23:12 [debug]  pid:3386 一个要发送的数据进入消息队列!
+2020/06/29 21:23:12 [stderr]  pid:3386 server: SerThreadPool::ThreadFunc()中线程:-1086904576,开始等待
+2020/06/29 21:23:34 [debug]  pid:3386 epoll驱动发数据!
+2020/06/29 21:23:34 [debug]  pid:3386 epoll驱动发送数据完毕!
+2020/06/29 21:23:34 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:34 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:34 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:34 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:23:34 [debug]  pid:3386 即将发送数据大小为：65008
+2020/06/29 21:23:34 [debug]  pid:3386 数据发送完毕
+2020/06/29 21:24:09 [info]  pid:3386 客户端关闭，四次挥手结束，正常关闭!
+2020/06/29 21:24:09 [info]  pid:3386 一个连接入延迟回收队列!
+2020/06/29 21:24:09 [info]  pid:3386 入延迟回收队列的时间为:1593437049
