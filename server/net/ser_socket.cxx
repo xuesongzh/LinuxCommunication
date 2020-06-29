@@ -646,7 +646,6 @@ void* SerSocket::ser_send_msg_queue_thread(void* pThreadData)
                     }
                     else //数据没有发完，肯定是因为缓冲区满了，这是需要为epoll对象添加写事件，用内核驱动发数据
                     {
-                        SER_LOG(SER_LOG_DEBUG, 0, "发送缓冲区满了，数据没有发完!此时靠epoll驱动发数据!");
                         pConnection->mSendLocation = pConnection->mSendLocation + sendedSize; //更新发送数据的位置
                         pConnection->mSendLength = pConnection->mSendLength - sendedSize; //更新发送数据大小
                         ++pConnection->mThrowSendCount; //标记需要通过epoll事件驱动来发送数据
@@ -660,6 +659,8 @@ void* SerSocket::ser_send_msg_queue_thread(void* pThreadData)
                         {
                             SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_send_msg_queue_thread()中ser_epoll_oper_event()失败!");
                         }
+
+                        SER_LOG_STDERR(0, "发送缓冲区满了，应该发送：%d,实际发送：%d。此时需要靠epoll驱动发数据!", pConnection->mSendLength, sendedSize);
                     }
                     continue;
                 }

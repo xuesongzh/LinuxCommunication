@@ -302,6 +302,7 @@ ssize_t SerSocket::ser_send_pkg(const int& sockFd, char* const& pBuffer, const s
 
 void SerSocket::ser_write_request_handler(lpser_connection_t tcpConnection)
 {
+    SER_LOG_STDERR(0, "执行SerSocket::ser_write_request_handler!");
     auto pMemory = SerMemory::GetInstance();
     ssize_t sendedSize = ser_send_pkg(tcpConnection->mSockFd, tcpConnection->mSendLocation, tcpConnection->mSendLength);
 
@@ -332,7 +333,7 @@ void SerSocket::ser_write_request_handler(lpser_connection_t tcpConnection)
             SER_LOG(SER_LOG_STDERR, errno, "SerSocket::ser_write_request_handler()中ser_epoll_oper_event()失败!");
         }
 
-        SER_LOG(SER_LOG_DEBUG, 0, "epoll驱动发送数据完毕!");
+        SER_LOG_STDERR(0, "epoll驱动发送数据完毕!");
     }
 
     //收尾工作，这里要么数据发送完毕，要么对端断开
