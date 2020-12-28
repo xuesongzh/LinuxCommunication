@@ -12,24 +12,24 @@
 #ifndef __SER_CONFIGER_H__
 #define __SER_CONFIGER_H__
 
-#include <vector>
 #include <mutex>
-#include "ser_macros.h"
+#include <vector>
+
 #include "ser_datastruct.h"
+#include "ser_macros.h"
 
-class SerConfiger
-{  
-DECLEAR_SINGLETON(SerConfiger)
+class SerConfiger {
+    DECLEAR_SINGLETON(SerConfiger)
 
-public:
+ public:
     ~SerConfiger();
 
-public:
-    bool Load(const char* const& pConfFileName);
-    const char* GetString(const char* const& pItemName);
-    int GetIntDefault(const char* const& pItemName, int def);
+ public:
+    bool Load(const char* pConfFileName);
+    const char* GetString(const char* pItemName);
+    int GetIntDefault(const char* pItemName, int def);
 
-private:
+ private:
     std::vector<LPConfItem> mConfItemList;
 };
 

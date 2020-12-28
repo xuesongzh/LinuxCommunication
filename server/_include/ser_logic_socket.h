@@ -14,13 +14,13 @@
 
 #include "ser_socket.h"
 
-class SerLogicSocket : public SerSocket
-{
-public:
+class SerLogicSocket : public SerSocket {
+ public:
     SerLogicSocket();
     virtual ~SerLogicSocket();
     virtual bool Initialize();
-public:
+
+ public:
     bool RegisterHandler(
         lpser_connection_t& pConnection,
         LPMSG_HEADER const& pMsgHeader,
@@ -32,7 +32,8 @@ public:
         LPMSG_HEADER const& pMsgHeader,
         char* const& pPkgBody,
         const unsigned short& pkgBodyLength);
-public:
+
+ public:
     virtual void ser_thread_process_message(char* const& pPkgData);
 };
 

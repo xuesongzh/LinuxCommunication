@@ -14,19 +14,19 @@
 
 #pragma region[字符串相关]
 
-void Rtrim(char* const& string);
+void Rtrim(char* string);
 
-void Ltrim(char* const& string);
+void Ltrim(char* string);
 
 #pragma endregion
 
 #pragma region[进程相关]
 
 //移走环境变量的位置，怕设置标题时，标题太长覆盖了环境变量
-void MoveEnviron(char*& pNewEnviron);
+void MoveEnviron(char* pNewEnviron);
 
 //假设所有的命令行参数都不用才能调用次函数
-void SetProcessTitle(const char* const& pTitle);
+void SetProcessTitle(const char* pTitle);
 
 //主进程函数
 void ser_master_process_cycle();
