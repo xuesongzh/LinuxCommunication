@@ -15,20 +15,17 @@
 #include <pthread.h>
 
 //自动释放互斥量，防止unlock的情况发生
-class SerLock
-{
-public:
-    SerLock(pthread_mutex_t* pMutex) : mMutex(pMutex)
-    {
-        pthread_mutex_lock(mMutex); //加锁互斥量
+class SerLock {
+ public:
+    SerLock(pthread_mutex_t* pMutex) : mMutex(pMutex) {
+        pthread_mutex_lock(mMutex);  //加锁互斥量
     }
 
-    ~SerLock()
-    {
+    ~SerLock() {
         pthread_mutex_unlock(mMutex);
     }
 
-private:
+ private:
     pthread_mutex_t* mMutex;
 };
 

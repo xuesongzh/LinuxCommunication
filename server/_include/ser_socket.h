@@ -32,22 +32,20 @@ class SerSocket;
 #define PKG_HEADER_LENGTH (sizeof(struct PKG_HEADER))  //包头长度
 #define MSG_HEADER_LENGTH (sizeof(struct NSG_HEADER))  //消息头长度
 
-typedef struct ser_listening_s ser_listening_t, *lpser_listening_t;
-typedef struct ser_connection_s ser_connection_t, *lpser_connection_t;
 //定义成员函数指针
 typedef void (SerSocket::*ser_event_handler)(lpser_connection_t connect);
 
-struct ser_listening_s {
+typedef struct ser_listening_s {
     int mPort;                       //监听端口
     int mFd;                         //套接字句柄：socket
     lpser_connection_t mConnection;  //指向对应的连接池中的连接
-};
+} ser_listening_t, *lpser_listening_t;
 
 //连接池格式，与TCP连接绑定
-struct ser_connection_s {
+typedef struct ser_connection_s {
     ser_connection_s();
     ~ser_connection_s();
-    void GetOneToUse();   //去一个连接时需要更新的一些状态
+    void GetOneToUse();   //取一个连接时需要更新的一些状态
     void PutOneToFree();  //释放连接池对象时需要更新的状态
 
     int mSockFd;                   //套接字描述符
@@ -85,7 +83,7 @@ struct ser_connection_s {
     time_t mInRecyTime;
 
     lpser_connection_t mNext;
-};
+} ser_connection_t, *lpser_connection_t;
 
 //引入消息头记录一下额外的需要使用的东西
 typedef struct NSG_HEADER {
@@ -115,11 +113,11 @@ class SerSocket {
     //     const uint32_t &eventType,
     //     lpser_connection_t &pConnection);
     int ser_epoll_oper_event(
-        const int& fd,                     //socket描述符
-        const uint32_t& eventType,         //时间类型:EPOLL_CTL_ADD,EPOLL_CTL_MOD,EPOLL_CTL_DEL
-        const uint32_t& events,            //关心的事件：EPOLLIN等
-        const int supAction,               //补充标记，当EPOLL_CTL_ADD时不需要这个参数,EPOLL_CTL_MOD有效，0：增加，1：去掉，2：覆盖
-        lpser_connection_t& pConnection);  //连接池对象
+        const int& fd,                    //socket描述符
+        const uint32_t& eventType,        //时间类型:EPOLL_CTL_ADD,EPOLL_CTL_MOD,EPOLL_CTL_DEL
+        const uint32_t& events,           //关心的事件：EPOLLIN等
+        const int supAction,              //补充标记，当EPOLL_CTL_ADD时不需要这个参数,EPOLL_CTL_MOD有效，0：增加，1：去掉，2：覆盖
+        lpser_connection_t pConnection);  //连接池对象
     int ser_epoll_process_events(const int& timer);
 
  protected:
@@ -140,7 +138,7 @@ class SerSocket {
     void ser_init_connection();   //初始化连接池
     void ser_clear_connection();  //回收连接池
     lpser_connection_t ser_get_free_connection(const int& sockfd);
-    void ser_free_connection(lpser_connection_t& pConnection);
+    void ser_free_connection(lpser_connection_t pConnection);
     void ser_close_connection(lpser_connection_t connection);  //关闭连接池对象并释放对应的套接字对象
     void ser_in_recy_connection(lpser_connection_t const& pConnection);
 
@@ -162,8 +160,7 @@ class SerSocket {
     static void* ser_recy_connection_thread(void* pThreadData);  //用于延迟回收连接池
 
  private:
-    struct ThreadItem  //延迟回收线程结构
-    {
+    struct ThreadItem {  //延迟回收线程结构
         pthread_t mHandle;
         SerSocket* mThis;
         bool mIfRunning;

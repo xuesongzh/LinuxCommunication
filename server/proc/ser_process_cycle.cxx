@@ -48,8 +48,7 @@ void ser_master_process_cycle() {
     size_t titleLength = 0;  //名字+命令行参数的长度
     titleLength = sizeof(pMasterProcessTitle);
     titleLength += ArgvLength + (ArgcNumber - 1) /*命令行参数之间空格的个数*/;
-    if (titleLength < 1000)  //小于1000才设置标题
-    {
+    if (titleLength < 1000) {  //小于1000才设置标题
         char title[1000] = {0};
         strcpy(title, pMasterProcessTitle);
         strcat(title, " ");  //追加空格
@@ -153,7 +152,7 @@ static void ser_worker_process_init(int processIndex) {
     sleep(1);  //休息1秒，防止还没有创建好线程池就来事件了
 
     //初始化子进程
-    if (true != g_socket.ser_init_subproc()) {
+    if (!g_socket.ser_init_subproc()) {
         SER_LOG_STDERR(0, "ser_worker_process_init()中g_socket.ser_init_subproc()失败!");
         exit(-2);
     }

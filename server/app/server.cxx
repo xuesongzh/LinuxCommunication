@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
         goto lblexit;
     }
     //初始化socket
-    if (false == g_socket.Initialize()) {
+    if (!g_socket.Initialize()) {
         SER_LOG_STDERR(0, "socket init failed!");
         exitCode = 1;
         goto lblexit;
