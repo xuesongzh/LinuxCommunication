@@ -13,19 +13,19 @@
 #define __SER_CRC32_H__
 
 #include <mutex>
+
 #include "ser_macros.h"
 
-class SerCRC32
-{
-DECLEAR_SINGLETON(SerCRC32);
+class SerCRC32 {
+    DECLEAR_SINGLETON(SerCRC32);
 
-public:
+ public:
     ~SerCRC32();
 
-public:
+ public:
     int Get_CRC(unsigned char* buffer, unsigned int dwSize);
 
-private:
+ private:
     void Init_CRC32_Table();
     unsigned int Reflect(unsigned int ref, char ch);
 

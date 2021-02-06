@@ -35,10 +35,10 @@ class SerThreadPool {
     virtual ~SerThreadPool();
 
  public:
-    void InMsgRecvQueueAndSignal(char* const& pBuffer);
-    bool Creat(const int& threadPoolSize);  //创建线程池
-    void StopAll();                         //停止所有线程
-    void Call();                            //唤醒一个线程来干活
+    void InMsgRecvQueueAndSignal(char* pBuffer);
+    bool Create(const int& threadPoolSize);  //创建线程池
+    void StopAll();                          //停止所有线程
+    void Call();                             //唤醒一个线程来干活
 
  private:
     static void* ThreadFunc(void* pThreadData);  //线程回调函数

@@ -78,6 +78,7 @@ int main(int argc, char** argv) {
         exitCode = 1;
         goto lblexit;
     }
+
     //日志系统初始化
     SER_LOG_INIT();
     //初始化信号，注册相关信号处理函数
@@ -86,6 +87,7 @@ int main(int argc, char** argv) {
         exitCode = 1;
         goto lblexit;
     }
+
     //初始化socket
     if (!g_socket.Initialize()) {
         SER_LOG_STDERR(0, "socket init failed!");

@@ -21,20 +21,28 @@ class SerLogicSocket : public SerSocket {
     virtual bool Initialize();
 
  public:
-    bool RegisterHandler(
-        lpser_connection_t& pConnection,
-        LPMSG_HEADER const& pMsgHeader,
-        char* const& pPkgBody,
-        const unsigned short& pkgBodyLength);
+    void SendNoBodyPkg(LPMSG_HEADER pMsgHeader, unsigned short msgCode);
 
-    bool LoginHandler(
-        lpser_connection_t& pConnection,
-        LPMSG_HEADER const& pMsgHeader,
-        char* const& pPkgBody,
-        const unsigned short& pkgBodyLength);
+    bool RegisterHandler(lpser_connection_t pConnection,
+                         LPMSG_HEADER pMsgHeader,
+                         char* pPkgBody,
+                         unsigned short pkgBodyLength);
+
+    bool LoginHandler(lpser_connection_t pConnection,
+                      LPMSG_HEADER pMsgHeader,
+                      char* pPkgBody,
+                      unsigned short pkgBodyLength);
+
+    bool PingHandler(lpser_connection_t pConnection,
+                     LPMSG_HEADER pMsgHeader,
+                     char* pPkgBody,
+                     unsigned short pkgBodyLength);
+
+    //检测心跳包是否超时，内存释放，子类应该实现具体的判断动作
+    virtual void pingTimeOutChecking(LPMSG_HEADER pMsgHeader, time_t time);
 
  public:
-    virtual void ser_thread_process_message(char* const& pPkgData);
+    virtual void ser_thread_process_message(char* pPkgData);
 };
 
 #endif

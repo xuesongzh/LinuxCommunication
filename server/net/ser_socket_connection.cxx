@@ -38,6 +38,7 @@ void ser_connection_s::GetOneToUse() {
     mThrowSendCount = 0;
     mSendPkgData = nullptr;
     mEpollEvents = 0;
+    mLastPingTime = time(NULL);
 }
 
 void ser_connection_s::PutOneToFree() {
@@ -100,7 +101,7 @@ void* SerSocket::ser_recy_connection_thread(void* pThreadData) {
     time_t currentTime;
     int err;
 
-    while (true) {
+    while (1) {
         usleep(200 * 1000);  //每隔200ms检查一次是否有满足条件的连接池对象
 
         if (!pSocket->mRecyConnectionList.empty()) {
@@ -116,7 +117,7 @@ void* SerSocket::ser_recy_connection_thread(void* pThreadData) {
             for (; iter != iterEnd; ++iter) {
                 pConnection = *iter;
                 if ((pConnection->mInRecyTime + pSocket->mRecyWaiteTime) > currentTime && g_stopEvent == 0) {
-                    //如果系不退出，并且没有达到延迟回收的时间，继续。如果系统退出，则需要强制释放资源
+                    //如果系统不退出，并且没有达到延迟回收的时间，继续。如果系统退出，则需要强制释放资源
                     continue;
                 }
 
@@ -132,8 +133,7 @@ void* SerSocket::ser_recy_connection_thread(void* pThreadData) {
             }
         }
 
-        if (g_stopEvent == 1)  //整个程序要退出,释放资源
-        {
+        if (g_stopEvent == 1) {  //整个程序要退出,释放资源
             SER_LOG(SER_LOG_INFO, 0, "程序要退出，释放连接池资源!");
 
             if (!pSocket->mRecyConnectionList.empty()) {

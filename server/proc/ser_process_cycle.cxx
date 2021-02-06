@@ -69,7 +69,7 @@ void ser_master_process_cycle() {
     //创建子进程之后，清空信号屏蔽字
     sigemptyset(&sigSet);
 
-    for (;;) {
+    while (1) {
         // sleep(1);
         // SER_LOG_STDERR(0, "父进程循环,pid = %p", ser_pid);
         //sigsuspend():
@@ -122,7 +122,7 @@ static void ser_worker_process_cycle(int processIndex) {
     SetProcessTitle(pWorkerProcessTitle);
 
     //子进程循环体
-    for (;;) {
+    while (1) {
         // sleep(1);
         // SER_LOG_STDERR(0, "子进程循环,pid = %p", ser_pid);
         ser_process_events_and_timers();
@@ -146,7 +146,7 @@ static void ser_worker_process_init(int processIndex) {
     //创建线程池
     auto pConfiger = SerConfiger::GetInstance();
     auto threadPoolSize = pConfiger->GetIntDefault("ThreadPoolSize", 5);
-    if (!g_threadpool.Creat(threadPoolSize)) {
+    if (!g_threadpool.Create(threadPoolSize)) {
         exit(-2);
     }
     sleep(1);  //休息1秒，防止还没有创建好线程池就来事件了
@@ -157,7 +157,7 @@ static void ser_worker_process_init(int processIndex) {
         exit(-2);
     }
 
-    //初始化epoll对象，并且往监听套接字上增加读事件
+    //初始化epoll对象，并且往监听套接字上增加监听事件
     g_socket.ser_epoll_init();
 
     //以后扩充代码....

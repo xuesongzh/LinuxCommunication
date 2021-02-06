@@ -21,7 +21,7 @@
             delete (ptr);     \
             ptr = nullptr;    \
         }                     \
-    } while (false)
+    } while (0)
 
 //删除指针数组
 #define DEL_ARRAY(ptr)        \
@@ -30,7 +30,7 @@
             delete[] ptr;     \
             ptr = nullptr;    \
         }                     \
-    } while (false)
+    } while (0)
 
 #pragma endregion
 

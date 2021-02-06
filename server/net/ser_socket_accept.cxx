@@ -19,10 +19,10 @@
 #include "ser_macros.h"
 #include "ser_socket.h"
 
-//三路握手，建立TCP连接用
+//三次握手，建立TCP连接用
 void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
-    struct sockaddr clientSockaddr;  //客户端地址
-    socklen_t sockLen = sizeof(clientSockaddr);
+    struct sockaddr clntAddr;  //客户端地址
+    socklen_t sockLen = sizeof(clntAddr);
     int err;
     int logLevel;
     int tcpSockFd;                      //从已连接队列中取出的与客户端通信的套接字描述符
@@ -33,10 +33,10 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
         if (useAccept4) {
             //因为监听套接字是非阻塞的。所以即便是已完成队列为空，也不会阻塞在这里
             //SOCK_NONBLOCK：返回的套接字设为非阻塞，不用主动调用ioctl
-            tcpSockFd = accept4(listenConnection->mSockFd, &clientSockaddr, &sockLen, SOCK_NONBLOCK);
+            tcpSockFd = accept4(listenConnection->mSockFd, &clntAddr, &sockLen, SOCK_NONBLOCK);
         } else {
             //因为监听套接字是非阻塞的。所以即便是已完成队列为空，也不会阻塞在这里
-            tcpSockFd = accept(listenConnection->mSockFd, &clientSockaddr, &sockLen);
+            tcpSockFd = accept(listenConnection->mSockFd, &clntAddr, &sockLen);
         }
 
         //在linux2.6内核上，accept系统调用已经不存在惊群了。这样，当新连接过来时，仅有一个子进程返回新建的连接，其他子进程继续休眠在accept调用上，没有被唤醒。
@@ -44,8 +44,7 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
         if (tcpSockFd == -1) {
             err = errno;
             //事件未发生时errno通常被设置成EAGAIN（意为“再来一次”）或者EWOULDBLOCK（意为“期待阻塞”）
-            if (err == EAGAIN)  //accept没有准备好
-            {
+            if (err == EAGAIN) {  //accept没有准备好
                 return;
             }
             logLevel = SER_LOG_ALERT;
@@ -64,9 +63,8 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
             }
             SER_LOG(logLevel, errno, "SerSocket::ser_event_accept中accept或者accept4返回套接字错误!");
 
-            if (useAccept4 && err == ENOSYS)  //不支持accept4
-            {
-                useAccept4 = 0;  //不使用accept4
+            if (useAccept4 && err == ENOSYS) {  //不支持accept4
+                useAccept4 = 0;                 //不使用accept4
                 continue;
             }
 
@@ -78,8 +76,7 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
         }
 
         pTCPConnection = ser_get_free_connection(tcpSockFd);  //取出一个空闲连接给TCP套接字用
-        if (nullptr == pTCPConnection)                        //连接池空闲连接不够用
-        {
+        if (nullptr == pTCPConnection) {                      //连接池空闲连接不够用
             if (close(tcpSockFd) == -1) {
                 SER_LOG(SER_LOG_ALERT, errno, "SerSocket::ser_event_accept中close tcp fd失败!");
             }
@@ -90,10 +87,9 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
         //判断连接是否超过最大连接数
 
         //拷贝客户端地址到连接对象
-        memcpy(&(pTCPConnection->mSockAddr), &clientSockaddr, sockLen);
-        if (!useAccept4)  //如果accept返回的套接字，需要设置为 非阻塞
-        {
-            if (ser_set_nonblocking(tcpSockFd) == false) {
+        memcpy(&(pTCPConnection->mSockAddr), &clntAddr, sockLen);
+        if (!useAccept4) {  //如果accept返回的套接字，需要设置为 非阻塞
+            if (!ser_set_nonblocking(tcpSockFd)) {
                 ser_close_connection(pTCPConnection);  //回收连接池中的连接，并关闭socket
             }
         }
@@ -104,19 +100,23 @@ void SerSocket::ser_event_accept(lpser_connection_t listenConnection) {
         pTCPConnection->mWHandler = &SerSocket::ser_write_request_handler;
 
         //将TCP连接以及对应的事件加入到epoll对象
-        if (ser_epoll_oper_event(
-                tcpSockFd,
-                EPOLL_CTL_ADD,
-                EPOLLIN | EPOLLRDHUP,  //EPOLLRDHUP:TCP断开，或者关闭
-                0,
-                pTCPConnection) == -1) {
+        if (ser_epoll_oper_event(tcpSockFd,
+                                 EPOLL_CTL_ADD,
+                                 EPOLLIN | EPOLLRDHUP,  //EPOLLRDHUP:TCP断开，或者关闭 EPOLLIN | EPOLLRDHUP | EPOLLET,
+                                 0,
+                                 pTCPConnection) == -1) {
             //增加事件失败，回收连接池及关闭套接字
             ser_close_connection(pTCPConnection);
             return;
         }
 
+        if (mIfKickTimer == 1) {
+            addToTimerQueue(pTCPConnection);
+        }
+        ++mOnlineUserCount;  //连入用户数量+1
+
         break;  //循环一次就跳出去
-    } while (true);
+    } while (1);
 
     return;
 }

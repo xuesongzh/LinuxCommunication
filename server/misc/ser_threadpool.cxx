@@ -1,5 +1,3 @@
-#include "ser_threadpool.h"
-
 #include <arpa/inet.h>
 #include <errno.h>
 #include <signal.h>
@@ -10,6 +8,7 @@
 #include "ser_logic_socket.h"
 #include "ser_macros.h"
 #include "ser_memory.h"
+#include "ser_th readpool.h"
 
 pthread_mutex_t SerThreadPool::mThreadMutex = PTHREAD_MUTEX_INITIALIZER;  //#define PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) -1)
 pthread_cond_t SerThreadPool::mThreadCond = PTHREAD_COND_INITIALIZER;     //#define PTHREAD_COND_INITIALIZER ((pthread_cond_t) -1)
@@ -23,14 +22,15 @@ SerThreadPool::~SerThreadPool() {
     ClearMsgRecvQueue();
 }
 
-bool SerThreadPool::Creat(const int& threadPoolSize) {
+bool SerThreadPool::Create(const int& threadPoolSize) {
     ThreadItem* pNewItem = nullptr;
     int err = 0;
     mThreadPoolSize = threadPoolSize;  //线程池大小
 
     //创建线程池
     for (int i = 0; i < mThreadPoolSize; ++i) {
-        mThreads.push_back(pNewItem = new ThreadItem(this));  //new 一个新线程到容器中
+        pNewItem = new ThreadItem(this);
+        mThreads.push_back(pNewItem);  //new 一个新线程到容器中
         //&pNewItem->mHandle:线程句柄，NULL:线程属性，ThreadFunc：线程入口函数，pNewItem：入口函数参数
         err = pthread_create(&pNewItem->mHandle, NULL, ThreadFunc, pNewItem);
         if (0 != err) {
@@ -44,7 +44,7 @@ bool SerThreadPool::Creat(const int& threadPoolSize) {
     //以下代码保证每个线程都启动，并运行至pthread_cond_wait()等待
 lblfor:
     for (auto& thread : mThreads) {
-        if (thread->mIfRunning == false) {
+        if (!thread->mIfRunning) {
             usleep(100 * 1000);  //100ms
             goto lblfor;
         }
@@ -54,7 +54,7 @@ lblfor:
 }
 
 void SerThreadPool::StopAll() {
-    if (true == mIfShutDown) {
+    if (mIfShutDown) {
         return;
     }
 
@@ -95,8 +95,7 @@ void SerThreadPool::Call() {
     //线程池不够用需要提示
     if (mThreadPoolSize == mRunningThreadNumber) {
         time_t currtime = time(NULL);
-        if (currtime - mLastEmgTime > 10)  //超过10秒才报警，不然会一直提示
-        {
+        if (currtime - mLastEmgTime > 10) {  //超过10秒才报警，不然会一直提示
             mLastEmgTime = currtime;
             SER_LOG_STDERR(0, "SerThreadPool::Call()中发现线程池不够用!");
         }
@@ -107,19 +106,19 @@ void SerThreadPool::Call() {
 //返回值必须为void*，否则pthread_create()会报错
 void* SerThreadPool::ThreadFunc(void* pThreadData) {
     auto pThread = static_cast<ThreadItem*>(pThreadData);
-    auto pThreadPool = pThread->mThis;
+    auto pThreadPool = pThread->mThis;  //静态成员函数，没有this指针
     auto pMemory = SerMemory::GetInstance();
     int err = 0;                     //错误码
     pthread_t tid = pthread_self();  //线程id
 
-    while (true) {
+    while (1) {
         err = pthread_mutex_lock(&mThreadMutex);  //加锁互斥量
         if (0 != err) {
             SER_LOG_STDERR(errno, " SerThreadPool::ThreadFunc()中pthread_mutex_lock()错误!错误码:%d", err);
             return (void*)-1;
         }
 
-        while (pThreadPool->mMsgRecvQueue.size() == 0 && !mIfShutDown) {
+        while (pThreadPool->mMsgRecvQueue.empty() && !mIfShutDown) {
             if (!pThread->mIfRunning) {
                 pThread->mIfRunning = true;  //线程被激活标记
             }
@@ -150,7 +149,7 @@ void* SerThreadPool::ThreadFunc(void* pThreadData) {
         //业务逻辑处理
         // char* temp = pPkgData;
         // LPPKG_HEADER pPkgHeader = (LPPKG_HEADER)(temp + MSG_HEADER_LENGTH);
-        // SER_LOG_STDERR(0,"处理业务逻辑时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->mPkgLength), ntohs(pPkgHeader->mMsgCode),ntohl(pPkgHeader->mCRC32));
+        // SER_LOG_STDERR(0,"处理业务逻辑时包的长度:%d，消息码：%d，crc32：%d",ntohs(pPkgHeader->pkgLen), ntohs(pPkgHeader->msgCode),ntohl(pPkgHeader->crc32));
 
         g_socket.ser_thread_process_message(pPkgData);
 
@@ -161,7 +160,7 @@ void* SerThreadPool::ThreadFunc(void* pThreadData) {
     return (void*)0;
 }
 
-void SerThreadPool::InMsgRecvQueueAndSignal(char* const& pBuffer) {
+void SerThreadPool::InMsgRecvQueueAndSignal(char* pBuffer) {
     int err = pthread_mutex_lock(&mThreadMutex);
     if (0 != err) {
         SER_LOG_STDERR(errno, "SerThreadPool::InMsgRecvQueueAndSignal()中pthread_mutex_lock发生错误，错误码：%d", err);
@@ -170,7 +169,6 @@ void SerThreadPool::InMsgRecvQueueAndSignal(char* const& pBuffer) {
 
     mMsgRecvQueue.push_back(pBuffer);
 
-    //取消互斥
     err = pthread_mutex_unlock(&mThreadMutex);
     if (0 != err) {
         SER_LOG_STDERR(errno, "SerThreadPool::InMsgRecvQueueAndSignal()中pthread_mutex_unlock发生错误，错误码：%d", err);

@@ -12,18 +12,17 @@
 #ifndef __SER_MEMORY_H__
 #define __SER_MEMORY_H__
 
-#include<mutex>
+#include <mutex>
 
 #include "ser_macros.h"
 
-class SerMemory
-{
-DECLEAR_SINGLETON(SerMemory);
+class SerMemory {
+    DECLEAR_SINGLETON(SerMemory);
 
-public:
+ public:
     ~SerMemory();
 
-public:
+ public:
     void* MallocMemory(const int& count, bool ifmemset = false);
     void FreeMemory(void* pMemory);
 };
